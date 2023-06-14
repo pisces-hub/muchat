@@ -1,0 +1,21 @@
+server:
+  port: -1
+
+spring:
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    database: 1
+    password: root
+
+app:
+  ip: 127.0.0.1
+  ws:
+    port: 11111
+    enable: true
+  tcp:
+    port: 11112
+    enable: true
+  zk:
+    path: /muchat/node
+    address: localhost:2181

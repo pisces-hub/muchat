@@ -1,0 +1,56 @@
+#这是配置服务的端口
+server:
+  port: 8888
+#配置项目的数据源
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/muchat?useSSL=false&useUnicode=true&characterEncoding=utf-8&allowPublicKeyRetrieval=true
+    username: root
+    password: root
+
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    database: 1
+    password: root
+
+  servlet:
+    multipart:
+      max-file-size: 5000MB
+      max-request-size: 5000MB
+  main:
+    allow-circular-references: true
+    allow-bean-definition-overriding: true
+
+mybatis-plus:
+  configuration:
+    # 是否开启自动驼峰命名规则（camel case）映射，即从经典数据库列名 A_COLUMN（下划线命名） 到经典 Java 属性名 aColumn（驼峰命名） 的类似映射
+    map-underscore-to-camel-case: false
+    #log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    # mapper
+  mapper-locations:
+    # *.xml的具体路径
+    - classpath*:mapper/*.xml
+minio:
+  endpoint: http://127.0.0.1:9000 #内网地址
+  public: http://127.0.0.1:9000  #外网访问地址
+  accessKey: xvde5CmbpqhE6VgfVQsR
+  secretKey: 3X7EgXHauD8DKmuQx4IQ01DShaLrT111kSqddmDZ8MG
+  bucketName: box-im
+  imagePath: image
+  filePath: file
+
+webrtc:
+  iceServers:
+    - urls: stun:stun.l.google.com:19302
+
+
+app:
+  zk:
+    addreess: localhost:2181
+    path: /muchat/node
+
+swagger:
+  enable: true
+
