@@ -15,6 +15,8 @@ public enum ResultCode {
     PASSWOR_ERROR(10001,"密码不正确"),
     USERNAME_ALREADY_REGISTER(10003,"该用户名已注册"),
     NO_AVAILABLE_SERVICES(10004,"没有可用的服务"),
+
+    COMMON_ERROR(501,"操作失败")
     ;
 
 

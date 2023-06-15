@@ -1,5 +1,7 @@
 package io.xiaochangbai.muchat.server.session;
 
+import io.xiaochangbai.muchat.common.core.enums.ResultCode;
+import io.xiaochangbai.muchat.server.exception.GlobalException;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -20,6 +22,15 @@ public class SessionContext {
         HttpServletRequest request = requestAttributes.getRequest();
         UserSession userSession = (UserSession) request.getAttribute("session");
         return  userSession;
+    }
+
+
+    public static Long getUserId(){
+        UserSession session = getSession();
+        if(session==null){
+            throw new GlobalException(ResultCode.INVALID_TOKEN);
+        }
+        return session.getId();
     }
 
 }
