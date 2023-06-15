@@ -74,8 +74,3 @@ QQ: 704566072
 
 ## 点下star吧
 喜欢的朋友麻烦点个star，鼓励一下作者吧！
-
-
-## 备注
-
-项目参考 https://gitee.com/bluexsx/box-im
