@@ -26,6 +26,8 @@ public class MvcConfig implements WebMvcConfigurer {
                 .excludePathPatterns("/swagger-resources/**")
                 .excludePathPatterns("/webjars/**")
                 .excludePathPatterns("/*/api-docs")
+                .excludePathPatterns("/admin/connector/**")
+                .excludePathPatterns("/resources/**")
         ;
 
 
@@ -48,6 +50,8 @@ public class MvcConfig implements WebMvcConfigurer {
         /** 公共部分内容 */
         registry.addResourceHandler("/webjars/**")
                 .addResourceLocations("classpath:/META-INF/resources/webjars/");
+
+
     }
 
 
