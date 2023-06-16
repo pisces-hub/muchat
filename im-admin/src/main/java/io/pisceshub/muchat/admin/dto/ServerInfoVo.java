@@ -1,4 +1,4 @@
-package io.pisceshub.muchat.server.admin.dto;
+package io.pisceshub.muchat.admin.dto;
 
 import lombok.Data;
 

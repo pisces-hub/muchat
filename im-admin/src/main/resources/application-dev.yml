@@ -1,0 +1,18 @@
+#这是配置服务的端口
+server:
+  port: 18888
+#配置项目的数据源
+spring:
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    database: 1
+    password: lilishop
+  main:
+    allow-circular-references: true
+    allow-bean-definition-overriding: true
+
+
+swagger:
+  enable: true
+
