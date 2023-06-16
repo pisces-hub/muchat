@@ -1,9 +1,9 @@
-package io.pisceshub.muchat.server.admin.controller;
+package io.pisceshub.muchat.admin.controller;
 
+import io.pisceshub.muchat.admin.dto.ServerConnectionInfoItemVo;
 import io.pisceshub.muchat.common.core.contant.AppConst;
 import io.pisceshub.muchat.common.core.enums.NetProtocolEnum;
-import io.pisceshub.muchat.server.admin.dto.ServerConnectionInfoItemVo;
-import io.pisceshub.muchat.server.admin.dto.ServerInfoVo;
+import io.pisceshub.muchat.admin.dto.ServerInfoVo;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,9 +14,8 @@ import java.util.List;
 
 
 @Controller
-@RequestMapping("/admin/connector")
+@RequestMapping("/connector")
 public class ConnectorNodeController {
-
 
 
     /**
