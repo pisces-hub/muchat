@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-io.xiaochangbai.muchat.common.core.CoreCommonAutoConfiguration
+io.pisceshub.muchat.common.core.CoreCommonAutoConfiguration
