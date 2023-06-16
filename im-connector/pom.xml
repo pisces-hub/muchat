@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>muchat</artifactId>
-        <groupId>io.xiaochangbai.muchat</groupId>
+        <groupId>io.pisceshub.muchat</groupId>
         <version>1.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -14,12 +14,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>io.xiaochangbai.muchat</groupId>
+            <groupId>io.pisceshub.muchat</groupId>
             <artifactId>im-common-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -52,6 +48,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>2.0.3.RELEASE</version>
                 <executions>
                     <execution>
                         <goals>
