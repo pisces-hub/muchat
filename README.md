@@ -1,8 +1,10 @@
 # MuChat
 
 <p>
-  <a href="#联系方式"><img src="http://43.138.164.74:9000/muchat/file/20230616/1686924473737.svg" alt="交流"></a>
-  <a href="https://github.com/pisces-hub/muchat-ui"> <img src="http://43.138.164.74:9000/muchat/file/20230616/1686924473731.svg" alt="前台项目"/></a>
+ <a href="https://github.com/pisces-hub/muchat-ui"> <img src="http://43.138.164.74:9000/muchat/file/20230617/1686965644141.svg" alt="前端项目"/>
+</a>
+    <br/>    
+<a href="#联系方式"><img src="http://43.138.164.74:9000/muchat/file/20230616/1686924473737.svg" alt="交流"></a>
   <a href="https://gitee.com/pisces-hub/muchat"><img src="http://43.138.164.74:9000/muchat/file/20230616/1686924589588.svg" alt="码云"></a>
 </p>
 
@@ -15,27 +17,10 @@
 
 `Muchat`100w级即时通讯应用
 
-## 项目文档
-
-待更新
 
 ## 项目介绍
 
 `Muchat`是用JAVA语言开发的轻量、高性能、单机支持几十万至百万在线用户IM，主要目标降低即时通讯门槛，快速打造低成本接入在线IM系统，通过极简洁的消息格式就可以实现多端不同协议间的消息发送如内置(Http、Websocket、Tcp自定义IM协议)
-
-### 项目演示
-
-#### 前端演示项目
-
-前端项目`muchat-ui`地址：https://github.com/pisces-hub/muchat-ui
-
-项目演示地址： [http://43.138.164.74](http://43.138.164.74)
-
-
-#### 后台系统
-
-前端项目`muchat-admin-ui`地址：筹备开源中...
-
 
 
 ### 组织结构
@@ -59,55 +44,36 @@ muchat
 | MyBatis              | ORM框架             | http://www.mybatis.org/mybatis-3/zh/index.html |
 | Redis                | 内存数据存储         | https://redis.io/                              |
 | Nginx                | 静态资源服务器      | https://www.nginx.com/                         |
-| Druid                | 数据库连接池        | https://github.com/alibaba/druid               |
-| OSS                  | 对象存储            | https://github.com/aliyun/aliyun-oss-java-sdk  |
 | MinIO                | 对象存储            | https://github.com/minio/minio                 |
-| JWT                  | JWT登录支持         | https://github.com/jwtk/jjwt                   |
-| Lombok               | Java语言增强库      | https://github.com/rzwitserloot/lombok         |
-| Hutool               | Java工具类库        | https://github.com/looly/hutool                |
-| PageHelper           | MyBatis物理分页插件 | http://git.oschina.net/free/Mybatis_PageHelper |
-| Swagger-UI           | API文档生成工具      | https://github.com/swagger-api/swagger-ui      |
-| Hibernator-Validator | 验证框架            | http://hibernate.org/validator                 |
-
-#### 前端技术
-
-| 技术       | 说明                  | 官网                                   |
-| ---------- | --------------------- | -------------------------------------- |
-| Vue        | 前端框架              | https://vuejs.org/                     |
-| Vue-router | 路由框架              | https://router.vuejs.org/              |
-| Vuex       | 全局状态管理框架      | https://vuex.vuejs.org/                |
-| Element    | 前端UI框架            | https://element.eleme.io               |
 
 
 #### 架构图
 
-##### 系统架构图
-
-![系统架构图](docs/images/高性能IM架构.jpg)
+![系统架构图](docs/images/architecture.jpeg)
 
 ### 开发环境
 
-| 工具        | 版本号    | 下载                                             |
-|-----------|--------|------------------------------------------------|
-| JDK       | 11     |                                                |
-| Mysql     | 8      | https://www.mysql.com/                         |
-| Redis     | 7.0    | https://redis.io/download                      |
-| Nginx     | 1.22   | http://nginx.org/en/download.html              |
-| Zookeeper |  |  |
+| 工具        | 版本号   | 下载                                             |
+|-----------|-------|------------------------------------------------|
+| JDK       | 11    |   https://www.oracle.com/java/technologies/javase/jdk11-archive-downloads.html                                          |
+| Mysql     | 8     | https://www.mysql.com/                         |
+| Redis     | 7.0   | https://redis.io/download                      |
+| Nginx     | 1.22  | http://nginx.org/en/download.html              |
+| Zookeeper | 3.8.0 | https://www.apache.org/dyn/closer.lua/zookeeper/zookeeper-3.8.0/apache-zookeeper-3.8.0-bin.tar.gz |
 
 
 ### 搭建步骤
 
 > Windows环境部署
 
-- 克隆`muchat`项目，并导入到IDEA中完成编译：
+- 克隆`muchat`项目，并导入到IDEA中完成编译
 
 
 ## 联系方式
 
 QQ: 704566072
 
-![](./docs/images/vx1.jpg)
+![](./docs/images/vx-xiaochangbai.jpg)
 
 有任何问题，欢迎给我留言哦
 
