@@ -24,7 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class IMSender {
 
     @Autowired
-    @Qualifier("IMRedisTemplate")
+//    @Qualifier("IMRedisTemplate")
     private RedisTemplate redisTemplate;
 
     @Autowired

@@ -51,6 +51,18 @@ public class ChatSessionInfoResp implements Serializable {
     private Long unReadCount;
 
 
+    /**
+     * 最后发送时间
+     */
+    private Long lastSendTime;
+
+    /**
+     * 最后发送内容
+     */
+    private String lastContent;
+
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

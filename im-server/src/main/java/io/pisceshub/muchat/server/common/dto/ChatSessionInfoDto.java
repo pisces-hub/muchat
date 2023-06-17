@@ -19,4 +19,7 @@ public class ChatSessionInfoDto implements Serializable {
     @NotNull(message = "聊天类型不能为空")
     private ChatType chatType;
 
+
+    private Long createTime;
+
 }

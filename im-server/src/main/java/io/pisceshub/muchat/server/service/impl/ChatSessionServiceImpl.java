@@ -2,6 +2,8 @@ package io.pisceshub.muchat.server.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import io.pisceshub.muchat.common.core.enums.ChatType;
+import io.pisceshub.muchat.common.core.model.GroupMessageInfo;
+import io.pisceshub.muchat.common.core.model.PrivateMessageInfo;
 import io.pisceshub.muchat.common.core.utils.Result;
 import io.pisceshub.muchat.common.core.utils.ResultUtils;
 import io.pisceshub.muchat.server.common.dto.ChatSessionInfoDto;
@@ -12,9 +14,7 @@ import io.pisceshub.muchat.server.common.vo.user.GroupVO;
 import io.pisceshub.muchat.server.common.vo.user.UserVO;
 import io.pisceshub.muchat.server.exception.GlobalException;
 import io.pisceshub.muchat.server.exception.NotJoinGroupException;
-import io.pisceshub.muchat.server.service.IChatSessionService;
-import io.pisceshub.muchat.server.service.IGroupService;
-import io.pisceshub.muchat.server.service.IUserService;
+import io.pisceshub.muchat.server.service.*;
 import io.pisceshub.muchat.server.service.business.chatsession.ChatSessionSave;
 import io.pisceshub.muchat.server.common.vo.user.ChatSessionAddReq;
 import io.pisceshub.muchat.server.util.BeanUtils;
@@ -40,6 +40,12 @@ public class ChatSessionServiceImpl implements IChatSessionService {
     @Autowired
     private IGroupService iGroupService;
 
+    @Autowired
+    private IGroupMessageService iGroupMessageService;
+
+    @Autowired
+    private IPrivateMessageService iPrivateMessageService;
+
     @Override
     public boolean save(ChatSessionAddReq vo) {
 
@@ -63,6 +69,7 @@ public class ChatSessionServiceImpl implements IChatSessionService {
             switch (chatType){
                 case GROUP:
                     try {
+                        //查询群信息
                         GroupVO groupVO = iGroupService.findById(targetId);
                         if(groupVO==null){
                             continue;
@@ -73,6 +80,15 @@ public class ChatSessionServiceImpl implements IChatSessionService {
                                 .name(groupVO.getName())
                                 .headImage(groupVO.getHeadImage())
                                 .unReadCount(0L).build();
+                        //查询消息
+                        List<GroupMessageInfo> historyMessage = iGroupMessageService.findHistoryMessage(targetId, 1L, 30L);
+                        if(CollUtil.isNotEmpty(historyMessage)){
+                            chatSessionInfoResp.setLastSendTime(historyMessage.get(0).getSendTime().getTime());
+                            chatSessionInfoResp.setLastContent(historyMessage.get(0).getContent());
+                        }else{
+                            chatSessionInfoResp.setLastSendTime(dto.getCreateTime());
+                        }
+
                         result.add(chatSessionInfoResp);
                     }catch (NotJoinGroupException e){
                     }
@@ -88,6 +104,15 @@ public class ChatSessionServiceImpl implements IChatSessionService {
                             .name(userVO.getNickName())
                             .headImage(userVO.getHeadImage())
                             .unReadCount(0L).build();
+                    //查询消息
+                    List<PrivateMessageInfo> historyMessage = iPrivateMessageService.findHistoryMessage(targetId, 1L, 30L);
+                    if(CollUtil.isNotEmpty(historyMessage)){
+                        chatSessionInfoResp.setLastSendTime(historyMessage.get(0).getSendTime().getTime());
+                        chatSessionInfoResp.setLastContent(historyMessage.get(0).getContent());
+                    }else{
+                        chatSessionInfoResp.setLastSendTime(dto.getCreateTime());
+                    }
+
                     result.add(chatSessionInfoResp);
             }
         }
