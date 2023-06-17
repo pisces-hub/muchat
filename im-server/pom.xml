@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>muchat</artifactId>
-        <groupId>io.xiaochangbai.muchat</groupId>
+        <groupId>io.pisceshub.muchat</groupId>
         <version>1.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -14,11 +14,11 @@
 
     <dependencies>
         <dependency>
-            <groupId>io.xiaochangbai.muchat</groupId>
+            <groupId>io.pisceshub.muchat</groupId>
             <artifactId>im-common-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.xiaochangbai.muchat</groupId>
+            <groupId>io.pisceshub.muchat</groupId>
             <artifactId>im-sdk</artifactId>
         </dependency>
         <dependency>
@@ -131,21 +131,10 @@
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger-ui</artifactId>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>com.github.xiaoymin</groupId>-->
-<!--            <artifactId>knife4j-spring-boot-starter</artifactId>-->
-<!--            <version>2.0.8</version>-->
-<!--        </dependency>-->
         <dependency>
             <groupId>com.github.xiaoymin</groupId>
             <artifactId>knife4j-openapi2-spring-boot-starter</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-thymeleaf</artifactId>
-        </dependency>
-
 
     </dependencies>
 
