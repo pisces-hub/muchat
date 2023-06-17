@@ -1,4 +1,4 @@
-package io.pisceshub.muchat.server.vo;
+package io.pisceshub.muchat.server.common.vo.user;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

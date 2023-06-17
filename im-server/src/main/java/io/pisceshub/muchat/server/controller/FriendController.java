@@ -1,11 +1,11 @@
 package io.pisceshub.muchat.server.controller;
 
-import io.pisceshub.muchat.server.entity.Friend;
-import io.pisceshub.muchat.server.session.SessionContext;
+import io.pisceshub.muchat.server.common.entity.Friend;
+import io.pisceshub.muchat.server.util.SessionContext;
 import io.pisceshub.muchat.common.core.utils.Result;
 import io.pisceshub.muchat.common.core.utils.ResultUtils;
 import io.pisceshub.muchat.server.service.IFriendService;
-import io.pisceshub.muchat.server.vo.FriendVO;
+import io.pisceshub.muchat.server.common.vo.user.FriendVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;

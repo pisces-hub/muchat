@@ -1,4 +1,4 @@
-package io.pisceshub.muchat.server.entity;
+package io.pisceshub.muchat.server.common.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -13,18 +13,18 @@ import java.util.Date;
 
 /**
  * <p>
- *  用户
+ * 群成员
  * </p>
  *
  * @author blue
- * @since 2022-10-01
+ * @since 2022-10-31
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@TableName("im_user")
-public class User extends Model<User> {
+@TableName("im_group_member")
+public class GroupMember extends Model<GroupMember> {
 
-    private static final long serialVersionUID=1L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * id
@@ -33,52 +33,43 @@ public class User extends Model<User> {
     private Long id;
 
     /**
-     * 用户名
+     * 群id
      */
-    @TableField("user_name")
-    private String userName;
+    @TableField("group_id")
+    private Long groupId;
 
     /**
-     * 用户名
+     * 用户id
      */
-    @TableField("nick_name")
-    private String nickName;
+    @TableField("user_id")
+    private Long userId;
 
     /**
-     * 性别
+     *  群内显示名称
      */
-    @TableField("sex")
-    private Integer sex;
+    @TableField("alias_name")
+    private String aliasName;
 
     /**
-     * 头像
+     *  头像
      */
     @TableField("head_image")
     private String headImage;
 
-    /**
-     * 头像缩略图
-     */
-    @TableField("head_image_thumb")
-    private String headImageThumb;
 
 
     /**
-     * 个性签名
+     * 备注
      */
-    @TableField("signature")
-    private String signature;
-    /**
-     * 密码(明文)
-     */
-    @TableField("password")
-    private String password;
+    @TableField("remark")
+    private String remark;
 
     /**
-     * 最后登录时间
+     * 是否已离开群聊
      */
-    @TableField("last_login_time")
-    private Date lastLoginTime;
+    @TableField("quit")
+    private Boolean quit;
+
 
     /**
      * 创建时间

@@ -1,8 +1,8 @@
 package io.pisceshub.muchat.server.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import io.pisceshub.muchat.server.entity.Friend;
-import io.pisceshub.muchat.server.vo.FriendVO;
+import io.pisceshub.muchat.server.common.entity.Friend;
+import io.pisceshub.muchat.server.common.vo.user.FriendVO;
 
 import java.util.List;
 

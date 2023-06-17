@@ -3,7 +3,7 @@ package io.pisceshub.muchat.server.controller;
 import io.pisceshub.muchat.common.core.utils.Result;
 import io.pisceshub.muchat.common.core.utils.ResultUtils;
 import io.pisceshub.muchat.server.service.thirdparty.FileService;
-import io.pisceshub.muchat.server.vo.UploadImageVO;
+import io.pisceshub.muchat.server.common.vo.common.UploadImageResp;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +24,7 @@ public class FileController {
 
     @ApiOperation(value = "上传图片",notes="上传图片,上传后返回原图和缩略图的url")
     @PostMapping("/image/upload")
-    public Result<UploadImageVO> uploadImage(MultipartFile file) {
+    public Result<UploadImageResp> uploadImage(MultipartFile file) {
         return ResultUtils.success(fileService.uploadImage(file));
     }
 

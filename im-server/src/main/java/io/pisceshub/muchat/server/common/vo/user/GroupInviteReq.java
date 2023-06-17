@@ -1,4 +1,4 @@
-package io.pisceshub.muchat.server.vo;
+package io.pisceshub.muchat.server.common.vo.user;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -10,7 +10,7 @@ import java.util.List;
 
 @Data
 @ApiModel("邀请好友进群请求VO")
-public class GroupInviteVO {
+public class GroupInviteReq {
 
     @NotNull(message = "群id不可为空")
     @ApiModelProperty(value = "群id")

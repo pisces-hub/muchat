@@ -2,7 +2,7 @@ package io.pisceshub.muchat.server.service;
 
 
 import io.pisceshub.muchat.common.core.enums.NetProtocolEnum;
-import io.pisceshub.muchat.server.vo.NodeInfoVo;
+import io.pisceshub.muchat.server.common.vo.connector.NodeInfoResp;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ import java.util.List;
  */
 public interface ConnectionService {
 
-    List<NodeInfoVo> nodeList();
+    List<NodeInfoResp> nodeList();
 
-    NodeInfoVo node(NetProtocolEnum netProtocolEnum,Long identify);
+    NodeInfoResp node(NetProtocolEnum netProtocolEnum, Long identify);
 }

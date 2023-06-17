@@ -1,5 +1,4 @@
-package io.pisceshub.muchat.server.vo;
-
+package io.pisceshub.muchat.server.common.vo.message;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -10,13 +9,12 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 @Data
-@ApiModel("私聊消息VO")
-public class PrivateMessageVO {
+@ApiModel("群聊消息VO")
+public class GroupMessageSendReq {
 
-
-    @NotNull(message="接收用户id不可为空")
-    @ApiModelProperty(value = "接收用户id")
-    private Long recvId;
+    @NotNull(message="群聊id不可为空")
+    @ApiModelProperty(value = "群聊id")
+    private Long groupId;
 
 
     @Length(max=1024,message = "内容长度不得大于1024")
@@ -27,5 +25,4 @@ public class PrivateMessageVO {
     @NotNull(message="消息类型不可为空")
     @ApiModelProperty(value = "消息类型")
     private Integer type;
-
 }

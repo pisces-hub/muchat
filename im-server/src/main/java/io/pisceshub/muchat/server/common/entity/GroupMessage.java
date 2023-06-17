@@ -1,4 +1,4 @@
-package io.pisceshub.muchat.server.entity;
+package io.pisceshub.muchat.server.common.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -12,14 +12,17 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 群
+ * <p>
+ * 群消息
+ * </p>
+ *
  * @author blue
  * @since 2022-10-31
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@TableName("im_group")
-public class Group extends Model<Group> {
+@TableName("im_group_message")
+public class GroupMessage extends Model<GroupMessage> {
 
     private static final long serialVersionUID = 1L;
 
@@ -30,46 +33,40 @@ public class Group extends Model<Group> {
     private Long id;
 
     /**
-     * 群名字
+     * 群id
      */
-    @TableField("name")
-    private String name;
+    @TableField("group_id")
+    private Long groupId;
 
     /**
-     * 群主id
+     * 发送用户id
      */
-    @TableField("owner_id")
-    private Long ownerId;
+    @TableField("send_id")
+    private Long sendId;
 
     /**
-     * 头像
+     * 发送内容
      */
-    @TableField("head_image")
-    private String headImage;
+    @TableField("content")
+    private String content;
 
     /**
-     * 头像缩略图
+     * 消息类型 0:文字 1:图片 2:文件
      */
-    @TableField("head_image_thumb")
-    private String headImageThumb;
+    @TableField("type")
+    private Integer type;
 
     /**
-     * 群公告
+     * 状态
      */
-    @TableField("notice")
-    private String notice;
+    @TableField("status")
+    private Integer status;
 
     /**
-     * 是否已删除
+     * 发送时间
      */
-    @TableField("deleted")
-    private Boolean deleted;
-
-    /**
-     * 创建时间
-     */
-    @TableField("created_time")
-    private Date createdTime;
+    @TableField("send_time")
+    private Date sendTime;
 
 
     @Override

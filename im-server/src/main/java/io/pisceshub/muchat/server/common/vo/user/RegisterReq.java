@@ -1,4 +1,4 @@
-package io.pisceshub.muchat.server.dto;
+package io.pisceshub.muchat.server.common.vo.user;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -9,7 +9,7 @@ import javax.validation.constraints.NotEmpty;
 
 @Data
 @ApiModel("用户注册VO")
-public class RegisterDTO {
+public class RegisterReq {
 
     @Length(max = 64,message = "用户名不能大于64字符")
     @NotEmpty(message="用户名不可为空")

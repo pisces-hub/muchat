@@ -1,4 +1,4 @@
-package io.xiaochangbai.muchat.common.core.enums;
+package io.pisceshub.muchat.common.core.enums;
 
 import lombok.Getter;
 

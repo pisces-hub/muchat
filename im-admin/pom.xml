@@ -9,7 +9,7 @@
         <version>1.0</version>
     </parent>
 
-    <groupId>io.xiaochangbai.sensitive</groupId>
+    <groupId>io.pisceshub.muchat</groupId>
     <artifactId>im-admin</artifactId>
 
     <dependencies>

@@ -1,4 +1,4 @@
-package io.pisceshub.muchat.server.entity;
+package io.pisceshub.muchat.server.common.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;

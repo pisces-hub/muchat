@@ -1,4 +1,4 @@
-package io.pisceshub.muchat.server.entity;
+package io.pisceshub.muchat.server.common.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -13,18 +13,18 @@ import java.util.Date;
 
 /**
  * <p>
- * 群消息
+ * 
  * </p>
  *
  * @author blue
- * @since 2022-10-31
+ * @since 2022-10-01
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@TableName("im_group_message")
-public class GroupMessage extends Model<GroupMessage> {
+@TableName("im_private_message")
+public class PrivateMessage extends Model<PrivateMessage> {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID=1L;
 
     /**
      * id
@@ -33,16 +33,16 @@ public class GroupMessage extends Model<GroupMessage> {
     private Long id;
 
     /**
-     * 群id
-     */
-    @TableField("group_id")
-    private Long groupId;
-
-    /**
      * 发送用户id
      */
     @TableField("send_id")
     private Long sendId;
+
+    /**
+     * 接收用户id
+     */
+    @TableField("recv_id")
+    private Long recvId;
 
     /**
      * 发送内容
@@ -51,7 +51,7 @@ public class GroupMessage extends Model<GroupMessage> {
     private String content;
 
     /**
-     * 消息类型 0:文字 1:图片 2:文件
+     * 消息类型 0:文字 1:图片 2:文件 3:语音  10:撤回消息
      */
     @TableField("type")
     private Integer type;
@@ -61,6 +61,7 @@ public class GroupMessage extends Model<GroupMessage> {
      */
     @TableField("status")
     private Integer status;
+
 
     /**
      * 发送时间

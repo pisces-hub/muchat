@@ -1,4 +1,4 @@
-package io.pisceshub.muchat.server.vo;
+package io.pisceshub.muchat.server.common.vo.user;
 
 
 import io.swagger.annotations.ApiModel;
@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 @ApiModel("群成员信息VO")
-public class GroupMemberVO {
+public class GroupMemberResp {
 
     @ApiModelProperty("用户id")
     private Long userId;

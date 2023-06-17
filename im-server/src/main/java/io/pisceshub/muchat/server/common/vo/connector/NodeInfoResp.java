@@ -1,4 +1,4 @@
-package io.pisceshub.muchat.server.vo;
+package io.pisceshub.muchat.server.common.vo.connector;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -10,7 +10,7 @@ import lombok.Data;
  * @description Good Good Study,Day Day Up.
  */
 @Data
-public class NodeInfoVo {
+public class NodeInfoResp {
 
     @ApiModelProperty("协议,ws,wss,mqtt等等")
     private String protocol;

@@ -5,7 +5,7 @@ import io.pisceshub.muchat.common.core.algorithm.RouteHandle;
 import io.pisceshub.muchat.common.core.contant.AppConst;
 import io.pisceshub.muchat.common.core.enums.NetProtocolEnum;
 import io.pisceshub.muchat.server.service.ConnectionService;
-import io.pisceshub.muchat.server.vo.NodeInfoVo;
+import io.pisceshub.muchat.server.common.vo.connector.NodeInfoResp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,11 +26,11 @@ public class ConnectionServiceImpl implements ConnectionService {
     private RouteHandle routeHandle;
 
     @Override
-    public List<NodeInfoVo> nodeList() {
-        List<NodeInfoVo> l1 = AppConst.WS_NODES.stream().map(str -> {
+    public List<NodeInfoResp> nodeList() {
+        List<NodeInfoResp> l1 = AppConst.WS_NODES.stream().map(str -> {
             return assembleNode(str, NetProtocolEnum.WS);
         }).collect(Collectors.toList());
-        List<NodeInfoVo> l2 = AppConst.TCP_NODES.stream().map(str -> {
+        List<NodeInfoResp> l2 = AppConst.TCP_NODES.stream().map(str -> {
             return assembleNode(str, NetProtocolEnum.TCP);
         }).collect(Collectors.toList());
         l1.addAll(l2);
@@ -39,7 +39,7 @@ public class ConnectionServiceImpl implements ConnectionService {
     }
 
     @Override
-    public NodeInfoVo node(NetProtocolEnum netProtocolEnum,Long identify) {
+    public NodeInfoResp node(NetProtocolEnum netProtocolEnum, Long identify) {
         if(identify==null){
             throw new RuntimeException();
         }
@@ -58,9 +58,9 @@ public class ConnectionServiceImpl implements ConnectionService {
 
     }
 
-    private NodeInfoVo assembleNode(String server,NetProtocolEnum netProtocolEnum) {
+    private NodeInfoResp assembleNode(String server, NetProtocolEnum netProtocolEnum) {
         String[] split = server.split(":");
-        NodeInfoVo node = new NodeInfoVo();
+        NodeInfoResp node = new NodeInfoResp();
         node.setProtocol(netProtocolEnum.name());
         node.setIp(split[0]);
         node.setPort(split[1]);

@@ -1,17 +1,16 @@
-package io.xiaochangbai.muchat.server.controller;
+package io.pisceshub.muchat.server.controller;
 
+import io.pisceshub.muchat.server.common.vo.user.ChatSessionInfoResp;
 import io.swagger.annotations.Api;
-import io.xiaochangbai.muchat.common.core.utils.Result;
-import io.xiaochangbai.muchat.common.core.utils.ResultUtils;
-import io.xiaochangbai.muchat.server.service.IChatSessionService;
-import io.xiaochangbai.muchat.server.vo.ChatSessionAddVo;
+import io.pisceshub.muchat.common.core.utils.Result;
+import io.pisceshub.muchat.common.core.utils.ResultUtils;
+import io.pisceshub.muchat.server.service.IChatSessionService;
+import io.pisceshub.muchat.server.common.vo.user.ChatSessionAddReq;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Set;
 
 /**
  * @author xiaochangbai
@@ -26,10 +25,33 @@ public class ChatSessionController {
     @Autowired
     private IChatSessionService iChatSessionService;
 
-
+    /**
+     * 保存聊天会话
+     * @param vo
+     * @return
+     */
     @PostMapping("/save")
-    public Result<String> save(@RequestBody @Valid ChatSessionAddVo vo){
+    public Result<String> save(@RequestBody @Valid ChatSessionAddReq vo){
         return iChatSessionService.save(vo)? ResultUtils.success():ResultUtils.error();
     }
 
+    /**
+     * 查询聊天会话
+     * @return
+     */
+    @GetMapping("/list")
+    public Result<Set<ChatSessionInfoResp>> pages(){
+        return iChatSessionService.list();
+    }
+
+
+    /**
+     * 删除聊天会话
+     * @param vo
+     * @return
+     */
+    @DeleteMapping("/del")
+    public Result<String> del(@RequestBody @Valid ChatSessionAddReq vo){
+        return iChatSessionService.del(vo)? ResultUtils.success():ResultUtils.error();
+    }
 }

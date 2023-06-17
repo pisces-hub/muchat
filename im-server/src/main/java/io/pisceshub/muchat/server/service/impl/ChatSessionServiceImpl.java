@@ -1,10 +1,28 @@
-package io.xiaochangbai.muchat.server.service.impl;
+package io.pisceshub.muchat.server.service.impl;
 
-import io.xiaochangbai.muchat.server.service.IChatSessionService;
-import io.xiaochangbai.muchat.server.service.business.chatsession.ChatSessionSave;
-import io.xiaochangbai.muchat.server.vo.ChatSessionAddVo;
+import cn.hutool.core.collection.CollUtil;
+import io.pisceshub.muchat.common.core.enums.ChatType;
+import io.pisceshub.muchat.common.core.utils.Result;
+import io.pisceshub.muchat.common.core.utils.ResultUtils;
+import io.pisceshub.muchat.server.common.dto.ChatSessionInfoDto;
+import io.pisceshub.muchat.server.common.vo.common.PageReq;
+import io.pisceshub.muchat.server.common.vo.common.PageResp;
+import io.pisceshub.muchat.server.common.vo.user.ChatSessionInfoResp;
+import io.pisceshub.muchat.server.common.vo.user.GroupVO;
+import io.pisceshub.muchat.server.common.vo.user.UserVO;
+import io.pisceshub.muchat.server.exception.GlobalException;
+import io.pisceshub.muchat.server.exception.NotJoinGroupException;
+import io.pisceshub.muchat.server.service.IChatSessionService;
+import io.pisceshub.muchat.server.service.IGroupService;
+import io.pisceshub.muchat.server.service.IUserService;
+import io.pisceshub.muchat.server.service.business.chatsession.ChatSessionSave;
+import io.pisceshub.muchat.server.common.vo.user.ChatSessionAddReq;
+import io.pisceshub.muchat.server.util.BeanUtils;
+import io.pisceshub.muchat.server.util.SessionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.*;
 
 /**
  * @author xiaochangbai
@@ -16,11 +34,70 @@ public class ChatSessionServiceImpl implements IChatSessionService {
     @Autowired
     private ChatSessionSave chatSessionSave;
 
+    @Autowired
+    private IUserService iUserService;
+
+    @Autowired
+    private IGroupService iGroupService;
+
     @Override
-    public boolean save(ChatSessionAddVo vo) {
+    public boolean save(ChatSessionAddReq vo) {
 
         //todo 校验对于id和类型的合法性
-        return chatSessionSave.add(vo);
+        ChatSessionInfoDto dto = new ChatSessionInfoDto();
+        BeanUtils.copyProperties(vo,dto);
+        return chatSessionSave.add(dto);
+    }
+
+    @Override
+    public Result<Set<ChatSessionInfoResp>> list() {
+        Set<ChatSessionInfoDto> list = chatSessionSave.list();
+        if(CollUtil.isEmpty(list)){
+            return ResultUtils.success(Collections.emptySet());
+        }
+        Set<ChatSessionInfoResp> result = new HashSet<>(list.size());
+        Long userId = SessionContext.getUserId();
+        for(ChatSessionInfoDto dto:list){
+            ChatType chatType = dto.getChatType();
+            Long targetId = dto.getTargetId();
+            switch (chatType){
+                case GROUP:
+                    try {
+                        GroupVO groupVO = iGroupService.findById(targetId);
+                        if(groupVO==null){
+                            continue;
+                        }
+                        ChatSessionInfoResp chatSessionInfoResp = ChatSessionInfoResp.builder()
+                                .chatType(chatType)
+                                .targetId(targetId)
+                                .name(groupVO.getName())
+                                .headImage(groupVO.getHeadImage())
+                                .unReadCount(0L).build();
+                        result.add(chatSessionInfoResp);
+                    }catch (NotJoinGroupException e){
+                    }
+                    break;
+                case PRIVATE:
+                    UserVO userVO = iUserService.findByUserIdAndFriendId(targetId,userId);
+                    if (userVO==null){
+                        continue;
+                    }
+                    ChatSessionInfoResp chatSessionInfoResp = ChatSessionInfoResp.builder()
+                            .chatType(chatType)
+                            .targetId(targetId)
+                            .name(userVO.getNickName())
+                            .headImage(userVO.getHeadImage())
+                            .unReadCount(0L).build();
+                    result.add(chatSessionInfoResp);
+            }
+        }
+
+        return ResultUtils.success(result);
+    }
+
+    @Override
+    public boolean del(ChatSessionAddReq vo) {
+        return chatSessionSave.del(BeanUtils.copyProperties(vo,ChatSessionInfoDto.class));
     }
 
 }

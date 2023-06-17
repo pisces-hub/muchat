@@ -6,20 +6,20 @@ import io.pisceshub.muchat.sdk.IMClient;
 import io.pisceshub.muchat.common.core.contant.AppConst;
 import io.pisceshub.muchat.common.core.model.GroupMessageInfo;
 import io.pisceshub.muchat.server.contant.RedisKey;
-import io.pisceshub.muchat.server.entity.Group;
-import io.pisceshub.muchat.server.entity.GroupMember;
-import io.pisceshub.muchat.server.entity.GroupMessage;
+import io.pisceshub.muchat.server.common.entity.Group;
+import io.pisceshub.muchat.server.common.entity.GroupMember;
+import io.pisceshub.muchat.server.common.entity.GroupMessage;
 import io.pisceshub.muchat.server.exception.GlobalException;
 import io.pisceshub.muchat.server.mapper.GroupMessageMapper;
 import io.pisceshub.muchat.server.service.IGroupMemberService;
 import io.pisceshub.muchat.server.service.IGroupMessageService;
 import io.pisceshub.muchat.server.service.IGroupService;
-import io.pisceshub.muchat.server.session.SessionContext;
+import io.pisceshub.muchat.server.util.SessionContext;
 import io.pisceshub.muchat.server.util.BeanUtils;
 import io.pisceshub.muchat.common.core.enums.MessageStatus;
 import io.pisceshub.muchat.common.core.enums.MessageType;
 import io.pisceshub.muchat.common.core.enums.ResultCode;
-import io.pisceshub.muchat.server.vo.GroupMessageVO;
+import io.pisceshub.muchat.server.common.vo.message.GroupMessageSendReq;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -55,7 +55,7 @@ public class GroupMessageServiceImpl extends ServiceImpl<GroupMessageMapper, Gro
      * @return 群聊id
      */
     @Override
-    public Long sendMessage(GroupMessageVO vo) {
+    public Long sendMessage(GroupMessageSendReq vo) {
         Long userId = SessionContext.getSession().getId();
         Group group = groupService.getById(vo.getGroupId());
         if(group == null){

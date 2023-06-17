@@ -6,17 +6,17 @@ import io.pisceshub.muchat.sdk.IMClient;
 import io.pisceshub.muchat.common.core.contant.AppConst;
 import io.pisceshub.muchat.common.core.contant.RedisKey;
 import io.pisceshub.muchat.common.core.model.PrivateMessageInfo;
-import io.pisceshub.muchat.server.entity.PrivateMessage;
+import io.pisceshub.muchat.server.common.entity.PrivateMessage;
 import io.pisceshub.muchat.server.exception.GlobalException;
 import io.pisceshub.muchat.server.mapper.PrivateMessageMapper;
 import io.pisceshub.muchat.server.service.IFriendService;
 import io.pisceshub.muchat.server.service.IPrivateMessageService;
-import io.pisceshub.muchat.server.session.SessionContext;
+import io.pisceshub.muchat.server.util.SessionContext;
 import io.pisceshub.muchat.server.util.BeanUtils;
 import io.pisceshub.muchat.common.core.enums.MessageStatus;
 import io.pisceshub.muchat.common.core.enums.MessageType;
 import io.pisceshub.muchat.common.core.enums.ResultCode;
-import io.pisceshub.muchat.server.vo.PrivateMessageVO;
+import io.pisceshub.muchat.server.common.vo.message.PrivateMessageSendReq;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -43,7 +43,7 @@ public class PrivateMessageServiceImpl extends ServiceImpl<PrivateMessageMapper,
      * @return 消息id
      */
     @Override
-    public Long sendMessage(PrivateMessageVO vo) {
+    public Long sendMessage(PrivateMessageSendReq vo) {
         Long userId = SessionContext.getSession().getId();
         Boolean isFriends = friendService.isFriend(userId, vo.getRecvId());
         if (!isFriends) {

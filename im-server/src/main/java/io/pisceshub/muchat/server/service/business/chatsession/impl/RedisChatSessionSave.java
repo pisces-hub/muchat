@@ -1,13 +1,17 @@
-package io.xiaochangbai.muchat.server.service.business.chatsession.impl;
+package io.pisceshub.muchat.server.service.business.chatsession.impl;
 
-import io.xiaochangbai.muchat.server.service.business.chatsession.ChatSessionSave;
-import io.xiaochangbai.muchat.server.session.SessionContext;
-import io.xiaochangbai.muchat.server.vo.ChatSessionAddVo;
+import io.pisceshub.muchat.server.common.dto.ChatSessionInfoDto;
+import io.pisceshub.muchat.server.common.vo.user.ChatSessionInfoResp;
+import io.pisceshub.muchat.server.service.business.chatsession.ChatSessionSave;
+import io.pisceshub.muchat.server.util.BeanUtils;
+import io.pisceshub.muchat.server.util.SessionContext;
+import io.pisceshub.muchat.server.common.vo.user.ChatSessionAddReq;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author xiaochangbai
@@ -20,9 +24,19 @@ public class RedisChatSessionSave implements ChatSessionSave {
     private RedisTemplate redisTemplate;
 
     @Override
-    public boolean add(ChatSessionAddVo vo) {
+    public boolean add(ChatSessionInfoDto dto) {
+        redisTemplate.opsForSet().add(String.valueOf(SessionContext.getUserId()), dto);
+        return true;
+    }
 
-        Long aLong = redisTemplate.opsForSet().add(String.valueOf(SessionContext.getUserId()), vo);
-        return aLong>0;
+    @Override
+    public Set<ChatSessionInfoDto> list() {
+        return redisTemplate.opsForSet().members(String.valueOf(SessionContext.getUserId()));
+    }
+
+    @Override
+    public boolean del(ChatSessionInfoDto dto) {
+        redisTemplate.opsForSet().remove(String.valueOf(SessionContext.getUserId()),dto);
+        return true;
     }
 }

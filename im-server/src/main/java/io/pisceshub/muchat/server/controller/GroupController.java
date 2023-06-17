@@ -4,9 +4,9 @@ package io.pisceshub.muchat.server.controller;
 import io.pisceshub.muchat.common.core.utils.Result;
 import io.pisceshub.muchat.common.core.utils.ResultUtils;
 import io.pisceshub.muchat.server.service.IGroupService;
-import io.pisceshub.muchat.server.vo.GroupInviteVO;
-import io.pisceshub.muchat.server.vo.GroupMemberVO;
-import io.pisceshub.muchat.server.vo.GroupVO;
+import io.pisceshub.muchat.server.common.vo.user.GroupInviteReq;
+import io.pisceshub.muchat.server.common.vo.user.GroupMemberResp;
+import io.pisceshub.muchat.server.common.vo.user.GroupVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,14 +59,14 @@ public class GroupController {
 
     @ApiOperation(value = "邀请进群",notes="邀请好友进群")
     @PostMapping("/invite")
-    public Result invite(@Valid  @RequestBody GroupInviteVO vo){
+    public Result invite(@Valid  @RequestBody GroupInviteReq vo){
         groupService.invite(vo);
         return ResultUtils.success();
     }
 
     @ApiOperation(value = "查询群聊成员",notes="查询群聊成员")
     @GetMapping("/members/{groupId}")
-    public Result<List<GroupMemberVO>> findGroupMembers(@NotNull(message = "群聊id不能为空") @PathVariable Long groupId){
+    public Result<List<GroupMemberResp>> findGroupMembers(@NotNull(message = "群聊id不能为空") @PathVariable Long groupId){
         return ResultUtils.success(groupService.findGroupMembers(groupId));
     }
 

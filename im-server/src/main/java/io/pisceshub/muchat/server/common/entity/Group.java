@@ -1,4 +1,4 @@
-package io.pisceshub.muchat.server.entity;
+package io.pisceshub.muchat.server.common.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -12,17 +12,14 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * <p>
- * 群成员
- * </p>
- *
+ * 群
  * @author blue
  * @since 2022-10-31
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@TableName("im_group_member")
-public class GroupMember extends Model<GroupMember> {
+@TableName("im_group")
+public class Group extends Model<Group> {
 
     private static final long serialVersionUID = 1L;
 
@@ -33,43 +30,40 @@ public class GroupMember extends Model<GroupMember> {
     private Long id;
 
     /**
-     * 群id
+     * 群名字
      */
-    @TableField("group_id")
-    private Long groupId;
+    @TableField("name")
+    private String name;
 
     /**
-     * 用户id
+     * 群主id
      */
-    @TableField("user_id")
-    private Long userId;
+    @TableField("owner_id")
+    private Long ownerId;
 
     /**
-     *  群内显示名称
-     */
-    @TableField("alias_name")
-    private String aliasName;
-
-    /**
-     *  头像
+     * 头像
      */
     @TableField("head_image")
     private String headImage;
 
-
+    /**
+     * 头像缩略图
+     */
+    @TableField("head_image_thumb")
+    private String headImageThumb;
 
     /**
-     * 备注
+     * 群公告
      */
-    @TableField("remark")
-    private String remark;
+    @TableField("notice")
+    private String notice;
 
     /**
-     * 是否已离开群聊
+     * 是否已删除
      */
-    @TableField("quit")
-    private Boolean quit;
-
+    @TableField("deleted")
+    private Boolean deleted;
 
     /**
      * 创建时间

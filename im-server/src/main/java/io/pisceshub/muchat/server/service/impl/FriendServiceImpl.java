@@ -3,16 +3,15 @@ package io.pisceshub.muchat.server.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.pisceshub.muchat.server.contant.RedisKey;
-import io.pisceshub.muchat.server.entity.Friend;
-import io.pisceshub.muchat.server.entity.User;
+import io.pisceshub.muchat.server.common.entity.Friend;
+import io.pisceshub.muchat.server.common.entity.User;
 import io.pisceshub.muchat.server.exception.GlobalException;
 import io.pisceshub.muchat.server.mapper.FriendMapper;
 import io.pisceshub.muchat.server.service.IFriendService;
 import io.pisceshub.muchat.server.service.IUserService;
-import io.pisceshub.muchat.server.session.SessionContext;
-import io.pisceshub.muchat.server.session.UserSession;
+import io.pisceshub.muchat.server.util.SessionContext;
 import io.pisceshub.muchat.common.core.enums.ResultCode;
-import io.pisceshub.muchat.server.vo.FriendVO;
+import io.pisceshub.muchat.server.common.vo.user.FriendVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -185,7 +184,7 @@ public class FriendServiceImpl extends ServiceImpl<FriendMapper, Friend> impleme
      */
     @Override
     public FriendVO findFriend(Long friendId) {
-        UserSession session = SessionContext.getSession();
+        SessionContext.UserSessionInfo session = SessionContext.getSession();
         QueryWrapper<Friend> wrapper = new QueryWrapper<>();
         wrapper.lambda()
                 .eq(Friend::getUserId,session.getId())

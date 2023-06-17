@@ -1,4 +1,4 @@
-package io.pisceshub.muchat.server.vo;
+package io.pisceshub.muchat.server.common.vo.user;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @ApiModel("用户登录VO")
-public class LoginVO {
+public class LoginResp {
 
     @ApiModelProperty(value = "每次请求都必须在header中携带accessToken")
     private String accessToken;
