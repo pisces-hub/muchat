@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class PullSendResultGroupMessageTask extends  AbstractPullMessageTask{
 
-    @Qualifier("IMRedisTemplate")
+//    @Qualifier("IMRedisTemplate")
     @Autowired
     private RedisTemplate<String,Object> redisTemplate;
 

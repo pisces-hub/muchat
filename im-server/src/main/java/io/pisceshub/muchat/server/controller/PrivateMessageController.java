@@ -5,7 +5,7 @@ import io.pisceshub.muchat.common.core.model.PrivateMessageInfo;
 import io.pisceshub.muchat.common.core.utils.Result;
 import io.pisceshub.muchat.common.core.utils.ResultUtils;
 import io.pisceshub.muchat.server.service.IPrivateMessageService;
-import io.pisceshub.muchat.server.vo.PrivateMessageVO;
+import io.pisceshub.muchat.server.common.vo.message.PrivateMessageSendReq;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ public class PrivateMessageController {
 
     @PostMapping("/send")
     @ApiOperation(value = "发送消息",notes="发送私聊消息")
-    public Result<Long> sendMessage(@Valid @RequestBody PrivateMessageVO vo){
+    public Result<Long> sendMessage(@Valid @RequestBody PrivateMessageSendReq vo){
         return ResultUtils.success(privateMessageService.sendMessage(vo));
     }
 

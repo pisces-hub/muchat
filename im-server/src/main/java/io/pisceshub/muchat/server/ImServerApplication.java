@@ -15,6 +15,9 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 public class ImServerApplication {
 
     public static void main(String[] args) {
+        System.setProperty("spring.devtools.restart.enabled", "false");
+        System.setProperty("spring.devtools.livereload.enabled", "false");
         SpringApplication.run(ImServerApplication.class,args);
+
     }
 }

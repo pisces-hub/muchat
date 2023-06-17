@@ -33,7 +33,11 @@ public class GlobalExceptionHandler {
             log.error("全局异常捕获:msg:{},log:{},{}" , ex.getMessage(), e);
             return ResultUtils.error(ex.getCode(), ex.getMessage());
         }
-        else if(e instanceof UndeclaredThrowableException) {
+        else if(e instanceof BusinessException) {
+            BusinessException ex = (BusinessException) e.getCause();
+            log.error("全局异常捕获:msg:{},log:{},{}" , ex.getMessage(), e);
+            return ResultUtils.error(ex.getCode(), ex.getMessage());
+        }else if(e instanceof UndeclaredThrowableException) {
             GlobalException ex = (GlobalException) e.getCause();
             log.error("全局异常捕获:msg:{},log:{},{}" , ex.getMessage(), e);
             return ResultUtils.error(ex.getCode(), ex.getMessage());

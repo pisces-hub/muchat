@@ -1,14 +1,14 @@
 package io.pisceshub.muchat.server.service.thirdparty;
 
 import io.pisceshub.muchat.server.contant.Constant;
-import io.pisceshub.muchat.server.session.SessionContext;
+import io.pisceshub.muchat.server.util.SessionContext;
 import io.pisceshub.muchat.server.util.FileUtil;
 import io.pisceshub.muchat.server.util.ImageUtil;
 import io.pisceshub.muchat.common.core.enums.FileType;
 import io.pisceshub.muchat.common.core.enums.ResultCode;
 import io.pisceshub.muchat.server.exception.GlobalException;
 import io.pisceshub.muchat.server.util.MinioUtil;
-import io.pisceshub.muchat.server.vo.UploadImageVO;
+import io.pisceshub.muchat.server.common.vo.common.UploadImageResp;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,7 +69,7 @@ public class FileService {
         return url;
     }
 
-    public UploadImageVO uploadImage(MultipartFile file){
+    public UploadImageResp uploadImage(MultipartFile file){
         try {
             Long userId = SessionContext.getSession().getId();
             // 大小校验
@@ -81,7 +81,7 @@ public class FileService {
                 throw new GlobalException(ResultCode.PROGRAM_ERROR,"图片格式不合法");
             }
             // 上传原图
-            UploadImageVO vo = new UploadImageVO();
+            UploadImageResp vo = new UploadImageResp();
             String fileName = minioUtil.upload(bucketName,imagePath,file);
             if(StringUtils.isEmpty(fileName)){
                 throw new GlobalException(ResultCode.PROGRAM_ERROR,"图片上传失败");

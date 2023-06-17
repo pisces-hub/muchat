@@ -42,6 +42,9 @@ public class ResultUtils {
         return result;
     }
 
+    public static final <T> Result<T> error(){
+        return error(ResultCode.COMMON_ERROR);
+    }
 
     public static final <T> Result<T> error(ResultCode resultCode, String messsage){
         Result result=new Result();

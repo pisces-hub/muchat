@@ -1,7 +1,7 @@
 package io.pisceshub.muchat.server.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import io.pisceshub.muchat.server.entity.GroupMember;
+import io.pisceshub.muchat.server.common.entity.GroupMember;
 
 import java.util.List;
 

@@ -2,15 +2,15 @@ package io.pisceshub.muchat.server.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import io.pisceshub.muchat.common.core.model.PrivateMessageInfo;
-import io.pisceshub.muchat.server.entity.PrivateMessage;
-import io.pisceshub.muchat.server.vo.PrivateMessageVO;
+import io.pisceshub.muchat.server.common.entity.PrivateMessage;
+import io.pisceshub.muchat.server.common.vo.message.PrivateMessageSendReq;
 
 import java.util.List;
 
 
 public interface IPrivateMessageService extends IService<PrivateMessage> {
 
-    Long sendMessage(PrivateMessageVO vo);
+    Long sendMessage(PrivateMessageSendReq vo);
 
     void recallMessage(Long id);
 

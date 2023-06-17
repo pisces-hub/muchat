@@ -6,23 +6,22 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.pisceshub.muchat.common.core.contant.RedisKey;
 import io.pisceshub.muchat.server.contant.Constant;
-import io.pisceshub.muchat.server.entity.Friend;
-import io.pisceshub.muchat.server.entity.GroupMember;
-import io.pisceshub.muchat.server.entity.User;
+import io.pisceshub.muchat.server.common.entity.Friend;
+import io.pisceshub.muchat.server.common.entity.GroupMember;
+import io.pisceshub.muchat.server.common.entity.User;
 import io.pisceshub.muchat.server.exception.GlobalException;
 import io.pisceshub.muchat.server.mapper.UserMapper;
 import io.pisceshub.muchat.server.service.IFriendService;
 import io.pisceshub.muchat.server.service.IGroupMemberService;
 import io.pisceshub.muchat.server.service.IUserService;
-import io.pisceshub.muchat.server.session.SessionContext;
-import io.pisceshub.muchat.server.session.UserSession;
+import io.pisceshub.muchat.server.util.SessionContext;
 import io.pisceshub.muchat.server.util.BeanUtils;
 import io.pisceshub.muchat.server.util.JwtUtil;
 import io.pisceshub.muchat.common.core.enums.ResultCode;
-import io.pisceshub.muchat.server.dto.LoginDTO;
-import io.pisceshub.muchat.server.dto.RegisterDTO;
-import io.pisceshub.muchat.server.vo.LoginVO;
-import io.pisceshub.muchat.server.vo.UserVO;
+import io.pisceshub.muchat.server.common.vo.user.LoginReq;
+import io.pisceshub.muchat.server.common.vo.user.RegisterReq;
+import io.pisceshub.muchat.server.common.vo.user.LoginResp;
+import io.pisceshub.muchat.server.common.vo.user.UserVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -59,7 +58,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
      */
 
     @Override
-    public LoginVO login(LoginDTO dto) {
+    public LoginResp login(LoginReq dto) {
         User user = findUserByName(dto.getUserName());
         if(null == user){
             throw  new GlobalException(ResultCode.PROGRAM_ERROR,"用户不存在");
@@ -68,11 +67,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             throw  new GlobalException(ResultCode.PASSWOR_ERROR);
         }
         // 生成token
-        UserSession session = BeanUtils.copyProperties(user,UserSession.class);
+        SessionContext.UserSessionInfo session = BeanUtils.copyProperties(user, SessionContext.UserSessionInfo.class);
         String strJson = JSON.toJSONString(session);
         String accessToken = JwtUtil.sign(user.getId(),strJson, Constant.ACCESS_TOKEN_EXPIRE,Constant.ACCESS_TOKEN_SECRET);
         String refreshToken = JwtUtil.sign(user.getId(),strJson, Constant.REFRESH_TOKEN_EXPIRE, Constant.REFRESH_TOKEN_SECRET);
-        LoginVO vo = new LoginVO();
+        LoginResp vo = new LoginResp();
         vo.setAccessToken(accessToken);
         vo.setAccessTokenExpiresIn(Constant.ACCESS_TOKEN_EXPIRE);
         vo.setRefreshToken(refreshToken);
@@ -87,7 +86,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
      * @return
      */
     @Override
-    public LoginVO refreshToken(String refreshToken) {
+    public LoginResp refreshToken(String refreshToken) {
         try{
             //验证 token
             JwtUtil.checkSign(refreshToken, Constant.REFRESH_TOKEN_SECRET);
@@ -95,7 +94,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             Long userId = JwtUtil.getUserId(refreshToken);
             String accessToken = JwtUtil.sign(userId,strJson, Constant.ACCESS_TOKEN_EXPIRE,Constant.ACCESS_TOKEN_SECRET);
             String newRefreshToken = JwtUtil.sign(userId,strJson, Constant.REFRESH_TOKEN_EXPIRE, Constant.REFRESH_TOKEN_SECRET);
-            LoginVO vo =new LoginVO();
+            LoginResp vo =new LoginResp();
             vo.setAccessToken(accessToken);
             vo.setAccessTokenExpiresIn(Constant.ACCESS_TOKEN_EXPIRE);
             vo.setRefreshToken(newRefreshToken);
@@ -113,7 +112,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
      * @return
      */
     @Override
-    public void register(RegisterDTO dto) {
+    public void register(RegisterReq dto) {
         User user = findUserByName(dto.getUserName());
         if(null != user){
             throw  new GlobalException(ResultCode.USERNAME_ALREADY_REGISTER);
@@ -147,7 +146,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Transactional
     @Override
     public void update(UserVO vo) {
-        UserSession session = SessionContext.getSession();
+        SessionContext.UserSessionInfo session = SessionContext.getSession();
         if(!session.getId().equals(vo.getId()) ){
             throw  new GlobalException(ResultCode.PROGRAM_ERROR,"不允许修改其他用户的信息!");
         }
@@ -223,6 +222,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             }
         }
         return onlineIds;
+    }
+
+    @Override
+    public UserVO findByUserIdAndFriendId(Long userId, Long friendId) {
+        if(!friendService.isFriend(userId,friendId)){
+            return null;
+        }
+        User user = getById(userId);
+        if(user==null){
+            return null;
+        }
+        return BeanUtils.copyProperties(user,UserVO.class);
     }
 
 

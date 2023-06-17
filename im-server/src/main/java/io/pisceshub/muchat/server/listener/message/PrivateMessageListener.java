@@ -8,7 +8,7 @@ import io.pisceshub.muchat.common.core.enums.IMListenerType;
 import io.pisceshub.muchat.common.core.enums.IMSendCode;
 import io.pisceshub.muchat.common.core.model.PrivateMessageInfo;
 import io.pisceshub.muchat.common.core.model.SendResult;
-import io.pisceshub.muchat.server.entity.PrivateMessage;
+import io.pisceshub.muchat.server.common.entity.PrivateMessage;
 import io.pisceshub.muchat.common.core.enums.MessageStatus;
 import io.pisceshub.muchat.common.core.enums.MessageType;
 import io.pisceshub.muchat.server.service.IPrivateMessageService;

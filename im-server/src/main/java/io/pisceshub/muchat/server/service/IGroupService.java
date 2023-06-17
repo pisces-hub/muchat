@@ -1,10 +1,10 @@
 package io.pisceshub.muchat.server.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import io.pisceshub.muchat.server.entity.Group;
-import io.pisceshub.muchat.server.vo.GroupInviteVO;
-import io.pisceshub.muchat.server.vo.GroupMemberVO;
-import io.pisceshub.muchat.server.vo.GroupVO;
+import io.pisceshub.muchat.server.common.entity.Group;
+import io.pisceshub.muchat.server.common.vo.user.GroupInviteReq;
+import io.pisceshub.muchat.server.common.vo.user.GroupMemberResp;
+import io.pisceshub.muchat.server.common.vo.user.GroupVO;
 
 import java.util.List;
 
@@ -24,11 +24,11 @@ public interface IGroupService extends IService<Group> {
 
     List<GroupVO>  findGroups();
 
-    void invite(GroupInviteVO vo);
+    void invite(GroupInviteReq vo);
 
     Group GetById(Long groupId);
 
     GroupVO findById(Long groupId);
 
-    List<GroupMemberVO> findGroupMembers(Long groupId);
+    List<GroupMemberResp> findGroupMembers(Long groupId);
 }

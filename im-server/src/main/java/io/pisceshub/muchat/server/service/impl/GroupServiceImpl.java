@@ -4,23 +4,23 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.pisceshub.muchat.server.contant.Constant;
 import io.pisceshub.muchat.server.contant.RedisKey;
-import io.pisceshub.muchat.server.entity.Friend;
-import io.pisceshub.muchat.server.entity.Group;
-import io.pisceshub.muchat.server.entity.GroupMember;
-import io.pisceshub.muchat.server.entity.User;
+import io.pisceshub.muchat.server.common.entity.Friend;
+import io.pisceshub.muchat.server.common.entity.Group;
+import io.pisceshub.muchat.server.common.entity.GroupMember;
+import io.pisceshub.muchat.server.common.entity.User;
 import io.pisceshub.muchat.server.exception.GlobalException;
+import io.pisceshub.muchat.server.exception.NotJoinGroupException;
 import io.pisceshub.muchat.server.mapper.GroupMapper;
 import io.pisceshub.muchat.server.service.IGroupMemberService;
 import io.pisceshub.muchat.server.service.IGroupService;
 import io.pisceshub.muchat.server.service.IUserService;
-import io.pisceshub.muchat.server.session.SessionContext;
-import io.pisceshub.muchat.server.session.UserSession;
+import io.pisceshub.muchat.server.util.SessionContext;
 import io.pisceshub.muchat.server.util.BeanUtils;
 import io.pisceshub.muchat.common.core.enums.ResultCode;
 import io.pisceshub.muchat.server.service.IFriendService;
-import io.pisceshub.muchat.server.vo.GroupInviteVO;
-import io.pisceshub.muchat.server.vo.GroupMemberVO;
-import io.pisceshub.muchat.server.vo.GroupVO;
+import io.pisceshub.muchat.server.common.vo.user.GroupInviteReq;
+import io.pisceshub.muchat.server.common.vo.user.GroupMemberResp;
+import io.pisceshub.muchat.server.common.vo.user.GroupVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +61,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
     @Transactional
     @Override
     public GroupVO createGroup(String groupName) {
-        UserSession session = SessionContext.getSession();
+        SessionContext.UserSessionInfo session = SessionContext.getSession();
         User user = userService.getById(session.getId());
         // 保存群组数据
         Group group = new Group();
@@ -96,7 +96,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
     @Transactional
     @Override
     public GroupVO modifyGroup(GroupVO vo) {
-        UserSession session = SessionContext.getSession();
+        SessionContext.UserSessionInfo session = SessionContext.getSession();
         // 校验是不是群主，只有群主能改信息
         Group group = this.getById(vo.getId());
         // 群主有权修改群基本信息
@@ -127,7 +127,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
     @CacheEvict(value = "#groupId")
     @Override
     public void deleteGroup(Long groupId) {
-        UserSession session = SessionContext.getSession();
+        SessionContext.UserSessionInfo session = SessionContext.getSession();
         Group group = this.getById(groupId);
         if(group.getOwnerId() != session.getId()){
             throw  new GlobalException(ResultCode.PROGRAM_ERROR,"只有群主才有权限解除群聊");
@@ -169,7 +169,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
      */
     @Override
     public void kickGroup(Long groupId, Long userId) {
-        UserSession session = SessionContext.getSession();
+        SessionContext.UserSessionInfo session = SessionContext.getSession();
         Group group = this.getById(groupId);
         if(group.getOwnerId() != session.getId()){
             throw  new GlobalException(ResultCode.PROGRAM_ERROR,"您不是群主，没有权限踢人");
@@ -184,11 +184,11 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
 
     @Override
     public GroupVO findById(Long groupId) {
-        UserSession session = SessionContext.getSession();
+        SessionContext.UserSessionInfo session = SessionContext.getSession();
         Group group = this.getById(groupId);
         GroupMember member = groupMemberService.findByGroupAndUserId(groupId,session.getId());
         if(member == null){
-            throw  new GlobalException(ResultCode.PROGRAM_ERROR,"您未加入群聊");
+            throw new NotJoinGroupException(ResultCode.PROGRAM_ERROR,"您未加入群聊");
         }
         GroupVO vo = BeanUtils.copyProperties(group,GroupVO.class);
         vo.setAliasName(member.getAliasName());
@@ -224,7 +224,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
      **/
     @Override
     public List<GroupVO> findGroups() {
-        UserSession session = SessionContext.getSession();
+        SessionContext.UserSessionInfo session = SessionContext.getSession();
         // 查询当前用户的群id列表
         List<GroupMember> groupMembers = groupMemberService.findByUserId(session.getId());
         if(groupMembers.isEmpty()){
@@ -253,8 +253,8 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
      * @return
      **/
     @Override
-    public void invite(GroupInviteVO vo) {
-        UserSession session = SessionContext.getSession();
+    public void invite(GroupInviteReq vo) {
+        SessionContext.UserSessionInfo session = SessionContext.getSession();
         Group group = this.getById(vo.getGroupId());
         if(group == null){
             throw new GlobalException(ResultCode.PROGRAM_ERROR, "群聊不存在");
@@ -300,10 +300,10 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
      * @return List<GroupMemberVO>
      **/
     @Override
-    public List<GroupMemberVO> findGroupMembers(Long groupId) {
+    public List<GroupMemberResp> findGroupMembers(Long groupId) {
         List<GroupMember> members = groupMemberService.findByGroupId(groupId);
-        List<GroupMemberVO> vos = members.stream().map(m->{
-            GroupMemberVO vo = BeanUtils.copyProperties(m,GroupMemberVO.class);
+        List<GroupMemberResp> vos = members.stream().map(m->{
+            GroupMemberResp vo = BeanUtils.copyProperties(m, GroupMemberResp.class);
             return  vo;
         }).collect(Collectors.toList());
         return vos;
