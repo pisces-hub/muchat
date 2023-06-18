@@ -48,8 +48,18 @@ webrtc:
 
 app:
   zk:
-    addreess: localhost:2181
+    address: localhost:2181
     path: /muchat/node
+  auth2:
+    loginRedirectUri: http://127.0.0.1:8080/#/oAuthLoginResult
+    gitee:
+      clientId: 1
+      clientSecret: 1
+      redirectUri: http://localhost:8888/connect/callback/GITEE
+    github:
+      clientId: 1
+      clientSecret: 1
+      redirectUri: http://localhost:8888/connect/callback/GITHUB
 
 swagger:
   enable: true

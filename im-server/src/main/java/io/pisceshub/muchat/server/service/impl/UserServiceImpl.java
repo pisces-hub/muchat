@@ -1,19 +1,24 @@
 package io.pisceshub.muchat.server.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.pisceshub.muchat.common.core.contant.RedisKey;
+import io.pisceshub.muchat.server.common.enums.RegisterRromEnum;
 import io.pisceshub.muchat.server.contant.Constant;
 import io.pisceshub.muchat.server.common.entity.Friend;
 import io.pisceshub.muchat.server.common.entity.GroupMember;
 import io.pisceshub.muchat.server.common.entity.User;
+import io.pisceshub.muchat.server.exception.BusinessException;
 import io.pisceshub.muchat.server.exception.GlobalException;
 import io.pisceshub.muchat.server.mapper.UserMapper;
 import io.pisceshub.muchat.server.service.IFriendService;
 import io.pisceshub.muchat.server.service.IGroupMemberService;
 import io.pisceshub.muchat.server.service.IUserService;
+import io.pisceshub.muchat.server.util.OauthLoginUtils;
 import io.pisceshub.muchat.server.util.SessionContext;
 import io.pisceshub.muchat.server.util.BeanUtils;
 import io.pisceshub.muchat.server.util.JwtUtil;
@@ -23,12 +28,14 @@ import io.pisceshub.muchat.server.common.vo.user.RegisterReq;
 import io.pisceshub.muchat.server.common.vo.user.LoginResp;
 import io.pisceshub.muchat.server.common.vo.user.UserVO;
 import lombok.extern.slf4j.Slf4j;
+import me.zhyd.oauth.model.AuthUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -67,6 +74,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             throw  new GlobalException(ResultCode.PASSWOR_ERROR);
         }
         // 生成token
+        return buildLoginResp(user);
+    }
+
+    public LoginResp buildLoginResp(User user){
         SessionContext.UserSessionInfo session = BeanUtils.copyProperties(user, SessionContext.UserSessionInfo.class);
         String strJson = JSON.toJSONString(session);
         String accessToken = JwtUtil.sign(user.getId(),strJson, Constant.ACCESS_TOKEN_EXPIRE,Constant.ACCESS_TOKEN_SECRET);
@@ -113,7 +124,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
      */
     @Override
     public void register(RegisterReq dto) {
-        User user = findUserByName(dto.getUserName());
+        String userName = dto.getUserName();
+        validUserName(userName);
+        User user = findUserByName(userName);
         if(null != user){
             throw  new GlobalException(ResultCode.USERNAME_ALREADY_REGISTER);
         }
@@ -122,6 +135,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         user.setSignature("我就是我，不一样的烟火");
         this.save(user);
         log.info("注册用户，用户id:{},用户名:{},昵称:{}",user.getId(),dto.getUserName(),dto.getNickName());
+    }
+
+    private void validUserName(String userName){
+        if(StrUtil.isBlank(userName)){
+            throw new BusinessException("用户名不能为空");
+        }
+        userName = userName.trim();
+        for(RegisterRromEnum e:RegisterRromEnum.values()){
+            if(userName.indexOf(e.getMsg())==0){
+                throw new BusinessException("用户名不可用");
+            }
+        }
     }
 
     /**
@@ -234,6 +259,32 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             return null;
         }
         return BeanUtils.copyProperties(user,UserVO.class);
+    }
+
+    @Override
+    public LoginResp oauthLogin(String type, AuthUser authUser) {
+        RegisterRromEnum registerRromEnum = RegisterRromEnum.findByMsg(type);
+        String userName = type+"@"+authUser.getUsername();
+        User user = findUserByName(userName);
+        Date date = new Date();
+        if(null == user){
+            user = new User();
+            user.setUserName(userName);
+            user.setRegisterFrom(registerRromEnum.getCode());
+            user.setCreatedTime(date);
+            user.setPassword(passwordEncoder.encode(userName));
+        }
+        user.setLastLoginTime(date);
+        user.setHeadImage(authUser.getAvatar());
+        user.setHeadImageThumb(authUser.getAvatar());
+        user.setNickName(authUser.getNickname());
+        user.setOauthSrc(JSONObject.toJSONString(authUser));
+        user.setSignature(OauthLoginUtils.parseBio(authUser.getRawUserInfo()));
+        this.saveOrUpdate(user);
+
+        //生成登录信息
+        log.info("oauthLogin，用户:{}",user);
+        return buildLoginResp(user);
     }
 
 

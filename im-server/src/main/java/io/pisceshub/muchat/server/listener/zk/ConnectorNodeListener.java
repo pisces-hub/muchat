@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import io.pisceshub.muchat.common.core.contant.AppConst;
 import io.pisceshub.muchat.common.core.enums.NetProtocolEnum;
+import io.pisceshub.muchat.server.config.properties.AppConfigInfo;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.framework.CuratorFramework;
@@ -13,6 +14,7 @@ import org.apache.curator.framework.recipes.cache.PathChildrenCache;
 import org.apache.curator.framework.recipes.cache.PathChildrenCacheEvent;
 import org.apache.curator.framework.recipes.cache.PathChildrenCacheListener;
 import org.apache.curator.retry.RetryNTimes;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.ApplicationListener;
@@ -31,18 +33,15 @@ import java.util.List;
 public class ConnectorNodeListener implements ApplicationListener<ApplicationStartedEvent> {
 
 
-    @Value("${app.zk.addreess}")
-    private String zk_address;
-
-    @Value("${app.zk.path}")
-    private String path;
+    @Autowired
+    private AppConfigInfo appConfigInfo;
 
     private CuratorFramework client;
 
     @SneakyThrows
     @Override
     public void onApplicationEvent(ApplicationStartedEvent applicationStartedEvent) {
-        client = CuratorFrameworkFactory.newClient(zk_address,
+        client = CuratorFrameworkFactory.newClient(appConfigInfo.getZk().getAddress(),
                 new RetryNTimes(10, 5000));
         client.start();
 
@@ -54,7 +53,7 @@ public class ConnectorNodeListener implements ApplicationListener<ApplicationSta
     }
 
     private String buildZkPath(NetProtocolEnum netProtocolEnum) throws Exception {
-        String zkPath = path+"/"+netProtocolEnum;
+        String zkPath = appConfigInfo.getZk().getPath()+"/"+netProtocolEnum;
         String path = "";
         for(String p:zkPath.split("/")){
             if(StrUtil.isBlank(p)){
