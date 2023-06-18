@@ -72,3 +72,8 @@ create table `im_group_message`(
     `send_time` datetime DEFAULT CURRENT_TIMESTAMP comment '发送时间',
     key `idx_group_id` (group_id)
 )ENGINE=InnoDB CHARSET=utf8mb3 comment '群消息';
+
+
+ALTER TABLE `im_user`
+ADD COLUMN `register_from` int NULL DEFAULT 0 COMMENT '注册来源：0本系统，1gitee,2github' AFTER `created_time`,
+ADD COLUMN `oauth_src` text NULL COMMENT 'oauth认证结果' AFTER `register_from`;

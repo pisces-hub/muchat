@@ -86,6 +86,17 @@ public class User extends Model<User> {
     @TableField("created_time")
     private Date createdTime;
 
+    /**
+     * 注册来源：0本系统，1gitee,2github
+     */
+    @TableField("register_from")
+    private Integer registerFrom;
+
+    /**
+     * oauth认证结果
+     */
+    @TableField("oauth_src")
+    private String oauthSrc;
 
     @Override
     protected Serializable pkVal() {

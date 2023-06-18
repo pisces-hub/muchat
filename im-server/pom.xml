@@ -136,6 +136,12 @@
             <artifactId>knife4j-openapi2-spring-boot-starter</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>me.zhyd.oauth</groupId>
+            <artifactId>JustAuth</artifactId>
+            <version>1.16.5</version>
+        </dependency>
+
     </dependencies>
 
     <build>

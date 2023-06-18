@@ -28,7 +28,7 @@ public class ResultUtils {
         return result;
     }
 
-    public static final <T> Result<T> success(String messsage){
+    public static final <T> Result<T> successMessage(String messsage){
         Result result=new Result();
         result.setCode(ResultCode.SUCCESS.getCode());
         result.setMessage(messsage);
