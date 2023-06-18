@@ -1,6 +1,6 @@
 package io.pisceshub.muchat.server.service.thirdparty;
 
-import io.pisceshub.muchat.server.contant.Constant;
+import io.pisceshub.muchat.server.common.contant.Constant;
 import io.pisceshub.muchat.server.util.SessionContext;
 import io.pisceshub.muchat.server.util.FileUtil;
 import io.pisceshub.muchat.server.util.ImageUtil;

@@ -1,5 +1,6 @@
 package io.pisceshub.muchat.server.service.impl;
 
+import cn.hutool.core.lang.Snowflake;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -7,26 +8,20 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.pisceshub.muchat.common.core.contant.RedisKey;
-import io.pisceshub.muchat.server.common.enums.RegisterRromEnum;
-import io.pisceshub.muchat.server.contant.Constant;
+import io.pisceshub.muchat.server.common.contant.Constant;
 import io.pisceshub.muchat.server.common.entity.Friend;
 import io.pisceshub.muchat.server.common.entity.GroupMember;
 import io.pisceshub.muchat.server.common.entity.User;
+import io.pisceshub.muchat.server.common.enums.UserEnum;
+import io.pisceshub.muchat.server.common.vo.user.*;
 import io.pisceshub.muchat.server.exception.BusinessException;
 import io.pisceshub.muchat.server.exception.GlobalException;
 import io.pisceshub.muchat.server.mapper.UserMapper;
 import io.pisceshub.muchat.server.service.IFriendService;
 import io.pisceshub.muchat.server.service.IGroupMemberService;
 import io.pisceshub.muchat.server.service.IUserService;
-import io.pisceshub.muchat.server.util.OauthLoginUtils;
-import io.pisceshub.muchat.server.util.SessionContext;
-import io.pisceshub.muchat.server.util.BeanUtils;
-import io.pisceshub.muchat.server.util.JwtUtil;
+import io.pisceshub.muchat.server.util.*;
 import io.pisceshub.muchat.common.core.enums.ResultCode;
-import io.pisceshub.muchat.server.common.vo.user.LoginReq;
-import io.pisceshub.muchat.server.common.vo.user.RegisterReq;
-import io.pisceshub.muchat.server.common.vo.user.LoginResp;
-import io.pisceshub.muchat.server.common.vo.user.UserVO;
 import lombok.extern.slf4j.Slf4j;
 import me.zhyd.oauth.model.AuthUser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +29,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
 
 import java.util.Date;
 import java.util.LinkedList;
@@ -68,7 +65,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public LoginResp login(LoginReq dto) {
         User user = findUserByName(dto.getUserName());
         if(null == user){
-            throw  new GlobalException(ResultCode.PROGRAM_ERROR,"用户不存在");
+            throw new GlobalException(ResultCode.PROGRAM_ERROR,"用户不存在");
+        }
+        if(UserEnum.AccountType.Anonymous.equals(user.getAccountType())){
+            throw new GlobalException(ResultCode.PROGRAM_ERROR,"用户不存在");
         }
         if(!passwordEncoder.matches(dto.getPassword(),user.getPassword())){
             throw  new GlobalException(ResultCode.PASSWOR_ERROR);
@@ -142,7 +142,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             throw new BusinessException("用户名不能为空");
         }
         userName = userName.trim();
-        for(RegisterRromEnum e:RegisterRromEnum.values()){
+        if(userName.indexOf("匿名")==0){
+            throw new BusinessException("用户名不可用");
+        }
+        for(UserEnum.RegisterRromEnum e: UserEnum.RegisterRromEnum.values()){
             if(userName.indexOf(e.getMsg())==0){
                 throw new BusinessException("用户名不可用");
             }
@@ -263,7 +266,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     public LoginResp oauthLogin(String type, AuthUser authUser) {
-        RegisterRromEnum registerRromEnum = RegisterRromEnum.findByMsg(type);
+        UserEnum.RegisterRromEnum registerRromEnum = UserEnum.RegisterRromEnum.findByMsg(type);
         String userName = type+"@"+authUser.getUsername();
         User user = findUserByName(userName);
         Date date = new Date();
@@ -284,6 +287,24 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
         //生成登录信息
         log.info("oauthLogin，用户:{}",user);
+        return buildLoginResp(user);
+    }
+
+    @Override
+    public LoginResp anonymousLogin(AnonymousLoginReq req) {
+        User user = lambdaQuery().eq(User::getAnonymouId, req.getAnonymouId()).one();
+        if(user==null){
+            //注册
+            user = new User();
+            user.setAnonymouId(req.getAnonymouId());
+            String name = "匿名-"+ IdUtils.generatorId();
+            user.setUserName(name);
+            user.setNickName(name);
+            user.setAccountType(UserEnum.AccountType.Anonymous.getCode());
+            user.setCreatedTime(new Date());
+        }
+        user.setLastLoginTime(new Date());
+        this.saveOrUpdate(user);
         return buildLoginResp(user);
     }
 

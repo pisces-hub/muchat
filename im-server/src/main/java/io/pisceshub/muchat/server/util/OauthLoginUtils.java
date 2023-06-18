@@ -1,7 +1,7 @@
 package io.pisceshub.muchat.server.util;
 
 import com.alibaba.fastjson.JSONObject;
-import io.pisceshub.muchat.server.common.enums.RegisterRromEnum;
+import io.pisceshub.muchat.server.common.enums.UserEnum;
 import io.pisceshub.muchat.server.config.properties.AppConfigInfo;
 import io.pisceshub.muchat.server.exception.BusinessException;
 import me.zhyd.oauth.AuthRequestBuilder;
@@ -29,7 +29,7 @@ public class OauthLoginUtils {
     }
 
     public AuthRequest buildAuthRequest(String type){
-        RegisterRromEnum registerRromEnum = RegisterRromEnum.findByMsg(type);
+        UserEnum.RegisterRromEnum registerRromEnum = UserEnum.RegisterRromEnum.findByMsg(type);
         if(registerRromEnum==null){
             throw new BusinessException("未知的登录方式");
         }

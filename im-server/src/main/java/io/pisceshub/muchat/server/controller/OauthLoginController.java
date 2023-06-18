@@ -3,10 +3,8 @@ package io.pisceshub.muchat.server.controller;
 import com.alibaba.fastjson.JSONObject;
 import io.pisceshub.muchat.common.core.utils.Result;
 import io.pisceshub.muchat.common.core.utils.ResultUtils;
-import io.pisceshub.muchat.server.common.enums.RegisterRromEnum;
 import io.pisceshub.muchat.server.common.vo.user.LoginResp;
 import io.pisceshub.muchat.server.config.properties.AppConfigInfo;
-import io.pisceshub.muchat.server.exception.BusinessException;
 import io.pisceshub.muchat.server.service.IUserService;
 import io.pisceshub.muchat.server.util.OauthLoginUtils;
 import io.pisceshub.muchat.server.util.SecurityUtils;
@@ -21,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.UUID;

@@ -77,3 +77,8 @@ create table `im_group_message`(
 ALTER TABLE `im_user`
 ADD COLUMN `register_from` int NULL DEFAULT 0 COMMENT '注册来源：0本系统，1gitee,2github' AFTER `created_time`,
 ADD COLUMN `oauth_src` text NULL COMMENT 'oauth认证结果' AFTER `register_from`;
+
+
+ALTER TABLE `im_user`
+ADD COLUMN `account_type` int NULL DEFAULT 0 COMMENT '账号类型:0正常，1匿名' AFTER `oauth_src`,
+ADD COLUMN `anonymou_id` varchar(255) NULL COMMENT '匿名id' AFTER `account_type`;

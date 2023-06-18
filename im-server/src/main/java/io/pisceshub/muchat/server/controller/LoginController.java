@@ -3,6 +3,7 @@ package io.pisceshub.muchat.server.controller;
 
 import io.pisceshub.muchat.common.core.utils.Result;
 import io.pisceshub.muchat.common.core.utils.ResultUtils;
+import io.pisceshub.muchat.server.common.vo.user.AnonymousLoginReq;
 import io.pisceshub.muchat.server.service.IUserService;
 import io.pisceshub.muchat.server.common.vo.user.LoginReq;
 import io.pisceshub.muchat.server.common.vo.user.RegisterReq;
@@ -44,5 +45,12 @@ public class LoginController {
     public Result register(@Valid @RequestBody RegisterReq dto){
         userService.register(dto);
         return ResultUtils.success();
+    }
+
+    @PostMapping("/anonymousLogin")
+    @ApiOperation(value = "匿名登录",notes="匿名登录")
+    public Result anonymousLogin(@RequestBody @Valid AnonymousLoginReq req){
+        LoginResp vo = userService.anonymousLogin(req);
+        return ResultUtils.success(vo);
     }
 }
