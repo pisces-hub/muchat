@@ -82,3 +82,5 @@ ADD COLUMN `oauth_src` text NULL COMMENT 'oauth认证结果' AFTER `register_fro
 ALTER TABLE `im_user`
 ADD COLUMN `account_type` int NULL DEFAULT 0 COMMENT '账号类型:0正常，1匿名' AFTER `oauth_src`,
 ADD COLUMN `anonymou_id` varchar(255) NULL COMMENT '匿名id' AFTER `account_type`;
+
+INSERT INTO `im_group` (`id`, `name`, `owner_id`, `head_image`, `head_image_thumb`, `notice`, `remark`, `deleted`, `created_time`) VALUES (0, '万人大群聊', 1, '', '', '', '', 0, '2023-06-17 11:43:40');

@@ -1,5 +1,6 @@
 package io.pisceshub.muchat.server.controller;
 
+import io.pisceshub.muchat.server.aop.annotation.AnonymousUserCheck;
 import io.pisceshub.muchat.server.common.entity.Friend;
 import io.pisceshub.muchat.server.util.SessionContext;
 import io.pisceshub.muchat.common.core.utils.Result;
@@ -26,6 +27,7 @@ public class FriendController {
 
     @GetMapping("/list")
     @ApiOperation(value = "好友列表",notes="获取好友列表")
+    @AnonymousUserCheck
     public Result< List<FriendVO>> findFriends(){
         List<Friend> friends = friendService.findFriendByUserId(SessionContext.getSession().getId());
         List<FriendVO> vos = friends.stream().map(f->{
@@ -41,6 +43,7 @@ public class FriendController {
 
 
     @PostMapping("/add")
+    @AnonymousUserCheck
     @ApiOperation(value = "添加好友",notes="双方建立好友关系")
     public Result addFriend(@NotEmpty(message = "好友id不可为空") @RequestParam("friendId") Long friendId){
          friendService.addFriend(friendId);
@@ -48,12 +51,14 @@ public class FriendController {
     }
 
     @GetMapping("/find/{friendId}")
+    @AnonymousUserCheck
     @ApiOperation(value = "查找好友信息",notes="查找好友信息")
     public Result<FriendVO> findFriend(@NotEmpty(message = "好友id不可为空") @PathVariable("friendId") Long friendId){
         return ResultUtils.success(friendService.findFriend(friendId));
     }
 
 
+    @AnonymousUserCheck
     @DeleteMapping("/delete/{friendId}")
     @ApiOperation(value = "删除好友",notes="解除好友关系")
     public Result delFriend(@NotEmpty(message = "好友id不可为空") @PathVariable("friendId") Long friendId){
@@ -61,6 +66,7 @@ public class FriendController {
         return ResultUtils.success();
     }
 
+    @AnonymousUserCheck
     @PutMapping("/update")
     @ApiOperation(value = "更新好友信息",notes="更新好友头像或昵称")
     public Result modifyFriend(@Valid @RequestBody FriendVO vo){

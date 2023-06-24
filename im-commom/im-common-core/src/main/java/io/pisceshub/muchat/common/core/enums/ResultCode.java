@@ -16,7 +16,8 @@ public enum ResultCode {
     USERNAME_ALREADY_REGISTER(10003,"该用户名已注册"),
     NO_AVAILABLE_SERVICES(10004,"没有可用的服务"),
 
-    COMMON_ERROR(501,"操作失败")
+    COMMON_ERROR(501,"操作失败"),
+    ANONYMOUSE_USER_NO_ACTION(502,"匿名用户禁止操作")
     ;
 
 

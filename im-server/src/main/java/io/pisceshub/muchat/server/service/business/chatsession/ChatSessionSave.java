@@ -10,9 +10,9 @@ import java.util.Set;
  * @date 2023-06-15 21:49
  */
 public interface ChatSessionSave {
-    boolean add(ChatSessionInfoDto vo);
+    boolean add(Long userId,ChatSessionInfoDto vo);
 
-    Set<ChatSessionInfoDto> list();
+    Set<ChatSessionInfoDto> list(Long userId);
 
-    boolean del(ChatSessionInfoDto vo);
+    boolean del(Long userId,ChatSessionInfoDto vo);
 }

@@ -29,8 +29,9 @@ public class RedisChatSessionSave implements ChatSessionSave {
     private RedisTemplate redisTemplate;
 
     @Override
-    public boolean add(ChatSessionInfoDto dto) {
-        String key = buildKey();
+    public boolean add(Long userId,ChatSessionInfoDto dto) {
+        dto.setCreateTime(System.currentTimeMillis());
+        String key = String.valueOf(userId);
         ZSetOperations zSetOperations = redisTemplate.opsForZSet();
         zSetOperations.add(key,dto,System.currentTimeMillis());
         Long size = zSetOperations.size(key);
@@ -39,15 +40,10 @@ public class RedisChatSessionSave implements ChatSessionSave {
         }
         return true;
     }
-
-    private String buildKey(){
-        return String.valueOf(SessionContext.getUserId());
-    }
-
     @Override
-    public Set<ChatSessionInfoDto> list() {
+    public Set<ChatSessionInfoDto> list(Long userId) {
         Set<ChatSessionInfoDto> sets = redisTemplate.opsForZSet()
-                .rangeByScore(buildKey(), 0, System.currentTimeMillis());
+                .rangeByScore(String.valueOf(userId), 0, System.currentTimeMillis());
         if(CollUtil.isEmpty(sets)){
             return Collections.emptySet();
         }
@@ -55,8 +51,8 @@ public class RedisChatSessionSave implements ChatSessionSave {
     }
 
     @Override
-    public boolean del(ChatSessionInfoDto dto) {
-        redisTemplate.opsForZSet().remove(buildKey(),dto);
+    public boolean del(Long userId,ChatSessionInfoDto dto) {
+        redisTemplate.opsForZSet().remove(String.valueOf(userId),dto);
         return true;
     }
 }

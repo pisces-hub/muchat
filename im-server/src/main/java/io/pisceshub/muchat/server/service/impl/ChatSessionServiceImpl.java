@@ -47,17 +47,17 @@ public class ChatSessionServiceImpl implements IChatSessionService {
     private IPrivateMessageService iPrivateMessageService;
 
     @Override
-    public boolean save(ChatSessionAddReq vo) {
+    public boolean save(Long userId,ChatSessionAddReq vo) {
 
         //todo 校验对于id和类型的合法性
         ChatSessionInfoDto dto = new ChatSessionInfoDto();
         BeanUtils.copyProperties(vo,dto);
-        return chatSessionSave.add(dto);
+        return chatSessionSave.add(userId,dto);
     }
 
     @Override
     public Result<Set<ChatSessionInfoResp>> list() {
-        Set<ChatSessionInfoDto> list = chatSessionSave.list();
+        Set<ChatSessionInfoDto> list = chatSessionSave.list(SessionContext.getUserId());
         if(CollUtil.isEmpty(list)){
             return ResultUtils.success(Collections.emptySet());
         }
@@ -122,7 +122,8 @@ public class ChatSessionServiceImpl implements IChatSessionService {
 
     @Override
     public boolean del(ChatSessionAddReq vo) {
-        return chatSessionSave.del(BeanUtils.copyProperties(vo,ChatSessionInfoDto.class));
+        return chatSessionSave.del(SessionContext.getUserId(),
+                BeanUtils.copyProperties(vo,ChatSessionInfoDto.class));
     }
 
 }

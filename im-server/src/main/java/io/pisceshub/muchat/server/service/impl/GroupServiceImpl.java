@@ -30,11 +30,9 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 @Slf4j
@@ -254,7 +252,6 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
      **/
     @Override
     public void invite(GroupInviteReq vo) {
-        SessionContext.UserSessionInfo session = SessionContext.getSession();
         Group group = this.getById(vo.getGroupId());
         if(group == null){
             throw new GlobalException(ResultCode.PROGRAM_ERROR, "群聊不存在");
@@ -266,27 +263,45 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
             throw new GlobalException(ResultCode.PROGRAM_ERROR, "群聊人数不能大于"+Constant.MAX_GROUP_MEMBER+"人");
         }
 
+        List<GroupMember> groupMembers = new ArrayList<>();
         // 找出好友信息
-        List<Friend> friends = friendsService.findFriendByUserId(session.getId());
-        List<Friend> friendsList = vo.getFriendIds().stream().map(id ->
-                friends.stream().filter(f -> f.getFriendId().equals(id)).findFirst().get()).collect(Collectors.toList());
-        if (friendsList.size() != vo.getFriendIds().size()) {
-            throw new GlobalException(ResultCode.PROGRAM_ERROR, "部分用户不是您的好友，邀请失败");
+        if(vo.getUserId()!=null){
+            List<Friend> friends = friendsService.findFriendByUserId(vo.getUserId());
+            List<Friend> friendsList = vo.getFriendIds().stream().map(id ->
+                    friends.stream().filter(f -> f.getFriendId().equals(id)).findFirst().get()).collect(Collectors.toList());
+            if (friendsList.size() != vo.getFriendIds().size()) {
+                throw new GlobalException(ResultCode.PROGRAM_ERROR, "部分用户不是您的好友，邀请失败");
+            }
+            groupMembers = friendsList.stream()
+                    .map(f -> {
+                        Optional<GroupMember> optional =  members.stream().filter(m->m.getUserId()==f.getFriendId()).findFirst();
+                        GroupMember groupMember = optional.isPresent()? optional.get():new GroupMember();
+                        groupMember.setGroupId(vo.getGroupId());
+                        groupMember.setUserId(f.getFriendId());
+                        groupMember.setAliasName(f.getFriendNickName());
+                        groupMember.setRemark(group.getName());
+                        groupMember.setHeadImage(f.getFriendHeadImage());
+                        groupMember.setCreatedTime(new Date());
+                        groupMember.setQuit(false);
+                        return groupMember;
+                    }).collect(Collectors.toList());
+        }else{
+            List<User> users = userService.listByIds(vo.getFriendIds());
+            List<Long> memberIds = members.stream().map(GroupMember::getUserId).collect(Collectors.toList());
+            groupMembers = users.stream().filter(e->!memberIds.contains(e.getId())).map(f->{
+                GroupMember groupMember = new GroupMember();
+                groupMember.setGroupId(vo.getGroupId());
+                groupMember.setUserId(f.getId());
+                groupMember.setAliasName(f.getNickName());
+                groupMember.setRemark(group.getName());
+                groupMember.setHeadImage(f.getHeadImage());
+                groupMember.setCreatedTime(new Date());
+                groupMember.setQuit(false);
+                return groupMember;
+            }).collect(Collectors.toList());
         }
+
         // 批量保存成员数据
-        List<GroupMember> groupMembers = friendsList.stream()
-                .map(f -> {
-                    Optional<GroupMember> optional =  members.stream().filter(m->m.getUserId()==f.getFriendId()).findFirst();
-                    GroupMember groupMember = optional.isPresent()? optional.get():new GroupMember();
-                    groupMember.setGroupId(vo.getGroupId());
-                    groupMember.setUserId(f.getFriendId());
-                    groupMember.setAliasName(f.getFriendNickName());
-                    groupMember.setRemark(group.getName());
-                    groupMember.setHeadImage(f.getFriendHeadImage());
-                    groupMember.setCreatedTime(new Date());
-                    groupMember.setQuit(false);
-                    return groupMember;
-                }).collect(Collectors.toList());
         if(!groupMembers.isEmpty()) {
             groupMemberService.saveOrUpdateBatch(group.getId(),groupMembers);
         }
