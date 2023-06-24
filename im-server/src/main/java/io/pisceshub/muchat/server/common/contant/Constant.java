@@ -1,4 +1,4 @@
-package io.pisceshub.muchat.server.contant;
+package io.pisceshub.muchat.server.common.contant;
 
 
 public class Constant {
@@ -7,7 +7,7 @@ public class Constant {
     // 最大上传文件大小
     public static final long MAX_FILE_SIZE = 1000*1024*1024;
     // 群聊最大人数
-    public static final long MAX_GROUP_MEMBER = 500;
+    public static final long MAX_GROUP_MEMBER = 50000;
     // accessToken 过期时间(1小时)
     public static final Integer ACCESS_TOKEN_EXPIRE = 30 * 60;
     // refreshToken 过期时间(7天)

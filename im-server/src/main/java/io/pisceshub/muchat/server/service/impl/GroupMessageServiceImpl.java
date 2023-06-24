@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.pisceshub.muchat.sdk.IMClient;
 import io.pisceshub.muchat.common.core.contant.AppConst;
 import io.pisceshub.muchat.common.core.model.GroupMessageInfo;
-import io.pisceshub.muchat.server.contant.RedisKey;
+import io.pisceshub.muchat.server.common.contant.RedisKey;
 import io.pisceshub.muchat.server.common.entity.Group;
 import io.pisceshub.muchat.server.common.entity.GroupMember;
 import io.pisceshub.muchat.server.common.entity.GroupMessage;

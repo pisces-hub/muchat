@@ -1,5 +1,6 @@
 package io.pisceshub.muchat.server.controller;
 
+import io.pisceshub.muchat.server.aop.annotation.AnonymousUserCheck;
 import io.pisceshub.muchat.server.common.entity.User;
 import io.pisceshub.muchat.server.service.IUserService;
 import io.pisceshub.muchat.server.util.SessionContext;
@@ -42,7 +43,7 @@ public class UserController {
         return ResultUtils.success(userVO);
     }
 
-
+    @AnonymousUserCheck
     @GetMapping("/find/{id}")
     @ApiOperation(value = "查找用户",notes="根据id查找用户")
     public Result findByIde(@NotEmpty @PathVariable("id") long id){
@@ -51,6 +52,7 @@ public class UserController {
         return ResultUtils.success(userVO);
     }
 
+    @AnonymousUserCheck
     @PutMapping("/update")
     @ApiOperation(value = "修改用户信息",notes="修改用户信息，仅允许修改登录用户信息")
     public Result update(@Valid @RequestBody UserVO vo){
@@ -60,7 +62,7 @@ public class UserController {
 
 
 
-
+    @AnonymousUserCheck
     @GetMapping("/findByNickName")
     @ApiOperation(value = "查找用户",notes="根据昵称查找用户")
     public Result findByNickName(@NotEmpty(message = "用户昵称不可为空") @RequestParam("nickName") String nickName){

@@ -6,7 +6,7 @@ import io.pisceshub.muchat.common.core.enums.IMListenerType;
 import io.pisceshub.muchat.common.core.enums.IMSendCode;
 import io.pisceshub.muchat.common.core.model.GroupMessageInfo;
 import io.pisceshub.muchat.common.core.model.SendResult;
-import io.pisceshub.muchat.server.contant.RedisKey;
+import io.pisceshub.muchat.server.common.contant.RedisKey;
 import io.pisceshub.muchat.common.core.enums.MessageType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

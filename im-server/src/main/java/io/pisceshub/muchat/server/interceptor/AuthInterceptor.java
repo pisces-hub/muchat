@@ -3,7 +3,7 @@ package io.pisceshub.muchat.server.interceptor;
 
 import com.alibaba.fastjson.JSON;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import io.pisceshub.muchat.server.contant.Constant;
+import io.pisceshub.muchat.server.common.contant.Constant;
 import io.pisceshub.muchat.server.exception.GlobalException;
 import io.pisceshub.muchat.server.util.JwtUtil;
 import io.pisceshub.muchat.common.core.enums.ResultCode;

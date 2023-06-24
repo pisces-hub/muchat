@@ -98,6 +98,19 @@ public class User extends Model<User> {
     @TableField("oauth_src")
     private String oauthSrc;
 
+    /**
+     * 账号类型:0正常，1匿名
+     */
+    @TableField("account_type")
+    private Integer accountType;
+
+    /**
+     * 匿名id
+     */
+    @TableField("anonymou_id")
+    private String anonymouId;
+
+
     @Override
     protected Serializable pkVal() {
         return this.id;

@@ -2,7 +2,7 @@ package io.pisceshub.muchat.server.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import io.pisceshub.muchat.server.contant.RedisKey;
+import io.pisceshub.muchat.server.common.contant.RedisKey;
 import io.pisceshub.muchat.server.common.entity.Friend;
 import io.pisceshub.muchat.server.common.entity.User;
 import io.pisceshub.muchat.server.exception.GlobalException;

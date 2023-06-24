@@ -1,4 +1,4 @@
-package io.pisceshub.muchat.server.contant;
+package io.pisceshub.muchat.server.common.contant;
 
 public class RedisKey {
 
