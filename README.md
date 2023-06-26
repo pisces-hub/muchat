@@ -67,6 +67,8 @@ muchat
 > Windows环境部署
 
 - 克隆`muchat`项目，并导入到IDEA中完成编译
+- 启动长连接服务im-connector
+- 启动业务服务im-server
 
 
 ## 联系方式
