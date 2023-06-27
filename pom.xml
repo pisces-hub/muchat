@@ -36,10 +36,17 @@
         <zxing.version>3.3.3</zxing.version>
         <commons-lang3.version>3.8.1</commons-lang3.version>
         <lombok.version>1.18.16</lombok.version>
-
         <swagger-bootstrap.version>1.9.6</swagger-bootstrap.version>
         <io-swagger.version>1.6.3</io-swagger.version>
         <springfox-swagger2.version>2.9.2</springfox-swagger2.version>
+        <spring-boot.version>2.6.15</spring-boot.version>
+        <poi.version>4.1.2</poi.version>
+        <commons-io.version>2.6</poi.version>
+        <dom4j.version>1.6.1</dom4j.version>
+        <zookeeper.version>3.7.0</zookeeper.version>
+        <curator-recipes.version>4.2.0</curator-recipes.version>
+        <knife4j.verson>4.1.0</knife4j.verson>
+        <hibernate-validator.verson>6.0.16.Final</hibernate-validator.verson>
     </properties>
 
 
@@ -69,7 +76,7 @@
                 <!-- Import dependency management from Spring Boot -->
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
-                <version>2.6.15</version>
+                <version>${spring-boot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -109,20 +116,22 @@
                 <artifactId>hutool-all</artifactId>
                 <version>${hutool.version}</version>
             </dependency>
+
+
             <dependency>
                 <groupId>org.apache.poi</groupId>
                 <artifactId>poi-ooxml</artifactId>
-                <version>4.1.2</version>
+                <version>${poi.version}</version>
             </dependency>
             <dependency>
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
-                <version>2.6</version>
+                <version>${commons-io.version}</version>
             </dependency>
             <dependency>
                 <groupId>dom4j</groupId>
                 <artifactId>dom4j</artifactId>
-                <version>1.6.1</version>
+                <version>${dom4j.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.codehaus.jackson</groupId>
@@ -138,7 +147,7 @@
             <dependency>
                 <groupId>org.apache.zookeeper</groupId>
                 <artifactId>zookeeper</artifactId>
-                <version>3.7.0</version>
+                <version>${zookeeper.version}</version>
                 <exclusions>
                     <exclusion>
                         <groupId>org.slf4j</groupId>
@@ -149,7 +158,7 @@
             <dependency>
                 <groupId>org.apache.curator</groupId>
                 <artifactId>curator-recipes</artifactId>
-                <version>4.2.0</version>
+                <version>${curator-recipes.version}</version>
                 <exclusions>
                     <exclusion>
                         <groupId>org.slf4j</groupId>
@@ -186,14 +195,14 @@
             <dependency>
                 <groupId>com.github.xiaoymin</groupId>
                 <artifactId>knife4j-openapi2-spring-boot-starter</artifactId>
-                <version>4.1.0</version>
+                <version>${knife4j.verson}</version>
             </dependency>
 
             <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-validator -->
             <dependency>
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-validator</artifactId>
-                <version>6.0.16.Final</version>
+                <version>${hibernate-validator.verson}</version>
             </dependency>
 
 
