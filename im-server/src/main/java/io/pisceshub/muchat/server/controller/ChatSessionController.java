@@ -1,5 +1,6 @@
 package io.pisceshub.muchat.server.controller;
 
+import io.pisceshub.muchat.common.log.annotation.ApiLog;
 import io.pisceshub.muchat.server.aop.annotation.AnonymousUserCheck;
 import io.pisceshub.muchat.server.common.vo.user.ChatSessionInfoResp;
 import io.pisceshub.muchat.server.util.SessionContext;
@@ -42,6 +43,7 @@ public class ChatSessionController {
      * 查询聊天会话
      * @return
      */
+    @ApiLog
     @GetMapping("/list")
     public Result<Set<ChatSessionInfoResp>> pages(){
         return iChatSessionService.list();
@@ -53,6 +55,7 @@ public class ChatSessionController {
      * @param vo
      * @return
      */
+
     @AnonymousUserCheck
     @DeleteMapping("/del")
     public Result<String> del(@RequestBody @Valid ChatSessionAddReq vo){

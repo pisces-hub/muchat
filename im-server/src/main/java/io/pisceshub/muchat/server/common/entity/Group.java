@@ -71,6 +71,8 @@ public class Group extends Model<Group> {
     @TableField("created_time")
     private Date createdTime;
 
+    @TableField("group_type")
+    private Integer groupType;
 
     @Override
     protected Serializable pkVal() {

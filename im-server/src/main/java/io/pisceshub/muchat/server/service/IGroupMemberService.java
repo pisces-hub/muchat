@@ -2,6 +2,7 @@ package io.pisceshub.muchat.server.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import io.pisceshub.muchat.server.common.entity.GroupMember;
+import io.pisceshub.muchat.server.common.entity.User;
 
 import java.util.List;
 
@@ -25,4 +26,8 @@ public interface IGroupMemberService extends IService<GroupMember> {
     void removeByGroupId(Long groupId);
 
     void removeByGroupAndUserId(Long groupId,Long userId);
+
+    boolean joinGroup(Long groupId, User user);
+
+    boolean memberExsit(Long userId, Long targetId);
 }

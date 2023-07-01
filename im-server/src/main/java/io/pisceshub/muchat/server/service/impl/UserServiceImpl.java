@@ -1,5 +1,6 @@
 package io.pisceshub.muchat.server.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Snowflake;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
@@ -11,8 +12,10 @@ import io.pisceshub.muchat.common.core.contant.RedisKey;
 import io.pisceshub.muchat.common.core.enums.ChatType;
 import io.pisceshub.muchat.server.common.contant.Constant;
 import io.pisceshub.muchat.server.common.entity.Friend;
+import io.pisceshub.muchat.server.common.entity.Group;
 import io.pisceshub.muchat.server.common.entity.GroupMember;
 import io.pisceshub.muchat.server.common.entity.User;
+import io.pisceshub.muchat.server.common.enums.GroupEnum;
 import io.pisceshub.muchat.server.common.enums.UserEnum;
 import io.pisceshub.muchat.server.common.vo.user.*;
 import io.pisceshub.muchat.server.exception.BusinessException;
@@ -59,7 +62,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     private IGroupService iGroupService;
 
     @Autowired
-    private IChatSessionService iChatSessionService;
+    private IGroupMemberService iGroupMemberService;
 
     /**
      * 用户登录
@@ -325,16 +328,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     private void anonyUserInit(User user) {
-        //加入默认群聊
-        GroupInviteReq inviteReq =
-                GroupInviteReq.builder().groupId(-1L).friendIds(Arrays.asList(user.getId())).build();
-        iGroupService.invite(inviteReq);
+        //查询出所有匿名群聊
+        List<Group> groupList = iGroupService.findByGroupType(GroupEnum.GroupType.Anonymous.getCode());
+        if(CollUtil.isEmpty(groupList)){
+            return;
+        }
+        for(Group g:groupList){
+            iGroupMemberService.joinGroup(g.getId(),user);
+        }
 
-        //会话列表
-        ChatSessionAddReq sessionAddReq = new ChatSessionAddReq();
-        sessionAddReq.setChatType(ChatType.GROUP);
-        sessionAddReq.setTargetId(-1L);
-        iChatSessionService.save(user.getId(),sessionAddReq);
     }
 
 

@@ -8,6 +8,8 @@ import io.pisceshub.muchat.server.common.entity.Friend;
 import io.pisceshub.muchat.server.common.entity.Group;
 import io.pisceshub.muchat.server.common.entity.GroupMember;
 import io.pisceshub.muchat.server.common.entity.User;
+import io.pisceshub.muchat.server.common.enums.GroupEnum;
+import io.pisceshub.muchat.server.exception.BusinessException;
 import io.pisceshub.muchat.server.exception.GlobalException;
 import io.pisceshub.muchat.server.exception.NotJoinGroupException;
 import io.pisceshub.muchat.server.mapper.GroupMapper;
@@ -256,6 +258,9 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
         if(group == null){
             throw new GlobalException(ResultCode.PROGRAM_ERROR, "群聊不存在");
         }
+        if(GroupEnum.GroupType.Anonymous.getCode().equals(group.getGroupType())){
+            throw new BusinessException("不允许加入");
+        }
         // 群聊人数校验
         List<GroupMember> members = groupMemberService.findByGroupId(vo.getGroupId());
         long size = members.stream().filter(m->!m.getQuit()).count();
@@ -323,5 +328,11 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
         }).collect(Collectors.toList());
         return vos;
     }
+
+    @Override
+    public List<Group> findByGroupType(Integer code) {
+        return lambdaQuery().eq(Group::getGroupType,code).orderByAsc(Group::getCreatedTime).list();
+    }
+
 
 }

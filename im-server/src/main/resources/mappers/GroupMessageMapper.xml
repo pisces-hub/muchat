@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.pisceshub.muchat.server.mapper.GroupMessageMapper">
+
+
+    <select id="findHistoryMessage" resultType="io.pisceshub.muchat.server.common.entity.GroupMessage">
+        select * FROM im_group_message
+        where group_id = #{groupId}
+        and send_time &gt;= #{startTime}
+        <if test="beforeMessageId!=null">
+            and id &lt; #{beforeMessageId}
+        </if>
+        and status != 2
+        order by id desc
+        limit #{count}
+    </select>
+</mapper>

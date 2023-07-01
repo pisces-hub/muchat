@@ -94,7 +94,7 @@ public class ApiLogAspect {
         Method targetMethod = joinPoint.getTarget().getClass().getDeclaredMethod(methodSignature.getName(),
                 methodSignature.getMethod().getParameterTypes());
         ApiOperation apiOperation = targetMethod.getAnnotation(ApiOperation.class);
-        if(apiAnnotation!=null){
+        if(apiOperation!=null){
             apiName = apiOperation.value();
         }
         return new TPair<>(moduleName,apiName);

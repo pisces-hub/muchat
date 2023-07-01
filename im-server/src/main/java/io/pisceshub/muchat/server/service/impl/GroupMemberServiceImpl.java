@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.pisceshub.muchat.server.common.contant.RedisKey;
 import io.pisceshub.muchat.server.common.entity.GroupMember;
+import io.pisceshub.muchat.server.common.entity.User;
 import io.pisceshub.muchat.server.mapper.GroupMemberMapper;
 import io.pisceshub.muchat.server.service.IGroupMemberService;
 import org.springframework.cache.annotation.CacheConfig;
@@ -12,6 +13,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -139,5 +141,32 @@ public class GroupMemberServiceImpl extends ServiceImpl<GroupMemberMapper, Group
                 .eq(GroupMember::getUserId,userId)
                 .set(GroupMember::getQuit,true);
         this.update(wrapper);
+    }
+
+
+    @Override
+    public boolean joinGroup(Long groupId, User user){
+        GroupMember groupMember = new GroupMember();
+        groupMember.setGroupId(groupId);
+        groupMember.setUserId(user.getId());
+        groupMember.setAliasName(user.getNickName());
+        groupMember.setRemark("匿名");
+        groupMember.setHeadImage(user.getHeadImage());
+        groupMember.setCreatedTime(new Date());
+        groupMember.setQuit(false);
+        //查询是否已经加入过
+        Integer count = lambdaQuery().eq(GroupMember::getGroupId, groupId)
+                .eq(GroupMember::getUserId, groupMember.getUserId()).count();
+        if(count>0){
+            return true;
+        }
+
+        return this.save(groupMember);
+    }
+
+    @Override
+    public boolean memberExsit(Long userId, Long groupId) {
+        return lambdaQuery().eq(GroupMember::getGroupId,groupId)
+                .eq(GroupMember::getUserId,userId).count()>0;
     }
 }

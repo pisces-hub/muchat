@@ -47,6 +47,7 @@ public class GroupMessageController {
         return ResultUtils.success();
     }
 
+    @ApiLog
     @GetMapping("/history")
     @ApiOperation(value = "查询聊天记录",notes="查询聊天记录")
     public Result<List<GroupMessageInfo>> recallMessage(@NotNull(message = "群聊id不能为空") @RequestParam Long groupId,

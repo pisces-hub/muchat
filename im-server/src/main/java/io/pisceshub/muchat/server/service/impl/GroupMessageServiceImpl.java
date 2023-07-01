@@ -50,6 +50,14 @@ public class GroupMessageServiceImpl extends ServiceImpl<GroupMessageMapper, Gro
     @Autowired
     private IMClient imClient;
 
+    @Autowired
+    private GroupMessageMapper groupMessageMapper;
+
+    /**
+     * 默认一次查询多少条消息
+     */
+    private final static Integer defaultQueryMessageCount = 15;
+
     /**
      * 发送群聊消息(与mysql所有交换都要进行缓存)
      *
@@ -181,23 +189,12 @@ public class GroupMessageServiceImpl extends ServiceImpl<GroupMessageMapper, Gro
         if (member == null || member.getQuit()) {
             throw new GlobalException(ResultCode.PROGRAM_ERROR, "您已不在群聊中");
         }
+        List<GroupMessage> messages = groupMessageMapper.findHistoryMessage(groupId,member.getCreatedTime(),lastMessageId,defaultQueryMessageCount);
         // 查询聊天记录，只查询加入群聊时间之后的消息
-        LambdaQueryWrapper<GroupMessage> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(GroupMessage::getGroupId, groupId)
-                .gt(GroupMessage::getSendTime, member.getCreatedTime())
-                .ne(GroupMessage::getStatus, MessageStatus.RECALL.code());
-
-        if (lastMessageId != null) {
-            queryWrapper.lt(GroupMessage::getId, lastMessageId);
-        }
-        queryWrapper.orderByDesc(GroupMessage::getId)
-                .last("limit 15");
-        List<GroupMessage> messages = this.list(queryWrapper);
         List<GroupMessageInfo> messageInfos = messages.stream().map(m -> {
             GroupMessageInfo info = BeanUtils.copyProperties(m, GroupMessageInfo.class);
             return info;
         }).collect(Collectors.toList());
-        log.info("拉取群聊记录，用户id:{},群聊id:{}，数量:{}", userId, groupId, messageInfos.size());
         return messageInfos;
     }
 
