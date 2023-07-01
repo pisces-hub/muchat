@@ -1,14 +1,15 @@
 package io.pisceshub.muchat.server.common.vo.user;
 
 import io.pisceshub.muchat.common.core.enums.ChatType;
-import io.swagger.annotations.ApiModelProperty;
+import io.pisceshub.muchat.common.core.model.CommonMessageInfo;
+import io.pisceshub.muchat.common.core.model.GroupMessageInfo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -61,6 +62,11 @@ public class ChatSessionInfoResp implements Serializable {
      */
     private String lastContent;
 
+
+    /**
+     * 消息列表
+     */
+    private List<GroupMessageInfo> groupMessages;
 
 
     @Override

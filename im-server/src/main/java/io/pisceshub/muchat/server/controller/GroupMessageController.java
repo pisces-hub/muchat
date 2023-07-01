@@ -4,6 +4,7 @@ package io.pisceshub.muchat.server.controller;
 import io.pisceshub.muchat.common.core.model.GroupMessageInfo;
 import io.pisceshub.muchat.common.core.utils.Result;
 import io.pisceshub.muchat.common.core.utils.ResultUtils;
+import io.pisceshub.muchat.common.log.annotation.ApiLog;
 import io.pisceshub.muchat.server.service.IGroupMessageService;
 import io.pisceshub.muchat.server.common.vo.message.GroupMessageSendReq;
 import io.swagger.annotations.Api;
@@ -25,6 +26,7 @@ public class GroupMessageController {
     private IGroupMessageService groupMessageService;
 
 
+    @ApiLog
     @PostMapping("/send")
     @ApiOperation(value = "发送群聊消息",notes="发送群聊消息")
     public Result<Long> sendMessage(@Valid @RequestBody GroupMessageSendReq vo){
@@ -48,9 +50,8 @@ public class GroupMessageController {
     @GetMapping("/history")
     @ApiOperation(value = "查询聊天记录",notes="查询聊天记录")
     public Result<List<GroupMessageInfo>> recallMessage(@NotNull(message = "群聊id不能为空") @RequestParam Long groupId,
-                                                        @NotNull(message = "页码不能为空") @RequestParam Long page,
-                                                        @NotNull(message = "size不能为空") @RequestParam Long size){
-        return ResultUtils.success( groupMessageService.findHistoryMessage(groupId,page,size));
+                                                        @RequestParam(required = false) Long lastMessageId){
+        return ResultUtils.success(groupMessageService.findHistoryMessage(groupId,lastMessageId));
     }
 }
 

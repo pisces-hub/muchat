@@ -41,7 +41,7 @@
         <springfox-swagger2.version>2.9.2</springfox-swagger2.version>
         <spring-boot.version>2.6.15</spring-boot.version>
         <poi.version>4.1.2</poi.version>
-        <commons-io.version>2.6</poi.version>
+        <commons-io.version>2.6</commons-io.version>
         <dom4j.version>1.6.1</dom4j.version>
         <zookeeper.version>3.7.0</zookeeper.version>
         <curator-recipes.version>4.2.0</curator-recipes.version>
@@ -56,6 +56,10 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
     </dependencies>
 
     <dependencyManagement>
@@ -69,6 +73,11 @@
             <dependency>
                 <groupId>io.pisceshub.muchat</groupId>
                 <artifactId>im-sdk</artifactId>
+                <version>1.0</version>
+            </dependency>
+            <dependency>
+                <groupId>io.pisceshub.muchat</groupId>
+                <artifactId>im-common-log</artifactId>
                 <version>1.0</version>
             </dependency>
 

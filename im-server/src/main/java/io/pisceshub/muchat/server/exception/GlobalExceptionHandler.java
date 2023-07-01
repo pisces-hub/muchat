@@ -26,28 +26,6 @@ import java.util.List;
 @Slf4j
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(value = Exception.class)
-    public Result handleException(Exception e){
-        if(e instanceof GlobalException) {
-            GlobalException ex = (GlobalException)e;
-            log.error("全局异常捕获:msg:{},log:{},{}" , ex.getMessage(), e);
-            return ResultUtils.error(ex.getCode(), ex.getMessage());
-        }
-        else if(e instanceof BusinessException) {
-            BusinessException ex = (BusinessException) e.getCause();
-            log.error("全局异常捕获:msg:{},log:{},{}" , ex.getMessage(), e);
-            return ResultUtils.error(ex.getCode(), ex.getMessage());
-        }else if(e instanceof UndeclaredThrowableException) {
-            GlobalException ex = (GlobalException) e.getCause();
-            log.error("全局异常捕获:msg:{},log:{},{}" , ex.getMessage(), e);
-            return ResultUtils.error(ex.getCode(), ex.getMessage());
-        }else{
-            log.error("全局异常捕获:msg:{},{}" , e.getMessage(), e);
-            return ResultUtils.error(ResultCode.PROGRAM_ERROR);
-        }
-    }
-
-
     /**
      *  数据解析错误
      **/
@@ -98,5 +76,23 @@ public class GlobalExceptionHandler {
         String errorMsg = error.getDefaultMessage();
         return ResultUtils.error(ResultCode.PROGRAM_ERROR,errorMsg);
     }
+
+    @ExceptionHandler(value = Exception.class)
+    public Result handleException(Exception e){
+        if(e instanceof GlobalException) {
+            GlobalException ge = (GlobalException)e;
+            log.error("全局异常捕获:msg:{},log:" , ge.getMessage(), ge);
+            return ResultUtils.error(ge.getCode(), ge.getMessage());
+        }
+        else if(e instanceof BusinessException) {
+            BusinessException be = (BusinessException)e;
+            log.error("全局异常捕获:msg:{},log:" , be.getMessage(), e);
+            return ResultUtils.error(be.getCode(), be.getMessage());
+        }else{
+            log.error("全局异常捕获:msg:{}," , e.getMessage(), e);
+            return ResultUtils.error(ResultCode.PROGRAM_ERROR);
+        }
+    }
+
 
 }

@@ -4,6 +4,7 @@ package io.pisceshub.muchat.server.controller;
 import io.pisceshub.muchat.common.core.model.PrivateMessageInfo;
 import io.pisceshub.muchat.common.core.utils.Result;
 import io.pisceshub.muchat.common.core.utils.ResultUtils;
+import io.pisceshub.muchat.common.log.annotation.ApiLog;
 import io.pisceshub.muchat.server.aop.annotation.AnonymousUserCheck;
 import io.pisceshub.muchat.server.service.IPrivateMessageService;
 import io.pisceshub.muchat.server.common.vo.message.PrivateMessageSendReq;
@@ -16,6 +17,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
+@AnonymousUserCheck
 @Api(tags = "私聊消息")
 @RestController
 @RequestMapping("/message/private")
@@ -24,7 +26,7 @@ public class PrivateMessageController {
     @Autowired
     private IPrivateMessageService privateMessageService;
 
-    @AnonymousUserCheck
+    @ApiLog
     @PostMapping("/send")
     @ApiOperation(value = "发送消息",notes="发送私聊消息")
     public Result<Long> sendMessage(@Valid @RequestBody PrivateMessageSendReq vo){
@@ -32,7 +34,6 @@ public class PrivateMessageController {
     }
 
 
-    @AnonymousUserCheck
     @DeleteMapping("/recall/{id}")
     @ApiOperation(value = "撤回消息",notes="撤回私聊消息")
     public Result<Long> recallMessage(@NotNull(message = "消息id不能为空") @PathVariable Long id){
@@ -41,7 +42,6 @@ public class PrivateMessageController {
     }
 
 
-    @AnonymousUserCheck
     @PostMapping("/pullUnreadMessage")
     @ApiOperation(value = "拉取未读消息",notes="拉取未读消息")
     public Result pullUnreadMessage(){
@@ -50,7 +50,7 @@ public class PrivateMessageController {
     }
 
 
-    @AnonymousUserCheck
+
     @GetMapping("/history")
     @ApiOperation(value = "查询聊天记录",notes="查询聊天记录")
     public Result<List<PrivateMessageInfo>> recallMessage(@NotNull(message = "好友id不能为空") @RequestParam Long friendId,

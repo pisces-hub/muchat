@@ -19,6 +19,10 @@
         </dependency>
         <dependency>
             <groupId>io.pisceshub.muchat</groupId>
+            <artifactId>im-common-log</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.pisceshub.muchat</groupId>
             <artifactId>im-sdk</artifactId>
         </dependency>
         <dependency>

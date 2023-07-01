@@ -1,6 +1,7 @@
 package io.pisceshub.muchat.server.common.vo.user;
 
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -43,5 +44,10 @@ public class UserVO {
 
     @ApiModelProperty(value = "是否在线")
     private Boolean online;
+
+    /**
+     * 账号类型:0正常，1匿名
+     */
+    private Integer accountType;
 
 }

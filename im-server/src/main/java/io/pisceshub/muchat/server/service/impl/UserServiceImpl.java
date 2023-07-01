@@ -327,13 +327,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     private void anonyUserInit(User user) {
         //加入默认群聊
         GroupInviteReq inviteReq =
-                GroupInviteReq.builder().groupId(0L).friendIds(Arrays.asList(user.getId())).build();
+                GroupInviteReq.builder().groupId(-1L).friendIds(Arrays.asList(user.getId())).build();
         iGroupService.invite(inviteReq);
 
         //会话列表
         ChatSessionAddReq sessionAddReq = new ChatSessionAddReq();
         sessionAddReq.setChatType(ChatType.GROUP);
-        sessionAddReq.setTargetId(0L);
+        sessionAddReq.setTargetId(-1L);
         iChatSessionService.save(user.getId(),sessionAddReq);
     }
 

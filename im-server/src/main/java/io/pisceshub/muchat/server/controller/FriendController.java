@@ -27,7 +27,6 @@ public class FriendController {
 
     @GetMapping("/list")
     @ApiOperation(value = "好友列表",notes="获取好友列表")
-    @AnonymousUserCheck
     public Result< List<FriendVO>> findFriends(){
         List<Friend> friends = friendService.findFriendByUserId(SessionContext.getSession().getId());
         List<FriendVO> vos = friends.stream().map(f->{

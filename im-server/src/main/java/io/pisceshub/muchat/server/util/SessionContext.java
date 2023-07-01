@@ -1,5 +1,6 @@
 package io.pisceshub.muchat.server.util;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import io.pisceshub.muchat.common.core.enums.ResultCode;
 import io.pisceshub.muchat.server.exception.GlobalException;
 import lombok.Data;
@@ -40,5 +41,10 @@ public class SessionContext {
         private Long id;
         private String userName;
         private String nickName;
+
+        /**
+         * 账号类型:0正常，1匿名
+         */
+        private Integer accountType;
     }
 }

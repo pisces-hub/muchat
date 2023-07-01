@@ -43,7 +43,6 @@ public class UserController {
         return ResultUtils.success(userVO);
     }
 
-    @AnonymousUserCheck
     @GetMapping("/find/{id}")
     @ApiOperation(value = "查找用户",notes="根据id查找用户")
     public Result findByIde(@NotEmpty @PathVariable("id") long id){

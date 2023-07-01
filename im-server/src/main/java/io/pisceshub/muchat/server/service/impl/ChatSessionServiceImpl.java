@@ -2,6 +2,7 @@ package io.pisceshub.muchat.server.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import io.pisceshub.muchat.common.core.enums.ChatType;
+import io.pisceshub.muchat.common.core.model.CommonMessageInfo;
 import io.pisceshub.muchat.common.core.model.GroupMessageInfo;
 import io.pisceshub.muchat.common.core.model.PrivateMessageInfo;
 import io.pisceshub.muchat.common.core.utils.Result;
@@ -81,10 +82,11 @@ public class ChatSessionServiceImpl implements IChatSessionService {
                                 .headImage(groupVO.getHeadImage())
                                 .unReadCount(0L).build();
                         //查询消息
-                        List<GroupMessageInfo> historyMessage = iGroupMessageService.findHistoryMessage(targetId, 1L, 30L);
+                        List<GroupMessageInfo> historyMessage = iGroupMessageService.findHistoryMessage(targetId, null);
                         if(CollUtil.isNotEmpty(historyMessage)){
                             chatSessionInfoResp.setLastSendTime(historyMessage.get(0).getSendTime().getTime());
                             chatSessionInfoResp.setLastContent(historyMessage.get(0).getContent());
+                            chatSessionInfoResp.setGroupMessages(historyMessage);
                         }else{
                             chatSessionInfoResp.setLastSendTime(dto.getCreateTime());
                         }

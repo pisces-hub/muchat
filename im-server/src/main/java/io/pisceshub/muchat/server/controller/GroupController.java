@@ -56,7 +56,6 @@ public class GroupController {
         return ResultUtils.success(groupService.findById(groupId));
     }
 
-    @AnonymousUserCheck
     @ApiOperation(value = "查询群聊列表",notes="查询群聊列表")
     @GetMapping("/list")
     public Result<List<GroupVO>> findGroups(){
