@@ -95,7 +95,6 @@ public class FriendServiceImpl extends ServiceImpl<FriendMapper, Friend> impleme
      * @param userId2 用户2的id
      * @return
      */
-    @Cacheable(key="#userId1+':'+#userId2")
     @Override
     public Boolean isFriend(Long userId1, Long userId2) {
         QueryWrapper<Friend> queryWrapper = new QueryWrapper<>();

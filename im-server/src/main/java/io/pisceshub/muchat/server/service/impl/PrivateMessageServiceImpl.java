@@ -1,5 +1,6 @@
 package io.pisceshub.muchat.server.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.pisceshub.muchat.sdk.IMClient;
@@ -36,6 +37,12 @@ public class PrivateMessageServiceImpl extends ServiceImpl<PrivateMessageMapper,
     private RedisTemplate<String, Object> redisTemplate;
     @Autowired
     private IMClient imClient;
+
+    /**
+     * 默认一次查询多少条消息
+     */
+    private final static Integer defaultQueryMessageCount = 15;
+
     /**
      * 发送私聊消息
      *
@@ -97,25 +104,25 @@ public class PrivateMessageServiceImpl extends ServiceImpl<PrivateMessageMapper,
      * 拉取历史聊天记录
      *
      * @param friendId 好友id
-     * @param page     页码
-     * @param size     页码大小
+     * @param lastMessageId     最后一条消息id
      * @return 聊天记录列表
      */
     @Override
-    public List<PrivateMessageInfo> findHistoryMessage(Long friendId, Long page, Long size) {
-        page = page > 0 ? page : 1;
-        size = size > 0 ? size : 10;
+    public List<PrivateMessageInfo> findHistoryMessage(Long friendId, Long lastMessageId) {
         Long userId = SessionContext.getSession().getId();
-        Long stIdx = (page - 1) * size;
-        QueryWrapper<PrivateMessage> wrapper = new QueryWrapper<>();
-        wrapper.lambda().and(wrap -> wrap.and(
+        LambdaQueryWrapper<PrivateMessage> wrapper = new LambdaQueryWrapper<>();
+        wrapper.and(wrap -> wrap.and(
                 wp -> wp.eq(PrivateMessage::getSendId, userId)
                         .eq(PrivateMessage::getRecvId, friendId))
                 .or(wp -> wp.eq(PrivateMessage::getRecvId, userId)
                         .eq(PrivateMessage::getSendId, friendId)))
-                .ne(PrivateMessage::getStatus, MessageStatus.RECALL.code())
-                .orderByDesc(PrivateMessage::getId)
-                .last("limit " + stIdx + "," + size);
+                .ne(PrivateMessage::getStatus, MessageStatus.RECALL.code());
+
+        if(lastMessageId!=null){
+            wrapper.lt(PrivateMessage::getId,lastMessageId);
+        }
+        wrapper.orderByDesc(PrivateMessage::getId)
+                .last("limit " +defaultQueryMessageCount);
 
         List<PrivateMessage> messages = this.list(wrapper);
         List<PrivateMessageInfo> messageInfos = messages.stream().map(m -> {

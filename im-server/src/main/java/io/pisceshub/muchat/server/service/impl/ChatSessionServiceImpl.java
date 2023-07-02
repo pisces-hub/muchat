@@ -167,7 +167,7 @@ public class ChatSessionServiceImpl implements IChatSessionService {
                             .headImage(userVO.getHeadImage())
                             .unReadCount(0L).build();
                     //查询消息
-                    List<PrivateMessageInfo> historyMessage = iPrivateMessageService.findHistoryMessage(targetId, 1L, 30L);
+                    List<PrivateMessageInfo> historyMessage = iPrivateMessageService.findHistoryMessage(targetId, null);
                     if(CollUtil.isNotEmpty(historyMessage)){
                         chatSessionInfoResp.setLastSendTime(historyMessage.get(0).getSendTime().getTime());
                         chatSessionInfoResp.setLastContent(historyMessage.get(0).getContent());

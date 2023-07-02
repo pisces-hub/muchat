@@ -51,7 +51,6 @@ public class UserController {
         return ResultUtils.success(userVO);
     }
 
-    @AnonymousUserCheck
     @PutMapping("/update")
     @ApiOperation(value = "修改用户信息",notes="修改用户信息，仅允许修改登录用户信息")
     public Result update(@Valid @RequestBody UserVO vo){

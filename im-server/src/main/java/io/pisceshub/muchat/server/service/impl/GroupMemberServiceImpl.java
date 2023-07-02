@@ -100,7 +100,6 @@ public class GroupMemberServiceImpl extends ServiceImpl<GroupMemberMapper, Group
      * @param groupId 群聊id
      * @return
      */
-    @Cacheable(key="#groupId")
     @Override
     public List<Long> findUserIdsByGroupId(Long groupId) {
         QueryWrapper<GroupMember> memberWrapper = new QueryWrapper();
