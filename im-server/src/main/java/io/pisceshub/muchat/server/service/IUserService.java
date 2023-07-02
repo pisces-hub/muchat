@@ -29,4 +29,6 @@ public interface IUserService extends IService<User> {
     LoginResp oauthLogin(String type, AuthUser authUser);
 
     LoginResp anonymousLogin(AnonymousLoginReq req);
+
+    UserVO findByIde(long id);
 }

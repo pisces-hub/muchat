@@ -110,6 +110,8 @@ public class User extends Model<User> {
     @TableField("anonymou_id")
     private String anonymouId;
 
+    @TableField("last_login_ip")
+    private String lastLoginIp;
 
     @Override
     protected Serializable pkVal() {

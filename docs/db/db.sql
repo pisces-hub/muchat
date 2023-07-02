@@ -88,3 +88,6 @@ ADD COLUMN `group_type` int NULL DEFAULT 0 COMMENT '群类型:0正常，1匿名�
 
 INSERT INTO `im_group` (`id`, `name`, `owner_id`, `head_image`, `head_image_thumb`, `notice`, `remark`, `deleted`, `created_time`,`group_type`) VALUES (0, '万人大群聊', 1, '', '', '', '', 0, '2023-06-17 11:43:40',1);
 
+ALTER TABLE `im_user`
+ADD COLUMN `last_login_ip` varchar(30) NULL COMMENT '最新一次登录的ip信息';
+

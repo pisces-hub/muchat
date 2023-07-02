@@ -1,5 +1,8 @@
 package io.pisceshub.muchat.server.util;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 public class FileUtil {
 
     /**
@@ -29,5 +32,17 @@ public class FileUtil {
         }
 
         return false;
+    }
+
+    public static byte[] readToByte(InputStream inputStream) throws IOException {
+        if(inputStream==null){
+            throw new IOException("空");
+        }
+        try {
+            return inputStream.readAllBytes();
+        }finally {
+            inputStream.close();
+        }
+
     }
 }

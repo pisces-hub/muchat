@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.pisceshub.muchat.common.core.contant.RedisKey;
 import io.pisceshub.muchat.common.core.enums.ChatType;
+import io.pisceshub.muchat.server.adapter.IpSearchAdapter;
 import io.pisceshub.muchat.server.common.contant.Constant;
 import io.pisceshub.muchat.server.common.entity.Friend;
 import io.pisceshub.muchat.server.common.entity.Group;
@@ -64,6 +65,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Autowired
     private IGroupMemberService iGroupMemberService;
 
+    @Autowired
+    private IpSearchAdapter ipSearchAdapter;
+
     /**
      * 用户登录
      *
@@ -83,6 +87,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         if(!passwordEncoder.matches(dto.getPassword(),user.getPassword())){
             throw  new GlobalException(ResultCode.PASSWOR_ERROR);
         }
+        user.setLastLoginIp(IpUtil.getIpAddr(SessionContext.getRequest()));
+        this.updateById(user);
         // 生成token
         return buildLoginResp(user);
     }
@@ -293,6 +299,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         user.setNickName(authUser.getNickname());
         user.setOauthSrc(JSONObject.toJSONString(authUser));
         user.setSignature(OauthLoginUtils.parseBio(authUser.getRawUserInfo()));
+        user.setLastLoginIp(IpUtil.getIpAddr(SessionContext.getRequest()));
         this.saveOrUpdate(user);
 
         //生成登录信息
@@ -308,8 +315,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             //注册
             user = new User();
             user.setAnonymouId(req.getAnonymouId());
-            String name = "匿名用户-"+ IdUtils.generatorId();
-            user.setUserName(name);
+            String generatorId = IdUtils.generatorId();
+            String name = "匿名-"+ generatorId.substring(0,10);
+            user.setUserName(generatorId);
             user.setNickName(name);
             user.setAccountType(UserEnum.AccountType.Anonymous.getCode());
             user.setCreatedTime(new Date());
@@ -317,14 +325,22 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             newUserFlag = true;
         }
         user.setLastLoginTime(new Date());
+        user.setLastLoginIp(IpUtil.getIpAddr(SessionContext.getRequest()));
         this.saveOrUpdate(user);
 
         if(newUserFlag){
             //初始化逻辑
             this.anonyUserInit(user);
         }
-
         return buildLoginResp(user);
+    }
+
+    @Override
+    public UserVO findByIde(long id) {
+        User user = this.getById(id);
+        UserVO userVO = BeanUtils.copyProperties(user,UserVO.class);
+        userVO.setIpAddress(ipSearchAdapter.search(user.getLastLoginIp()));
+        return userVO;
     }
 
     private void anonyUserInit(User user) {

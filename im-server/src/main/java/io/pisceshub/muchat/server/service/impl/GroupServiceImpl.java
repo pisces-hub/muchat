@@ -1,7 +1,11 @@
 package io.pisceshub.muchat.server.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import io.pisceshub.muchat.server.adapter.IpSearchAdapter;
 import io.pisceshub.muchat.server.common.contant.Constant;
 import io.pisceshub.muchat.server.common.contant.RedisKey;
 import io.pisceshub.muchat.server.common.entity.Friend;
@@ -50,6 +54,9 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
 
     @Autowired
     private IFriendService friendsService;
+
+    @Autowired
+    private IpSearchAdapter ipSearchAdapter;
 
 
     /**
@@ -322,8 +329,22 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
     @Override
     public List<GroupMemberResp> findGroupMembers(Long groupId) {
         List<GroupMember> members = groupMemberService.findByGroupId(groupId);
+        Set<Long> memberIds = members.stream()
+                .map(e -> e.getUserId()).collect(Collectors.toSet());
+        if(CollUtil.isEmpty(members)){
+            return Collections.emptyList();
+        }
+        List<User> users = userService.listByIds(memberIds);
+        if(CollUtil.isEmpty(users)){
+            return Collections.emptyList();
+        }
+        Map<Long, String> ipMap = users.stream()
+                .collect(Collectors.toMap(User::getId,
+                        e -> ObjectUtil.defaultIfBlank(e.getLastLoginIp(),"")));
+        users.clear();
         List<GroupMemberResp> vos = members.stream().map(m->{
             GroupMemberResp vo = BeanUtils.copyProperties(m, GroupMemberResp.class);
+            vo.setIpAddress(ipSearchAdapter.search(ipMap.get(vo.getUserId())));
             return  vo;
         }).collect(Collectors.toList());
         return vos;

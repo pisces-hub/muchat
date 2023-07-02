@@ -47,6 +47,8 @@
         <curator-recipes.version>4.2.0</curator-recipes.version>
         <knife4j.verson>4.1.0</knife4j.verson>
         <hibernate-validator.verson>6.0.16.Final</hibernate-validator.verson>
+        <ip2region.version>2.7.0</ip2region.version>
+        <justauth.version>1.16.5</justauth.version>
     </properties>
 
 
@@ -78,6 +80,11 @@
             <dependency>
                 <groupId>io.pisceshub.muchat</groupId>
                 <artifactId>im-common-log</artifactId>
+                <version>1.0</version>
+            </dependency>
+            <dependency>
+                <groupId>io.pisceshub.muchat</groupId>
+                <artifactId>im-common-publics</artifactId>
                 <version>1.0</version>
             </dependency>
 
@@ -212,6 +219,16 @@
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-validator</artifactId>
                 <version>${hibernate-validator.verson}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.lionsoul</groupId>
+                <artifactId>ip2region</artifactId>
+                <version>${ip2region.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>me.zhyd.oauth</groupId>
+                <artifactId>JustAuth</artifactId>
+                <version>${justauth.version}</version>
             </dependency>
 
 

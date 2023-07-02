@@ -24,4 +24,7 @@ public class GroupMemberResp {
     @ApiModelProperty("备注")
     private String remark;
 
+    @ApiModelProperty(value = "ip地址")
+    private String ipAddress;
+
 }

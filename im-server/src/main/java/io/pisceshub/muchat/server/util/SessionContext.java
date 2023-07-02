@@ -26,6 +26,13 @@ public class SessionContext {
         return  userSession;
     }
 
+    public static HttpServletRequest getRequest(){
+        ServletRequestAttributes requestAttributes = ServletRequestAttributes.class.
+                cast(RequestContextHolder.getRequestAttributes());
+        HttpServletRequest request = requestAttributes.getRequest();
+        return request;
+    }
+
 
     public static Long getUserId(){
         UserSessionInfo session = getSession();

@@ -45,9 +45,11 @@ public class UserVO {
     @ApiModelProperty(value = "是否在线")
     private Boolean online;
 
-    /**
-     * 账号类型:0正常，1匿名
-     */
+
+    @ApiModelProperty(value = "账号类型:0正常，1匿名")
     private Integer accountType;
+
+    @ApiModelProperty(value = "ip地址")
+    private String ipAddress;
 
 }
