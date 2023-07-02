@@ -334,7 +334,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             return;
         }
         for(Group g:groupList){
-            iGroupMemberService.joinGroup(g.getId(),user);
+            iGroupMemberService.joinGroup(g.getId(),g.getName(),user);
         }
 
     }

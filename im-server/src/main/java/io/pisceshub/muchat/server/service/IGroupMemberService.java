@@ -27,7 +27,7 @@ public interface IGroupMemberService extends IService<GroupMember> {
 
     void removeByGroupAndUserId(Long groupId,Long userId);
 
-    boolean joinGroup(Long groupId, User user);
+    boolean joinGroup(Long groupId,String remark, User user);
 
     boolean memberExsit(Long userId, Long targetId);
 }

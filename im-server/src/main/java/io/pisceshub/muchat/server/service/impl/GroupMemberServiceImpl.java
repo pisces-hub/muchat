@@ -145,12 +145,12 @@ public class GroupMemberServiceImpl extends ServiceImpl<GroupMemberMapper, Group
 
 
     @Override
-    public boolean joinGroup(Long groupId, User user){
+    public boolean joinGroup(Long groupId,String remark, User user){
         GroupMember groupMember = new GroupMember();
         groupMember.setGroupId(groupId);
         groupMember.setUserId(user.getId());
         groupMember.setAliasName(user.getNickName());
-        groupMember.setRemark("匿名");
+        groupMember.setRemark(remark);
         groupMember.setHeadImage(user.getHeadImage());
         groupMember.setCreatedTime(new Date());
         groupMember.setQuit(false);

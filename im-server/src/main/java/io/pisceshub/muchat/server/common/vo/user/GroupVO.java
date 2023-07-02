@@ -1,5 +1,6 @@
 package io.pisceshub.muchat.server.common.vo.user;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -40,7 +41,10 @@ public class GroupVO {
     private String aliasName;
 
     @Length(max=20,message = "群聊显示长度不能大于20")
-    @ApiModelProperty(value = "群聊显示备注")
+
     private String remark;
+
+    @ApiModelProperty(value = "群类型：0普通，1匿名")
+    private Integer groupType;
 
 }

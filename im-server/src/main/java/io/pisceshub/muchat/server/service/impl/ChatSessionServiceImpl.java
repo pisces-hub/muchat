@@ -94,7 +94,7 @@ public class ChatSessionServiceImpl implements IChatSessionService {
                         throw new BusinessException(ResultCode.INVALID_TOKEN);
                     }
                 }
-                iGroupMemberService.joinGroup(resp.getTargetId(),user);
+                iGroupMemberService.joinGroup(resp.getTargetId(),resp.getName(),user);
             }else{
                 //已经加入过，查询历史消息
                 List<GroupMessageInfo> historyMessage = iGroupMessageService.findHistoryMessage(resp.getTargetId(), null);
