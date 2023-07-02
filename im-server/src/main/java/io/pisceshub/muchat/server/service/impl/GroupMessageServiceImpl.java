@@ -1,5 +1,6 @@
 package io.pisceshub.muchat.server.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -192,8 +193,8 @@ public class GroupMessageServiceImpl extends ServiceImpl<GroupMessageMapper, Gro
         List<GroupMessage> messages = groupMessageMapper.findHistoryMessage(groupId,member.getCreatedTime(),lastMessageId,defaultQueryMessageCount);
         // 查询聊天记录，只查询加入群聊时间之后的消息
         List<GroupMessageInfo> messageInfos = messages.stream().map(m -> {
-            GroupMessageInfo info = BeanUtils.copyProperties(m, GroupMessageInfo.class);
-            return info;
+            GroupMessageInfo groupMessageInfo = BeanUtil.copyProperties(m, GroupMessageInfo.class);
+            return groupMessageInfo;
         }).collect(Collectors.toList());
         return messageInfos;
     }

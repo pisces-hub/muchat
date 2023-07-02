@@ -140,6 +140,7 @@ public class ChatSessionServiceImpl implements IChatSessionService {
                                 .targetId(targetId)
                                 .name(groupVO.getName())
                                 .headImage(groupVO.getHeadImage())
+                                .groupMessages(Collections.emptyList())
                                 .unReadCount(0L).build();
                         //查询消息
                         List<GroupMessageInfo> historyMessage = iGroupMessageService.findHistoryMessage(targetId, null);
@@ -165,12 +166,14 @@ public class ChatSessionServiceImpl implements IChatSessionService {
                             .targetId(targetId)
                             .name(userVO.getNickName())
                             .headImage(userVO.getHeadImage())
+                            .privateMessages(Collections.emptyList())
                             .unReadCount(0L).build();
                     //查询消息
                     List<PrivateMessageInfo> historyMessage = iPrivateMessageService.findHistoryMessage(targetId, null);
                     if(CollUtil.isNotEmpty(historyMessage)){
                         chatSessionInfoResp.setLastSendTime(historyMessage.get(0).getSendTime().getTime());
                         chatSessionInfoResp.setLastContent(historyMessage.get(0).getContent());
+                        chatSessionInfoResp.setPrivateMessages(historyMessage);
                     }else{
                         chatSessionInfoResp.setLastSendTime(dto.getCreateTime());
                     }

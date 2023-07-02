@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import io.pisceshub.muchat.common.core.serializer.DateToLongSerializer;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -66,6 +68,7 @@ public class GroupMessage extends Model<GroupMessage> {
      * 发送时间
      */
     @TableField("send_time")
+    @JsonSerialize(using = DateToLongSerializer.class)
     private Date sendTime;
 
 

@@ -17,4 +17,19 @@ public class Constant {
     // refreshToken 加密秘钥
     public static final String REFRESH_TOKEN_SECRET = "IKDiqVmn0VFU";
 
+    public static final String[] defaultAnonymousUserHeader = new String[]{
+      "http://43.138.164.74:9000/muchat/image/20230702/1688310033039.png",
+            "http://43.138.164.74:9000/muchat/image/20230702/1688310042726.png",
+            "http://43.138.164.74:9000/muchat/image/20230702/1688310058528.png",
+            "http://43.138.164.74:9000/muchat/image/20230702/1688310067567.png",
+            "http://43.138.164.74:9000/muchat/image/20230702/1688310078217.png",
+            "http://43.138.164.74:9000/muchat/image/20230702/1688310088980.png",
+            "http://43.138.164.74:9000/muchat/image/20230702/1688310101999.png",
+            "http://43.138.164.74:9000/muchat/image/20230702/1688310113418.png",
+            "http://43.138.164.74:9000/muchat/image/20230702/1688310123338.png",
+            "http://43.138.164.74:9000/muchat/image/20230702/1688310132008.png",
+            "http://43.138.164.74:9000/muchat/image/20230702/1688310140989.png",
+            "http://43.138.164.74:9000/muchat/image/20230702/1688310150665.png"
+    };
+
 }

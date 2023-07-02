@@ -354,7 +354,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
                 .map(m -> {
                     GroupMemberResp vo = BeanUtils.copyProperties(m, GroupMemberResp.class);
                     User user = ipMap.get(vo.getUserId());
-                    vo.setIpAddress(user.getLastLoginIp());
+                    vo.setIpAddress(ipSearchAdapter.search(user.getLastLoginIp()));
                     if(GroupEnum.GroupType.Anonymous.getCode().equals(groupVO.getGroupType())){
                         vo.setAliasName(user.getNickName());
                         vo.setHeadImage(user.getHeadImage());

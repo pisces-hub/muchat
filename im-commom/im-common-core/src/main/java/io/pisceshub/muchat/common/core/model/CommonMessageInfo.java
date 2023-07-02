@@ -18,28 +18,28 @@ public abstract class CommonMessageInfo implements Serializable {
     /*
      * 发送者id
      */
-    private Long sendId;
+    protected Long sendId;
 
 
     /*
      * 消息id
      */
-    private Long id;
+    protected Long id;
 
     /*
      * 发送内容
      */
-    private String content;
+    protected String content;
 
     /*
      * 消息内容类型 具体枚举值由应用层定义
      */
-    private Integer type;
+    protected Integer type;
 
 
     /**
      * 发送时间
      */
     @JsonSerialize(using = DateToLongSerializer.class)
-    private Date sendTime;
+    protected Date sendTime;
 }

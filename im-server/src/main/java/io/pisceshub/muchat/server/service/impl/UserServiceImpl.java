@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.pisceshub.muchat.common.core.contant.RedisKey;
 import io.pisceshub.muchat.common.core.enums.ChatType;
+import io.pisceshub.muchat.common.core.utils.MixUtils;
 import io.pisceshub.muchat.server.adapter.IpSearchAdapter;
 import io.pisceshub.muchat.server.common.contant.Constant;
 import io.pisceshub.muchat.server.common.entity.Friend;
@@ -238,6 +239,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public List<UserVO> findUserByNickName(String nickname) {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda()
+                .eq(User::getAccountType,UserEnum.AccountType.Plain.getCode())
                 .like(User::getNickName,nickname)
                 .last("limit 20");
         List<User> users = this.list(queryWrapper);
@@ -322,6 +324,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             user.setAccountType(UserEnum.AccountType.Anonymous.getCode());
             user.setCreatedTime(new Date());
             user.setPassword(passwordEncoder.encode("123456"));
+            String img = MixUtils.random(Constant.defaultAnonymousUserHeader);
+            user.setHeadImageThumb(img);
+            user.setHeadImage(img);
             newUserFlag = true;
         }
         user.setLastLoginTime(new Date());

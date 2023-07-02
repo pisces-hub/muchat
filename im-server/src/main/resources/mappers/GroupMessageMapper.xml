@@ -4,6 +4,7 @@
 <mapper namespace="io.pisceshub.muchat.server.mapper.GroupMessageMapper">
 
 
+
     <select id="findHistoryMessage" resultType="io.pisceshub.muchat.server.common.entity.GroupMessage">
         select * FROM im_group_message
         where group_id = #{groupId}

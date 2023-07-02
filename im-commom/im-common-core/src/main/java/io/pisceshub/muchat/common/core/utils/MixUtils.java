@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.*;
 import java.util.Enumeration;
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 
 /**
@@ -56,4 +57,27 @@ public class MixUtils {
         return ip;
     }
 
+    public static String random(String[] arrays) {
+        if(arrays==null || arrays.length<1){
+            return null;
+        }
+        int index = new Random().nextInt(arrays.length);
+        if(index<0 || index>=arrays.length){
+            index = 0;
+        }
+        return arrays[index];
+    }
+
+    public static void main(String[] args) {
+        String[] ss = new String[]{"aa","b","c","d","e"};
+        System.out.println(random(ss));
+        System.out.println(random(ss));
+        System.out.println(random(ss));
+        System.out.println(random(ss));
+        System.out.println(random(ss));
+        System.out.println(random(ss));
+        System.out.println(random(ss));
+        System.out.println(random(ss));
+        System.out.println(random(ss));
+    }
 }
