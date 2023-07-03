@@ -8,7 +8,9 @@
     <select id="findHistoryMessage" resultType="io.pisceshub.muchat.server.common.entity.GroupMessage">
         select * FROM im_group_message
         where group_id = #{groupId}
-        and send_time &gt;= #{startTime}
+          <if test="startTime!=null">
+              and send_time &gt;= #{startTime}
+          </if>
         <if test="beforeMessageId!=null">
             and id &lt; #{beforeMessageId}
         </if>

@@ -12,6 +12,8 @@ import io.pisceshub.muchat.server.common.contant.RedisKey;
 import io.pisceshub.muchat.server.common.entity.Group;
 import io.pisceshub.muchat.server.common.entity.GroupMember;
 import io.pisceshub.muchat.server.common.entity.GroupMessage;
+import io.pisceshub.muchat.server.common.enums.GroupEnum;
+import io.pisceshub.muchat.server.common.vo.user.GroupVO;
 import io.pisceshub.muchat.server.exception.GlobalException;
 import io.pisceshub.muchat.server.mapper.GroupMessageMapper;
 import io.pisceshub.muchat.server.service.IGroupMemberService;
@@ -184,14 +186,22 @@ public class GroupMessageServiceImpl extends ServiceImpl<GroupMessageMapper, Gro
      */
     @Override
     public List<GroupMessageInfo> findHistoryMessage(Long groupId, Long lastMessageId) {
-        Long userId = SessionContext.getSession().getId();
-        // 群聊成员信息
-        GroupMember member = groupMemberService.findByGroupAndUserId(groupId, userId);
-        if (member == null || member.getQuit()) {
-            throw new GlobalException(ResultCode.PROGRAM_ERROR, "您已不在群聊中");
+        GroupVO groupVO = groupService.findById(groupId);
+        if(groupVO==null){
+            throw new GlobalException("群聊不存在");
         }
-        List<GroupMessage> messages = groupMessageMapper.findHistoryMessage(groupId,member.getCreatedTime(),lastMessageId,defaultQueryMessageCount);
-        // 查询聊天记录，只查询加入群聊时间之后的消息
+        Date beforeDate = null;
+        if(GroupEnum.GroupType.Plain.getCode().equals(groupVO.getGroupType())){
+            Long userId = SessionContext.getSession().getId();
+            // 群聊成员信息
+            GroupMember member = groupMemberService.findByGroupAndUserId(groupId, userId);
+            if (member == null || member.getQuit()) {
+                throw new GlobalException(ResultCode.PROGRAM_ERROR, "您已不在群聊中");
+            }
+            // 查询聊天记录，只查询加入群聊时间之后的消息
+            beforeDate = member.getCreatedTime();
+        }
+        List<GroupMessage> messages = groupMessageMapper.findHistoryMessage(groupId,beforeDate,lastMessageId,defaultQueryMessageCount);
         List<GroupMessageInfo> messageInfos = messages.stream().map(m -> {
             GroupMessageInfo groupMessageInfo = BeanUtil.copyProperties(m, GroupMessageInfo.class);
             return groupMessageInfo;
