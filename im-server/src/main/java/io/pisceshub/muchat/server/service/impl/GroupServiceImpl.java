@@ -99,7 +99,6 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
      * @return
      * @Param GroupVO 群聊信息
      **/
-    @CacheEvict(value = "#vo.getId()")
     @Transactional
     @Override
     public GroupVO modifyGroup(GroupVO vo) {
@@ -131,7 +130,6 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
      * @Param groupId 群聊id
      **/
     @Transactional
-    @CacheEvict(value = "#groupId")
     @Override
     public void deleteGroup(Long groupId) {
         SessionContext.UserSessionInfo session = SessionContext.getSession();
@@ -367,7 +365,9 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
 
     @Override
     public List<Group> findByGroupType(Integer code) {
-        return lambdaQuery().eq(Group::getGroupType, code).orderByAsc(Group::getCreatedTime).list();
+        return lambdaQuery().eq(Group::getGroupType, code)
+                .eq(Group::getDeleted,false)
+        .orderByAsc(Group::getCreatedTime).list();
     }
 
 

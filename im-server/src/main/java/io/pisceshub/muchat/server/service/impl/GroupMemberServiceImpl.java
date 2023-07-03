@@ -29,7 +29,6 @@ public class GroupMemberServiceImpl extends ServiceImpl<GroupMemberMapper, Group
      * @param member 成员
      * @return
      */
-    @CacheEvict(key="#member.getGroupId()")
     @Override
     public boolean save(GroupMember member) {
         return super.save(member);
@@ -43,7 +42,6 @@ public class GroupMemberServiceImpl extends ServiceImpl<GroupMemberMapper, Group
      * @param members 成员列表
      * @return
      */
-    @CacheEvict(key="#groupId")
     @Override
     public boolean saveOrUpdateBatch(Long groupId,List<GroupMember> members) {
         return super.saveOrUpdateBatch(members);
@@ -116,7 +114,6 @@ public class GroupMemberServiceImpl extends ServiceImpl<GroupMemberMapper, Group
      * @param groupId  群聊id
      * @return
      */
-    @CacheEvict(key = "#groupId")
     @Override
     public void removeByGroupId(Long groupId) {
         UpdateWrapper<GroupMember> wrapper = new UpdateWrapper();
@@ -132,7 +129,6 @@ public class GroupMemberServiceImpl extends ServiceImpl<GroupMemberMapper, Group
      * @param userId  用户id
      * @return
      */
-    @CacheEvict(key = "#groupId")
     @Override
     public void removeByGroupAndUserId(Long groupId, Long userId) {
         UpdateWrapper<GroupMember> wrapper = new UpdateWrapper<>();

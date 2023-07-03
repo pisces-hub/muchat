@@ -137,7 +137,6 @@ public class FriendServiceImpl extends ServiceImpl<FriendMapper, Friend> impleme
      * @param friendId  好友的用户id
      * @return
      */
-    @CacheEvict(key="#userId+':'+#friendId")
     public void bindFriend(Long userId, Long friendId) {
         QueryWrapper<Friend> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda()
@@ -162,7 +161,6 @@ public class FriendServiceImpl extends ServiceImpl<FriendMapper, Friend> impleme
      * @param friendId  好友的用户id
      * @return
      */
-    @CacheEvict(key="#userId+':'+#friendId")
     public void unbindFriend(Long userId, Long friendId) {
         QueryWrapper<Friend> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda()
