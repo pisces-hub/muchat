@@ -1,4 +1,4 @@
-package io.pisceshub.muchat.server.listener.message;
+package io.pisceshub.muchat.server.tcp.listener.message;
 
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import io.pisceshub.muchat.sdk.IMClient;

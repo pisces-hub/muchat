@@ -1,7 +1,7 @@
 package io.pisceshub.muchat.server.service.impl;
 
 
-import io.pisceshub.muchat.common.core.algorithm.RouteHandle;
+import io.pisceshub.muchat.server.tcp.algorithm.RouteHandle;
 import io.pisceshub.muchat.common.core.contant.AppConst;
 import io.pisceshub.muchat.common.core.enums.NetProtocolEnum;
 import io.pisceshub.muchat.server.service.ConnectionService;
@@ -45,9 +45,9 @@ public class ConnectionServiceImpl implements ConnectionService {
         }
         String server = null;
         if(NetProtocolEnum.WS.equals(netProtocolEnum)){
-            server = routeHandle.routeServer(new ArrayList<>(AppConst.WS_NODES),String.valueOf(identify));
+            server = routeHandle.routeServer(NetProtocolEnum.WS,new ArrayList<>(AppConst.WS_NODES),String.valueOf(identify));
         }else if(NetProtocolEnum.TCP.equals(netProtocolEnum)){
-            server = routeHandle.routeServer(new ArrayList<>(AppConst.WS_NODES),String.valueOf(identify));
+            server = routeHandle.routeServer(NetProtocolEnum.TCP,new ArrayList<>(AppConst.WS_NODES),String.valueOf(identify));
         }else{
             return null;
         }

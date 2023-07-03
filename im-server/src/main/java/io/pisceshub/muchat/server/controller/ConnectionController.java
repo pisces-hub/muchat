@@ -1,5 +1,6 @@
 package io.pisceshub.muchat.server.controller;
 
+import io.pisceshub.muchat.common.log.annotation.ApiLog;
 import io.pisceshub.muchat.server.util.SessionContext;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -37,6 +38,7 @@ public class ConnectionController {
     }
 
 
+    @ApiLog
     @ApiOperation("选择一台可用的长连接")
     @GetMapping("/node")
     public Result<NodeInfoResp> node(NetProtocolEnum protocol){

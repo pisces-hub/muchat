@@ -1,4 +1,4 @@
-package io.pisceshub.muchat.server.listener.message;
+package io.pisceshub.muchat.server.tcp.listener.message;
 
 import io.pisceshub.muchat.sdk.annotation.IMListener;
 import io.pisceshub.muchat.sdk.listener.MessageListener;

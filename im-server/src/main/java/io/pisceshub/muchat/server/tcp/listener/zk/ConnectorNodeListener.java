@@ -1,4 +1,4 @@
-package io.pisceshub.muchat.server.listener.zk;
+package io.pisceshub.muchat.server.tcp.listener.zk;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
@@ -20,7 +20,9 @@ import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -38,6 +40,9 @@ public class ConnectorNodeListener implements ApplicationListener<ApplicationSta
 
     private CuratorFramework client;
 
+    @Autowired
+    private List<INodeUpdateNodeEventListener> nodeUpdateNodeEventListeners;
+
     @SneakyThrows
     @Override
     public void onApplicationEvent(ApplicationStartedEvent applicationStartedEvent) {
@@ -50,6 +55,10 @@ public class ConnectorNodeListener implements ApplicationListener<ApplicationSta
         childrenCacheListener(client,NetProtocolEnum.WS);
         this.addNode(NetProtocolEnum.TCP,client.getChildren().forPath(buildZkPath(NetProtocolEnum.TCP)));
         this.addNode(NetProtocolEnum.WS,client.getChildren().forPath(buildZkPath(NetProtocolEnum.WS)));
+
+        if(nodeUpdateNodeEventListeners==null){
+            nodeUpdateNodeEventListeners = Collections.emptyList();
+        }
     }
 
     private String buildZkPath(NetProtocolEnum netProtocolEnum) throws Exception {
@@ -96,9 +105,17 @@ public class ConnectorNodeListener implements ApplicationListener<ApplicationSta
         }
         if(NetProtocolEnum.TCP.equals(netProtocolEnum)){
             AppConst.TCP_NODES.remove(node);
+            nodeUpdateNodeEventListeners.forEach(e->{
+                e.delete(NetProtocolEnum.TCP,node);
+                e.list(NetProtocolEnum.TCP,AppConst.TCP_NODES);
+            });
         }
         if(NetProtocolEnum.WS.equals(netProtocolEnum)){
             AppConst.WS_NODES.remove(node);
+            nodeUpdateNodeEventListeners.forEach(e->{
+                e.delete(NetProtocolEnum.WS,node);
+                e.list(NetProtocolEnum.WS,AppConst.WS_NODES);
+            });
         }
     }
 
@@ -108,9 +125,18 @@ public class ConnectorNodeListener implements ApplicationListener<ApplicationSta
         }
         if(NetProtocolEnum.TCP.equals(netProtocolEnum)){
             AppConst.TCP_NODES.addAll(nodes);
+            nodeUpdateNodeEventListeners.forEach(e->{
+                e.add(NetProtocolEnum.TCP,nodes);
+                e.list(NetProtocolEnum.TCP,AppConst.TCP_NODES);
+            });
         }
         if(NetProtocolEnum.WS.equals(netProtocolEnum)){
             AppConst.WS_NODES.addAll(nodes);
+            nodeUpdateNodeEventListeners.forEach(e->{
+                e.add(NetProtocolEnum.WS,nodes);
+                e.list(NetProtocolEnum.WS,AppConst.WS_NODES);
+            });
         }
+
     }
 }

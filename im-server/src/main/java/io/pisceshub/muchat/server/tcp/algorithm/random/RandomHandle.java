@@ -1,8 +1,9 @@
-package io.pisceshub.muchat.common.core.algorithm.random;
+package io.pisceshub.muchat.server.tcp.algorithm.random;
 
 
 
-import io.pisceshub.muchat.common.core.algorithm.RouteHandle;
+import io.pisceshub.muchat.common.core.enums.NetProtocolEnum;
+import io.pisceshub.muchat.server.tcp.algorithm.RouteHandle;
 
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -13,7 +14,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class RandomHandle implements RouteHandle {
 
     @Override
-    public String routeServer(List<String> values, String key) {
+    public String routeServer(NetProtocolEnum protocolEnum, List<String> values, String key) {
         int size = values.size();
         if (size == 0) {
             throw new RuntimeException() ;

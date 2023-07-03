@@ -1,7 +1,9 @@
-package io.pisceshub.muchat.common.core.algorithm.consistenthash;
+package io.pisceshub.muchat.server.tcp.algorithm.consistenthash;
 
 
 
+import java.util.Collection;
+import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -20,9 +22,10 @@ public class TreeMapConsistentHash extends AbstractConsistentHash {
         treeMap = new TreeMap<Long, String>();
         virtualNodeSize = 2;
     }
-    public TreeMapConsistentHash(int virtualNodeSize){
+    public TreeMapConsistentHash(Collection<String> values, int virtualNodeSize){
         treeMap = new TreeMap<Long, String>();
         this.virtualNodeSize = virtualNodeSize;
+        this.reBuildRing(values);
     }
 
 

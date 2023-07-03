@@ -1,8 +1,9 @@
-package io.pisceshub.muchat.common.core.algorithm.consistenthash;
+package io.pisceshub.muchat.server.tcp.algorithm.consistenthash;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -33,17 +34,37 @@ public abstract class AbstractConsistentHash {
 
     /**
      * 传入节点列表以及客户端信息获取一个服务节点
-     * @param values
+     * @param nodes
      * @param key
      * @return
      */
-    public String process(List<String> values,String key){
-        for (String value : values) {
+    public String process(List<String> nodes,String key){
+        for (String value : nodes) {
             add(hash(value), value);
         }
         sort();
-
         return getFirstNodeValue(key) ;
+    }
+
+    /**
+     * 从已有节点列表中获取一个服务节点
+     * @param key
+     * @return
+     */
+    public String process(String key){
+        return getFirstNodeValue(key) ;
+    }
+
+    /**
+     * 重建哈希环
+     * @param nodes
+     * @return
+     */
+    public void reBuildRing(Collection<String> nodes){
+        for (String value : nodes) {
+            add(hash(value), value);
+        }
+        sort();
     }
 
     /**

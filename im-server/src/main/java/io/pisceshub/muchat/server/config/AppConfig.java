@@ -1,9 +1,8 @@
 package io.pisceshub.muchat.server.config;
 
-import io.pisceshub.muchat.common.core.algorithm.RouteHandle;
-import io.pisceshub.muchat.common.core.algorithm.consistenthash.ConsistentHashHandle;
+import io.pisceshub.muchat.server.tcp.algorithm.RouteHandle;
+import io.pisceshub.muchat.server.tcp.algorithm.consistenthash.ConsistentHashHandle;
 import io.pisceshub.muchat.server.util.FileUtil;
-import io.pisceshub.muchat.server.util.IpUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.lionsoul.ip2region.xdb.Searcher;
 import org.springframework.context.annotation.Bean;
@@ -12,7 +11,6 @@ import org.springframework.core.io.ClassPathResource;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 
 /**
  * @author xiaochangbai
