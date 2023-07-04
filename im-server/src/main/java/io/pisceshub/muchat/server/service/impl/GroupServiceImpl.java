@@ -3,6 +3,7 @@ package io.pisceshub.muchat.server.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.pisceshub.muchat.server.adapter.IpSearchAdapter;
@@ -188,9 +189,21 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
     }
 
     @Override
+    public Group findBaseInfoById(Long groupId){
+        LambdaQueryWrapper<Group> groupLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        groupLambdaQueryWrapper.eq(Group::getDeleted,false);
+        groupLambdaQueryWrapper.eq(Group::getId,groupId);
+        return this.getOne(groupLambdaQueryWrapper);
+    }
+
+
+    @Override
     public GroupVO findById(Long groupId) {
         SessionContext.UserSessionInfo session = SessionContext.getSession();
-        Group group = this.getById(groupId);
+        Group group = this.findBaseInfoById(groupId);
+        if(group==null){
+            throw new BusinessException("群聊信息不存在");
+        }
         GroupMember member = groupMemberService.findByGroupAndUserId(groupId, session.getId());
         if (member == null) {
             throw new NotJoinGroupException(ResultCode.PROGRAM_ERROR, "您未加入群聊");
@@ -204,24 +217,6 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
             vo.setRemark(member.getRemark());
         }
         return vo;
-    }
-
-    /**
-     * 根据id查找群聊，并进行缓存
-     *
-     * @param groupId 群聊id
-     * @return
-     */
-    @Override
-    public Group GetById(Long groupId) {
-        Group group = super.getById(groupId);
-        if (group == null) {
-            throw new GlobalException(ResultCode.PROGRAM_ERROR, "群组不存在");
-        }
-        if (group.getDeleted()) {
-            throw new GlobalException(ResultCode.PROGRAM_ERROR, "群组已解散");
-        }
-        return group;
     }
 
 

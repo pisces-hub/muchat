@@ -131,15 +131,15 @@ public class ChatSessionServiceImpl implements IChatSessionService {
                 case GROUP:
                     try {
                         //查询群信息
-                        GroupVO groupVO = iGroupService.findById(targetId);
-                        if(groupVO==null){
+                        Group group = iGroupService.findBaseInfoById(targetId);
+                        if(group==null){
                             continue;
                         }
                         ChatSessionInfoResp chatSessionInfoResp = ChatSessionInfoResp.builder()
                                 .chatType(chatType)
                                 .targetId(targetId)
-                                .name(groupVO.getName())
-                                .headImage(groupVO.getHeadImage())
+                                .name(group.getName())
+                                .headImage(group.getHeadImage())
                                 .groupMessages(Collections.emptyList())
                                 .unReadCount(0L).build();
                         //查询消息

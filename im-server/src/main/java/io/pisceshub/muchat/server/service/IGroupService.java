@@ -27,7 +27,7 @@ public interface IGroupService extends IService<Group> {
 
     void invite(GroupInviteReq vo);
 
-    Group GetById(Long groupId);
+    Group findBaseInfoById(Long groupId);
 
     GroupVO findById(Long groupId);
 
