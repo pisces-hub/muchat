@@ -97,7 +97,7 @@ public class TcpSocketServer implements IMServer {
             // 等待服务端口关闭
             //channel.closeFuture().sync();
         } catch (InterruptedException e) {
-            log.info("tcp server 初始化异常",e);
+            log.error("tcp server 初始化异常",e);
         }
     }
 
@@ -110,7 +110,7 @@ public class TcpSocketServer implements IMServer {
             workGroup.shutdownGracefully();
         }
         this.ready = false;
-        log.info("tcp server 停止");
+        log.error("tcp server 停止");
     }
 
 
