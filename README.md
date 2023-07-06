@@ -70,6 +70,11 @@ muchat
 - 启动长连接服务im-connector
 - 启动业务服务im-server
 
+## Contributing
+
+- For bug reports, please use [Issues](https://gitee.com/pisces-hub/muchat/issues)
+- For code contribution, please use [Pull Request](https://gitee.com/pisces-hub/muchat/pulls).
+
 
 ## 联系方式
 
