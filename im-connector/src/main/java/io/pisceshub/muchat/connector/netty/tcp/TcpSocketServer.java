@@ -7,6 +7,7 @@ import io.pisceshub.muchat.connector.config.AppConfigProperties;
 import io.pisceshub.muchat.connector.listener.event.NodeRegisterEvent;
 import io.pisceshub.muchat.connector.netty.IMChannelHandler;
 import io.pisceshub.muchat.connector.netty.IMServer;
+import io.pisceshub.muchat.connector.netty.factory.NettyEventLoopFactory;
 import io.pisceshub.muchat.connector.netty.tcp.endecode.MessageProtocolDecoder;
 import io.pisceshub.muchat.connector.netty.tcp.endecode.MessageProtocolEncoder;
 import io.netty.bootstrap.ServerBootstrap;
@@ -54,12 +55,12 @@ public class TcpSocketServer implements IMServer {
     @Override
     public void start() {
         bootstrap = new ServerBootstrap();
-        bossGroup = new NioEventLoopGroup();
-        workGroup = new NioEventLoopGroup();
+        bossGroup = NettyEventLoopFactory.eventLoopGroup(1);
+        workGroup = NettyEventLoopFactory.eventLoopGroup(Math.min(Runtime.getRuntime().availableProcessors() + 1,32));
         // 设置为主从线程模型
         bootstrap.group(bossGroup, workGroup)
                 // 设置服务端NIO通信类型
-                .channel(NioServerSocketChannel.class)
+                .channel(NettyEventLoopFactory.serverSocketChannelClass())
                 // 设置ChannelPipeline，也就是业务职责链，由处理的Handler串联而成，由从线程池处理
                 .childHandler(new ChannelInitializer<Channel>() {
                     // 添加处理的Handler，通常包括消息编解码、业务处理，也可以是日志、权限、过滤等
