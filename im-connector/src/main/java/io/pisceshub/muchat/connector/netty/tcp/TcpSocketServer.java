@@ -83,7 +83,7 @@ public class TcpSocketServer implements IMServer {
 
         try {
             Integer port = appConfigProperties.getTcp().getPort();
-            if(port<1){
+            if(port==null || port<1){
                 port = MixUtils.findAvailablePort();
                 appConfigProperties.getTcp().setPort(port);
             }
