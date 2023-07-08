@@ -1,8 +1,10 @@
 package io.pisceshub.muchat.server.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import io.pisceshub.muchat.common.core.model.PageResp;
 import io.pisceshub.muchat.server.common.entity.Group;
 import io.pisceshub.muchat.server.common.entity.GroupMember;
+import io.pisceshub.muchat.server.common.vo.group.GroupMemberQueryReq;
 import io.pisceshub.muchat.server.common.vo.user.GroupInviteReq;
 import io.pisceshub.muchat.server.common.vo.user.GroupMemberResp;
 import io.pisceshub.muchat.server.common.vo.user.GroupVO;

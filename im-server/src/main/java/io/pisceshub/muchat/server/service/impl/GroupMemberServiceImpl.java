@@ -1,13 +1,26 @@
 package io.pisceshub.muchat.server.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import io.pisceshub.muchat.common.core.model.PageReq;
+import io.pisceshub.muchat.common.core.model.PageResp;
+import io.pisceshub.muchat.server.aop.annotation.AnonymousUserCheck;
 import io.pisceshub.muchat.server.common.contant.RedisKey;
 import io.pisceshub.muchat.server.common.entity.GroupMember;
 import io.pisceshub.muchat.server.common.entity.User;
+import io.pisceshub.muchat.server.common.vo.group.GroupMemberQueryReq;
+import io.pisceshub.muchat.server.common.vo.user.GroupMemberResp;
 import io.pisceshub.muchat.server.mapper.GroupMemberMapper;
 import io.pisceshub.muchat.server.service.IGroupMemberService;
+import io.pisceshub.muchat.server.service.IGroupService;
+import io.pisceshub.muchat.server.service.IUserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -22,6 +35,8 @@ import java.util.stream.Collectors;
 @Service
 public class GroupMemberServiceImpl extends ServiceImpl<GroupMemberMapper, GroupMember> implements IGroupMemberService {
 
+    @Autowired
+    private IUserService iUserService;
 
     /**
      * 添加群聊成员
@@ -163,5 +178,27 @@ public class GroupMemberServiceImpl extends ServiceImpl<GroupMemberMapper, Group
     public boolean memberExsit(Long userId, Long groupId) {
         return lambdaQuery().eq(GroupMember::getGroupId,groupId)
                 .eq(GroupMember::getUserId,userId).count()>0;
+    }
+
+    @Override
+    public PageResp<GroupMemberResp> findGroupMembersV2(GroupMemberQueryReq req) {
+        Page<GroupMember> groupMemberPage = this.baseMapper.findGroupMembersV2(new Page<>(req.getPageNo(),req.getPageSize()),
+                req.getGroupId(),req.getSearch());
+        List<GroupMember> records = groupMemberPage.getRecords();
+        if(CollUtil.isEmpty(records)){
+            return PageResp.empty();
+        }
+        List<GroupMemberResp> memberList = records.stream().map(e -> {
+            GroupMemberResp groupMemberResp = BeanUtil.copyProperties(e, GroupMemberResp.class);
+            groupMemberResp.setOnlineState(iUserService.isOnline(e.getUserId()));
+            return groupMemberResp;
+        }).collect(Collectors.toList());
+
+        return PageResp.toPage(memberList,groupMemberPage.hasNext());
+    }
+
+    @Override
+    public Integer findMemberCount(Long groupId) {
+        return lambdaQuery().eq(GroupMember::getGroupId,groupId).count();
     }
 }

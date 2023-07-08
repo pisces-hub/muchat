@@ -31,4 +31,11 @@ public interface IUserService extends IService<User> {
     LoginResp anonymousLogin(AnonymousLoginReq req);
 
     UserVO findByIde(long id);
+
+    /**
+     * 判断用户是否在线
+     * @param userId
+     * @return
+     */
+    boolean isOnline(Long userId);
 }

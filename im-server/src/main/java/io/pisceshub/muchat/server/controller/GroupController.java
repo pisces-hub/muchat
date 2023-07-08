@@ -1,9 +1,13 @@
 package io.pisceshub.muchat.server.controller;
 
 
+import io.pisceshub.muchat.common.core.model.PageResp;
 import io.pisceshub.muchat.common.core.utils.Result;
 import io.pisceshub.muchat.common.core.utils.ResultUtils;
+import io.pisceshub.muchat.common.log.annotation.ApiLog;
 import io.pisceshub.muchat.server.aop.annotation.AnonymousUserCheck;
+import io.pisceshub.muchat.server.common.vo.group.GroupMemberQueryReq;
+import io.pisceshub.muchat.server.service.IGroupMemberService;
 import io.pisceshub.muchat.server.service.IGroupService;
 import io.pisceshub.muchat.server.common.vo.user.GroupInviteReq;
 import io.pisceshub.muchat.server.common.vo.user.GroupMemberResp;
@@ -26,6 +30,9 @@ public class GroupController {
 
     @Autowired
     private IGroupService groupService;
+
+    @Autowired
+    private IGroupMemberService iGroupMemberService;
 
     @AnonymousUserCheck
     @ApiOperation(value = "创建群聊",notes="创建群聊")
@@ -71,10 +78,18 @@ public class GroupController {
         return ResultUtils.success();
     }
 
+    @ApiLog
     @ApiOperation(value = "查询群聊成员",notes="查询群聊成员")
     @GetMapping("/members/{groupId}")
     public Result<List<GroupMemberResp>> findGroupMembers(@NotNull(message = "群聊id不能为空") @PathVariable Long groupId){
         return ResultUtils.success(groupService.findGroupMembers(groupId));
+    }
+
+    @ApiLog
+    @ApiOperation(value = "查询群聊成员",notes="查询群聊成员")
+    @GetMapping("/membersV2")
+    public Result<PageResp<GroupMemberResp>> findGroupMembersV2(@Valid GroupMemberQueryReq req){
+        return ResultUtils.success(iGroupMemberService.findGroupMembersV2(req));
     }
 
     @AnonymousUserCheck

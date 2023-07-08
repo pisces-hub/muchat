@@ -47,4 +47,8 @@ public class GroupVO {
     @ApiModelProperty(value = "群类型：0普通，1匿名")
     private Integer groupType;
 
+    /**
+     * 成员数量
+     */
+    private Integer memberCount;
 }

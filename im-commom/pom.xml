@@ -12,6 +12,7 @@
         <module>im-common-core</module>
         <module>im-common-log</module>
         <module>im-common-publics</module>
+        <module>im-common-db</module>
     </modules>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>im-commom</artifactId>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.pisceshub.muchat.server.mapper.GroupMemberMapper">
+
+    <select id="findGroupMembersV2" resultType="io.pisceshub.muchat.server.common.entity.GroupMember">
+        select * from im_group_member
+        where group_id=#{groupId}
+          <if test="search!=null">
+              and alias_name like CONCAT(#{search},"%")
+          </if>
+        order by created_time desc
+    </select>
+</mapper>

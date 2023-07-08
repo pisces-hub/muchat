@@ -6,6 +6,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import io.pisceshub.muchat.common.core.model.PageResp;
 import io.pisceshub.muchat.server.adapter.IpSearchAdapter;
 import io.pisceshub.muchat.server.common.contant.Constant;
 import io.pisceshub.muchat.server.common.contant.RedisKey;
@@ -14,6 +15,7 @@ import io.pisceshub.muchat.server.common.entity.Group;
 import io.pisceshub.muchat.server.common.entity.GroupMember;
 import io.pisceshub.muchat.server.common.entity.User;
 import io.pisceshub.muchat.server.common.enums.GroupEnum;
+import io.pisceshub.muchat.server.common.vo.group.GroupMemberQueryReq;
 import io.pisceshub.muchat.server.exception.BusinessException;
 import io.pisceshub.muchat.server.exception.GlobalException;
 import io.pisceshub.muchat.server.exception.NotJoinGroupException;
@@ -216,6 +218,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
             vo.setAliasName(member.getAliasName());
             vo.setRemark(member.getRemark());
         }
+        vo.setMemberCount(groupMemberService.findMemberCount(groupId));
         return vo;
     }
 
@@ -364,6 +367,8 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
                 .eq(Group::getDeleted,false)
         .orderByAsc(Group::getCreatedTime).list();
     }
+
+
 
 
 }

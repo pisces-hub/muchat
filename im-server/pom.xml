@@ -23,6 +23,10 @@
         </dependency>
         <dependency>
             <groupId>io.pisceshub.muchat</groupId>
+            <artifactId>im-common-db</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.pisceshub.muchat</groupId>
             <artifactId>im-sdk</artifactId>
         </dependency>
         <dependency>
@@ -33,22 +37,8 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-boot-starter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>druid</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jdbc</artifactId>
-        </dependency>
+
+
         <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjweaver</artifactId>
@@ -98,11 +88,7 @@
             <artifactId>thumbnailator</artifactId>
             <version>0.4.8</version>
         </dependency>
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-generator</artifactId>
-            <version>3.3.2</version>
-        </dependency>
+
         <!-- 引入操作JWT的相关依赖 -->
         <dependency>
             <groupId>com.auth0</groupId>

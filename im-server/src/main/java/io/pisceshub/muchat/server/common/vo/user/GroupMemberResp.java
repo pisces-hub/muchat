@@ -27,4 +27,6 @@ public class GroupMemberResp {
     @ApiModelProperty(value = "ip地址")
     private String ipAddress;
 
+    private Boolean onlineState;
+
 }
