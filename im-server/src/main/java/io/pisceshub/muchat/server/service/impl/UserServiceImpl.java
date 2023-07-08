@@ -1,15 +1,15 @@
 package io.pisceshub.muchat.server.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.lang.Snowflake;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import io.pisceshub.muchat.common.cache.AppCache;
+import io.pisceshub.muchat.common.cache.CachePrefix;
 import io.pisceshub.muchat.common.core.contant.RedisKey;
-import io.pisceshub.muchat.common.core.enums.ChatType;
 import io.pisceshub.muchat.common.core.utils.MixUtils;
 import io.pisceshub.muchat.server.adapter.IpSearchAdapter;
 import io.pisceshub.muchat.server.common.contant.Constant;
@@ -33,10 +33,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.context.request.RequestAttributes;
-import org.springframework.web.context.request.RequestContextHolder;
 
-import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -68,6 +65,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Autowired
     private IpSearchAdapter ipSearchAdapter;
+
+    @Autowired
+    private AppCache appCache;
 
     /**
      * 用户登录
@@ -318,7 +318,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             user = new User();
             user.setAnonymouId(req.getAnonymouId());
             String generatorId = IdUtils.generatorId();
-            String name = "匿名-"+ generatorId.substring(0,10);
+            String name = "匿名-"+ appCache.incr(CachePrefix.ANONYMOUS_USER_NICK_NAME.name());
             user.setUserName(generatorId);
             user.setNickName(name);
             user.setAccountType(UserEnum.AccountType.Anonymous.getCode());
