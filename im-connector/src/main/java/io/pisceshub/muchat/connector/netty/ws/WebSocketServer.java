@@ -60,7 +60,7 @@ public class WebSocketServer implements IMServer {
     public void start() {
         bootstrap = new ServerBootstrap();
         bossGroup = NettyEventLoopFactory.eventLoopGroup(1);
-        workGroup = NettyEventLoopFactory.eventLoopGroup(Math.min(Runtime.getRuntime().availableProcessors() + 1,32));
+        workGroup = NettyEventLoopFactory.eventLoopGroup(Math.min(Runtime.getRuntime().availableProcessors() + 1,20));
         // 设置为主从线程模型
         bootstrap.group(bossGroup, workGroup)
                 // 设置服务端NIO通信类型
@@ -91,7 +91,7 @@ public class WebSocketServer implements IMServer {
 
         try {
             Integer port = appConfigProperties.getWs().getPort();
-            if(port<1){
+            if(port==null || port<1){
                 port = MixUtils.findAvailablePort();
                 appConfigProperties.getWs().setPort(port);
             }
