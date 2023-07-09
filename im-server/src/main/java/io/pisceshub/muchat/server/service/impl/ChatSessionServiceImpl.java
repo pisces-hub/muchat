@@ -21,6 +21,7 @@ import io.pisceshub.muchat.server.service.*;
 import io.pisceshub.muchat.server.service.business.chatsession.ChatSessionSave;
 import io.pisceshub.muchat.server.common.vo.user.ChatSessionAddReq;
 import io.pisceshub.muchat.server.util.BeanUtils;
+import io.pisceshub.muchat.server.util.MessageUtils;
 import io.pisceshub.muchat.server.util.SessionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -72,7 +73,7 @@ public class ChatSessionServiceImpl implements IChatSessionService {
             chatSessionInfoResp.setName(e.getName());
             chatSessionInfoResp.setHeadImage(e.getHeadImage());
             chatSessionInfoResp.setUnReadCount(0L);
-            chatSessionInfoResp.setGroupMessages(Collections.emptyList());
+            chatSessionInfoResp.setMessages(Collections.emptyList());
             chatSessionInfoResp.setLastSendTime(e.getCreatedTime().getTime());
             return chatSessionInfoResp;
         }).collect(Collectors.toSet());
@@ -97,7 +98,7 @@ public class ChatSessionServiceImpl implements IChatSessionService {
                 if(CollUtil.isNotEmpty(historyMessage)){
                     resp.setLastSendTime(historyMessage.get(0).getSendTime().getTime());
                     resp.setLastContent(historyMessage.get(0).getContent());
-                    resp.setGroupMessages(historyMessage);
+                    resp.setMessages(historyMessage);
                 }
             }
 
@@ -123,6 +124,11 @@ public class ChatSessionServiceImpl implements IChatSessionService {
         for(ChatSessionInfoDto dto:list){
             ChatType chatType = dto.getChatType();
             Long targetId = dto.getTargetId();
+            Long lastSendTime = dto.getCreateTime();
+            String lastContent = null;
+            List message = Collections.emptyList();
+            String name = null;
+            String headImage = null;
             switch (chatType){
                 case GROUP:
                     try {
@@ -131,25 +137,18 @@ public class ChatSessionServiceImpl implements IChatSessionService {
                         if(group==null){
                             continue;
                         }
-                        ChatSessionInfoResp chatSessionInfoResp = ChatSessionInfoResp.builder()
-                                .chatType(chatType)
-                                .targetId(targetId)
-                                .name(group.getName())
-                                .headImage(group.getHeadImage())
-                                .groupMessages(Collections.emptyList())
-                                .unReadCount(0L).build();
+                        name = group.getName();
+                        headImage = group.getHeadImage();
                         //查询消息
                         List<GroupMessageInfo> historyMessage = iGroupMessageService.findHistoryMessage(targetId, null);
                         if(CollUtil.isNotEmpty(historyMessage)){
-                            chatSessionInfoResp.setLastSendTime(historyMessage.get(0).getSendTime().getTime());
-                            chatSessionInfoResp.setLastContent(historyMessage.get(0).getContent());
-                            chatSessionInfoResp.setGroupMessages(historyMessage);
-                        }else{
-                            chatSessionInfoResp.setLastSendTime(dto.getCreateTime());
+                            GroupMessageInfo messageInfo = historyMessage.get(0);
+                            lastSendTime = messageInfo.getSendTime().getTime();
+                            lastContent = MessageUtils.converMessageContent(messageInfo.getType(),messageInfo.getContent());
+                            message = historyMessage;
                         }
-
-                        result.add(chatSessionInfoResp);
                     }catch (NotJoinGroupException e){
+                        continue;
                     }
                     break;
                 case PRIVATE:
@@ -157,25 +156,27 @@ public class ChatSessionServiceImpl implements IChatSessionService {
                     if (userVO==null){
                         continue;
                     }
-                    ChatSessionInfoResp chatSessionInfoResp = ChatSessionInfoResp.builder()
-                            .chatType(chatType)
-                            .targetId(targetId)
-                            .name(userVO.getNickName())
-                            .headImage(userVO.getHeadImage())
-                            .privateMessages(Collections.emptyList())
-                            .unReadCount(0L).build();
+                    name = userVO.getNickName();
+                    headImage = userVO.getHeadImage();
                     //查询消息
                     List<PrivateMessageInfo> historyMessage = iPrivateMessageService.findHistoryMessage(targetId, null);
                     if(CollUtil.isNotEmpty(historyMessage)){
-                        chatSessionInfoResp.setLastSendTime(historyMessage.get(0).getSendTime().getTime());
-                        chatSessionInfoResp.setLastContent(historyMessage.get(0).getContent());
-                        chatSessionInfoResp.setPrivateMessages(historyMessage);
-                    }else{
-                        chatSessionInfoResp.setLastSendTime(dto.getCreateTime());
+                        PrivateMessageInfo messageInfo = historyMessage.get(0);
+                        lastSendTime = messageInfo.getSendTime().getTime();
+                        lastContent = MessageUtils.converMessageContent(messageInfo.getType(),messageInfo.getContent());
+                        message = historyMessage;
                     }
-
-                    result.add(chatSessionInfoResp);
             }
+            ChatSessionInfoResp.ChatSessionInfoRespBuilder builder = ChatSessionInfoResp.builder()
+                    .chatType(chatType)
+                    .messages(message)
+                    .targetId(targetId)
+                    .unReadCount(0L)
+                    .name(name)
+                    .headImage(headImage)
+                    .lastContent(lastContent)
+                    .lastSendTime(lastSendTime);
+            result.add(builder.build());
         }
 
         return ResultUtils.success(result);

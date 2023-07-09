@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.pisceshub.muchat.common.core.model.PageReq;
 import io.pisceshub.muchat.common.core.model.PageResp;
+import io.pisceshub.muchat.server.adapter.IpSearchAdapter;
 import io.pisceshub.muchat.server.aop.annotation.AnonymousUserCheck;
 import io.pisceshub.muchat.server.common.contant.RedisKey;
 import io.pisceshub.muchat.server.common.entity.GroupMember;
@@ -26,8 +27,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -37,6 +37,9 @@ public class GroupMemberServiceImpl extends ServiceImpl<GroupMemberMapper, Group
 
     @Autowired
     private IUserService iUserService;
+
+    @Autowired
+    private IpSearchAdapter ipSearchAdapter;
 
     /**
      * 添加群聊成员
@@ -188,9 +191,20 @@ public class GroupMemberServiceImpl extends ServiceImpl<GroupMemberMapper, Group
         if(CollUtil.isEmpty(records)){
             return PageResp.empty();
         }
+        Set<Long> memberIds = records.stream()
+                .map(e -> e.getUserId()).collect(Collectors.toSet());
+        List<User> users = iUserService.listByIds(memberIds);
+        if (CollUtil.isEmpty(users)) {
+            return PageResp.empty();
+        }
+        Map<Long, User> ipMap = users.stream()
+                .collect(Collectors.toMap(User::getId,
+                        e -> e));
         List<GroupMemberResp> memberList = records.stream().map(e -> {
             GroupMemberResp groupMemberResp = BeanUtil.copyProperties(e, GroupMemberResp.class);
             groupMemberResp.setOnlineState(iUserService.isOnline(e.getUserId()));
+            User user = ipMap.get(e.getUserId());
+            groupMemberResp.setIpAddress(ipSearchAdapter.search(user.getLastLoginIp()));
             return groupMemberResp;
         }).collect(Collectors.toList());
 

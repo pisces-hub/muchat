@@ -1,5 +1,6 @@
 package io.pisceshub.muchat.server.service.impl;
 
+import ch.qos.logback.core.util.ContextUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -356,7 +357,25 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
                         vo.setHeadImage(user.getHeadImage());
                         vo.setRemark(groupVO.getName());
                     }
+                    vo.setOnlineState(userService.isOnline(m.getUserId()));
+                    if(m.getUserId().equals(SessionContext.getUserId())){
+                        vo.setOnlineState(true);
+                    }
                     return vo;
+                }).sorted(new Comparator<GroupMemberResp>() {
+                    @Override
+                    public int compare(GroupMemberResp o1, GroupMemberResp o2) {
+                        //根据在线状态排序
+                        if(o1.getOnlineState() && o2.getOnlineState()){
+                            return 1;
+                        }else if(o1.getOnlineState()){
+                            return -1;
+                        }else if(o2.getOnlineState()){
+                            return 1;
+                        }else {
+                            return -1;
+                        }
+                    }
                 }).collect(Collectors.toList());
         return vos;
     }

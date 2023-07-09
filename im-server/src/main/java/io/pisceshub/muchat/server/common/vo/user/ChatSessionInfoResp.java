@@ -64,16 +64,11 @@ public class ChatSessionInfoResp implements Serializable {
     private String lastContent;
 
 
-    /**
-     * 群聊消息列表
-     */
-    private List<GroupMessageInfo> groupMessages;
-
 
     /**
-     * 群聊消息列表
+     * 消息列表
      */
-    private List<PrivateMessageInfo> privateMessages;
+    private List<? extends CommonMessageInfo> messages;
 
 
     @Override

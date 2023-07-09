@@ -26,6 +26,15 @@ public enum MessageType {
         this.desc=desc;
     }
 
+    public static MessageType findByCode(Integer type) {
+        for(MessageType m:values()){
+            if (m.code.equals(type)) {
+                return m;
+            }
+        }
+        return null;
+    }
+
 
     public String description() {
         return desc;
