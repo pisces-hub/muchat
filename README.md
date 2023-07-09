@@ -5,7 +5,6 @@
 > 1. **前端项目地址**：[muchat-ui](https://gitee.com/pisces-hub/muchat-ui)
 > 2. **快速体验项目**：[在线访问地址](http://43.138.164.74)
 
-<br/>
 
 ## 前言
 
