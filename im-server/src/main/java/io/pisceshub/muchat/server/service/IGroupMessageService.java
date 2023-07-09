@@ -5,6 +5,7 @@ import io.pisceshub.muchat.common.core.model.CommonMessageInfo;
 import io.pisceshub.muchat.common.core.model.GroupMessageInfo;
 import io.pisceshub.muchat.server.common.entity.GroupMessage;
 import io.pisceshub.muchat.server.common.vo.message.GroupMessageSendReq;
+import io.pisceshub.muchat.server.common.vo.message.MessageSendResp;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
 public interface IGroupMessageService extends IService<GroupMessage> {
 
 
-    Long sendMessage(GroupMessageSendReq vo);
+    MessageSendResp sendMessage(GroupMessageSendReq vo);
 
     void recallMessage(Long id);
 

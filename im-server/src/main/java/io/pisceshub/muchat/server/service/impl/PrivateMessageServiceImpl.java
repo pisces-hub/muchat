@@ -7,7 +7,9 @@ import io.pisceshub.muchat.sdk.IMClient;
 import io.pisceshub.muchat.common.core.contant.AppConst;
 import io.pisceshub.muchat.common.core.contant.RedisKey;
 import io.pisceshub.muchat.common.core.model.PrivateMessageInfo;
+import io.pisceshub.muchat.server.adapter.SensitiveWordAdapter;
 import io.pisceshub.muchat.server.common.entity.PrivateMessage;
+import io.pisceshub.muchat.server.common.vo.message.MessageSendResp;
 import io.pisceshub.muchat.server.exception.GlobalException;
 import io.pisceshub.muchat.server.mapper.PrivateMessageMapper;
 import io.pisceshub.muchat.server.service.IFriendService;
@@ -43,6 +45,9 @@ public class PrivateMessageServiceImpl extends ServiceImpl<PrivateMessageMapper,
      */
     private final static Integer defaultQueryMessageCount = 15;
 
+    @Autowired
+    private SensitiveWordAdapter sensitiveWordAdapter;
+
     /**
      * 发送私聊消息
      *
@@ -50,12 +55,18 @@ public class PrivateMessageServiceImpl extends ServiceImpl<PrivateMessageMapper,
      * @return 消息id
      */
     @Override
-    public Long sendMessage(PrivateMessageSendReq vo) {
+    public MessageSendResp sendMessage(PrivateMessageSendReq vo) {
         Long userId = SessionContext.getSession().getId();
         Boolean isFriends = friendService.isFriend(userId, vo.getRecvId());
         if (!isFriends) {
             throw new GlobalException(ResultCode.PROGRAM_ERROR, "您已不是对方好友，无法发送消息");
         }
+        String replaced = sensitiveWordAdapter.replace(vo.getContent());
+        if(replaced.matches("^\\*+$")){
+            throw new GlobalException("不允许发送该消息内容");
+        }
+        vo.setContent(replaced);
+
         // 保存消息
         PrivateMessage msg = BeanUtils.copyProperties(vo, PrivateMessage.class);
         msg.setSendId(userId);
@@ -66,8 +77,9 @@ public class PrivateMessageServiceImpl extends ServiceImpl<PrivateMessageMapper,
         PrivateMessageInfo msgInfo = BeanUtils.copyProperties(msg, PrivateMessageInfo.class);
         imClient.sendPrivateMessage(vo.getRecvId(),msgInfo);
         log.info("发送私聊消息，发送id:{},接收id:{}，内容:{}", userId, vo.getRecvId(), vo.getContent());
-        return msg.getId();
+        return MessageSendResp.builder().id(msg.getId()).content(msg.getContent()).build();
     }
+
 
     /**
      * 撤回消息

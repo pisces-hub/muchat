@@ -8,11 +8,13 @@ import io.pisceshub.muchat.common.core.model.CommonMessageInfo;
 import io.pisceshub.muchat.sdk.IMClient;
 import io.pisceshub.muchat.common.core.contant.AppConst;
 import io.pisceshub.muchat.common.core.model.GroupMessageInfo;
+import io.pisceshub.muchat.server.adapter.SensitiveWordAdapter;
 import io.pisceshub.muchat.server.common.contant.RedisKey;
 import io.pisceshub.muchat.server.common.entity.Group;
 import io.pisceshub.muchat.server.common.entity.GroupMember;
 import io.pisceshub.muchat.server.common.entity.GroupMessage;
 import io.pisceshub.muchat.server.common.enums.GroupEnum;
+import io.pisceshub.muchat.server.common.vo.message.MessageSendResp;
 import io.pisceshub.muchat.server.common.vo.user.GroupVO;
 import io.pisceshub.muchat.server.exception.GlobalException;
 import io.pisceshub.muchat.server.mapper.GroupMessageMapper;
@@ -61,6 +63,9 @@ public class GroupMessageServiceImpl extends ServiceImpl<GroupMessageMapper, Gro
      */
     private final static Integer defaultQueryMessageCount = 15;
 
+    @Autowired
+    private SensitiveWordAdapter sensitiveWordAdapter;
+
     /**
      * 发送群聊消息(与mysql所有交换都要进行缓存)
      *
@@ -68,7 +73,7 @@ public class GroupMessageServiceImpl extends ServiceImpl<GroupMessageMapper, Gro
      * @return 群聊id
      */
     @Override
-    public Long sendMessage(GroupMessageSendReq vo) {
+    public MessageSendResp sendMessage(GroupMessageSendReq vo) {
         Long userId = SessionContext.getSession().getId();
         Group group = groupService.getById(vo.getGroupId());
         if (group == null) {
@@ -82,6 +87,13 @@ public class GroupMessageServiceImpl extends ServiceImpl<GroupMessageMapper, Gro
         if (!userIds.contains(userId)) {
             throw new GlobalException(ResultCode.PROGRAM_ERROR, "您已不在群聊里面，无法发送消息");
         }
+
+        String replaced = sensitiveWordAdapter.replace(vo.getContent());
+        if(replaced.matches("^\\*+$")){
+            throw new GlobalException("不允许发送该消息内容");
+        }
+        vo.setContent(replaced);
+
         // 保存消息
         GroupMessage msg = BeanUtils.copyProperties(vo, GroupMessage.class);
         msg.setSendId(userId);
@@ -93,7 +105,8 @@ public class GroupMessageServiceImpl extends ServiceImpl<GroupMessageMapper, Gro
         GroupMessageInfo msgInfo = BeanUtils.copyProperties(msg, GroupMessageInfo.class);
         imClient.sendGroupMessage(userIds, msgInfo);
         log.info("发送群聊消息，发送id:{},群聊id:{},内容:{}", userId, vo.getGroupId(), vo.getContent());
-        return msg.getId();
+
+        return MessageSendResp.builder().id(msg.getId()).content(msg.getContent()).build();
     }
 
 

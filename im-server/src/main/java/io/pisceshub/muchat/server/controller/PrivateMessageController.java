@@ -5,7 +5,9 @@ import io.pisceshub.muchat.common.core.model.PrivateMessageInfo;
 import io.pisceshub.muchat.common.core.utils.Result;
 import io.pisceshub.muchat.common.core.utils.ResultUtils;
 import io.pisceshub.muchat.common.log.annotation.ApiLog;
+import io.pisceshub.muchat.server.adapter.SensitiveWordAdapter;
 import io.pisceshub.muchat.server.aop.annotation.AnonymousUserCheck;
+import io.pisceshub.muchat.server.common.vo.message.MessageSendResp;
 import io.pisceshub.muchat.server.service.IPrivateMessageService;
 import io.pisceshub.muchat.server.common.vo.message.PrivateMessageSendReq;
 import io.swagger.annotations.Api;
@@ -26,10 +28,11 @@ public class PrivateMessageController {
     @Autowired
     private IPrivateMessageService privateMessageService;
 
+
     @ApiLog
     @PostMapping("/send")
     @ApiOperation(value = "发送消息",notes="发送私聊消息")
-    public Result<Long> sendMessage(@Valid @RequestBody PrivateMessageSendReq vo){
+    public Result<MessageSendResp> sendMessage(@Valid @RequestBody PrivateMessageSendReq vo){
         return ResultUtils.success(privateMessageService.sendMessage(vo));
     }
 

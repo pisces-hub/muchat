@@ -31,6 +31,10 @@
         </dependency>
         <dependency>
             <groupId>io.pisceshub.muchat</groupId>
+            <artifactId>im-common-publics</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.pisceshub.muchat</groupId>
             <artifactId>im-sdk</artifactId>
         </dependency>
         <dependency>

@@ -5,6 +5,7 @@ import io.pisceshub.muchat.common.core.model.GroupMessageInfo;
 import io.pisceshub.muchat.common.core.utils.Result;
 import io.pisceshub.muchat.common.core.utils.ResultUtils;
 import io.pisceshub.muchat.common.log.annotation.ApiLog;
+import io.pisceshub.muchat.server.common.vo.message.MessageSendResp;
 import io.pisceshub.muchat.server.service.IGroupMessageService;
 import io.pisceshub.muchat.server.common.vo.message.GroupMessageSendReq;
 import io.swagger.annotations.Api;
@@ -29,7 +30,7 @@ public class GroupMessageController {
     @ApiLog
     @PostMapping("/send")
     @ApiOperation(value = "发送群聊消息",notes="发送群聊消息")
-    public Result<Long> sendMessage(@Valid @RequestBody GroupMessageSendReq vo){
+    public Result<MessageSendResp> sendMessage(@Valid @RequestBody GroupMessageSendReq vo){
         return ResultUtils.success(groupMessageService.sendMessage(vo));
     }
 
