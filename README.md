@@ -1,16 +1,9 @@
 # MuChat
 
-<p>
- <a href="https://github.com/pisces-hub/muchat-ui"> <img src="http://43.138.164.74:9000/muchat/file/20230617/1686965644141.svg" alt="前端项目"/>
-</a>
-    <br/>    
-<a href="#联系方式"><img src="http://43.138.164.74:9000/muchat/file/20230616/1686924473737.svg" alt="交流"></a>
-  <a href="https://gitee.com/pisces-hub/muchat"><img src="http://43.138.164.74:9000/muchat/file/20230616/1686924589588.svg" alt="码云"></a>
-</p>
+<br/>
 
-## 友情提示
-
-> 1. **快速体验项目**：[在线访问地址](http://43.138.164.74)
+> 1. **前端项目地址**：[muchat-ui](https://gitee.com/pisces-hub/muchat-ui)
+> 2. **快速体验项目**：[在线访问地址](http://43.138.164.74)
 
 
 ## 前言
