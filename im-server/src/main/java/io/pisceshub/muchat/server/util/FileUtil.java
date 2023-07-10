@@ -1,7 +1,9 @@
 package io.pisceshub.muchat.server.util;
 
-import java.io.IOException;
-import java.io.InputStream;
+import cn.hutool.core.util.StrUtil;
+
+import java.io.*;
+import java.util.function.Function;
 
 public class FileUtil {
 
@@ -43,6 +45,55 @@ public class FileUtil {
         }finally {
             inputStream.close();
         }
+    }
 
+
+    public static void lineHandler(String path, Function<String,String> function) throws Exception {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(path),"utf-8"));
+
+        String outPath = path+".bak";
+
+        checkeFileExist(outPath);
+
+        BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outPath), "utf-8"));
+        ;
+        String line = null;
+        while (( line= bufferedReader.readLine())!=null){
+            if(StrUtil.isEmpty(line)){
+                continue;
+            }
+            line = function.apply(line);
+            bufferedWriter.write(line);
+            bufferedWriter.newLine();
+        }
+
+        bufferedWriter.flush();
+
+    }
+
+    public static void main(String[] args) throws Exception {
+        String path = FileUtil.class.getClassLoader().getResource("base.txt").getPath();
+
+        lineHandler(path, new Function<String, String>() {
+            @Override
+            public String apply(String s) {
+                if(s.substring(s.length()-1).equals(",")){
+                    return s.substring(0,s.length()-1);
+                }
+                return s;
+            }
+        });
+
+        String s = "aaa,";
+        System.out.println(path);
+        System.out.println(s.substring(s.length()-1));
+        System.out.println(s.substring(0,s.length()-1));
+    }
+
+    private static void checkeFileExist(String outPath) {
+        File file = new File(outPath);
+        if(!file.getParentFile().exists()){
+            file.mkdir();
+        }
     }
 }
