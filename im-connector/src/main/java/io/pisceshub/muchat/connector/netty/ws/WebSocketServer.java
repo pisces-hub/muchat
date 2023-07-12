@@ -105,7 +105,7 @@ public class WebSocketServer implements IMServer {
             // 等待服务端口关闭
             //channel.closeFuture().sync();
         } catch (InterruptedException e) {
-            log.info("websocket server 初始化异常",e);
+            log.error("websocket server 初始化异常",e);
         }
     }
 
@@ -118,7 +118,7 @@ public class WebSocketServer implements IMServer {
             workGroup.shutdownGracefully();
         }
         this.ready = false;
-        log.info("websocket server 停止");
+        log.error("websocket server 停止");
     }
 
 
