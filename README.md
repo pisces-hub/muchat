@@ -63,6 +63,14 @@ muchat
 - 启动长连接服务im-connector
 - 启动业务服务im-server
 
+
+
+
+### 项目运行截图
+
+![聊天列表](docs/images/demo1.jpg)
+![聊天列表](docs/images/demo3.jpg)
+
 ## Contributing
 
 - For bug reports, please use [Issues](https://gitee.com/pisces-hub/muchat/issues)
@@ -76,6 +84,8 @@ QQ: 704566072
 ![](./docs/images/vx-xiaochangbai.jpg)
 
 有任何问题，欢迎给我留言哦
+
+
 
 
 ## 点下star吧
