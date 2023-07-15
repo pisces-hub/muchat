@@ -4,7 +4,7 @@ server:
 #配置项目的数据源
 spring:
   datasource:
-    driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/muchat?useSSL=false&useUnicode=true&characterEncoding=utf-8&allowPublicKeyRetrieval=true
     username: root
     password: root
