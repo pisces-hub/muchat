@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
  * @author xiaochangbai
  * @date 2023-06-15 21:49
  */
-@Component
+//@Component
 public class RedisChatSessionSave implements ChatSessionSave {
 
     private final static Long MAX_SIZE = 100L;

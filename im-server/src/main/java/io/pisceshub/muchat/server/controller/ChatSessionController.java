@@ -3,6 +3,7 @@ package io.pisceshub.muchat.server.controller;
 import io.pisceshub.muchat.common.log.annotation.ApiLog;
 import io.pisceshub.muchat.server.aop.annotation.AnonymousUserCheck;
 import io.pisceshub.muchat.server.common.vo.user.ChatSessionInfoResp;
+import io.pisceshub.muchat.server.common.vo.user.ChatSessionUpdateReq;
 import io.pisceshub.muchat.server.util.SessionContext;
 import io.swagger.annotations.Api;
 import io.pisceshub.muchat.common.core.utils.Result;
@@ -33,6 +34,7 @@ public class ChatSessionController {
      * @param vo
      * @return
      */
+    @ApiLog
     @AnonymousUserCheck
     @PostMapping("/save")
     public Result<String> save(@RequestBody @Valid ChatSessionAddReq vo){
@@ -55,10 +57,11 @@ public class ChatSessionController {
      * @param vo
      * @return
      */
-
+    @ApiLog
     @AnonymousUserCheck
     @DeleteMapping("/del")
-    public Result<String> del(@RequestBody @Valid ChatSessionAddReq vo){
+    public Result<String> del(@RequestBody @Valid ChatSessionUpdateReq vo){
+        vo.setUserId(null);
         return iChatSessionService.del(vo)? ResultUtils.success():ResultUtils.error();
     }
 }

@@ -1,6 +1,7 @@
 package io.pisceshub.muchat.server.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ObjectUtil;
 import io.pisceshub.muchat.common.core.enums.ChatType;
 import io.pisceshub.muchat.common.core.enums.ResultCode;
 import io.pisceshub.muchat.common.core.model.CommonMessageInfo;
@@ -14,6 +15,7 @@ import io.pisceshub.muchat.server.common.entity.User;
 import io.pisceshub.muchat.server.common.enums.GroupEnum;
 import io.pisceshub.muchat.server.common.enums.UserEnum;
 import io.pisceshub.muchat.server.common.vo.user.ChatSessionInfoResp;
+import io.pisceshub.muchat.server.common.vo.user.ChatSessionUpdateReq;
 import io.pisceshub.muchat.server.common.vo.user.UserVO;
 import io.pisceshub.muchat.server.exception.BusinessException;
 import io.pisceshub.muchat.server.exception.NotJoinGroupException;
@@ -183,9 +185,9 @@ public class ChatSessionServiceImpl implements IChatSessionService {
     }
 
     @Override
-    public boolean del(ChatSessionAddReq vo) {
-        return chatSessionSave.del(SessionContext.getUserId(),
-                BeanUtils.copyProperties(vo,ChatSessionInfoDto.class));
+    public boolean del(ChatSessionUpdateReq vo) {
+        Long userId = ObjectUtil.defaultIfNull(vo.getUserId(),SessionContext.getUserId());
+        return chatSessionSave.del(userId,BeanUtils.copyProperties(vo,ChatSessionInfoDto.class));
     }
 
 }

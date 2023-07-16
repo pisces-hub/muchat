@@ -91,3 +91,13 @@ INSERT INTO `im_group` (`id`, `name`, `owner_id`, `head_image`, `head_image_thum
 ALTER TABLE `im_user`
 ADD COLUMN `last_login_ip` varchar(30) NULL COMMENT '最新一次登录的ip信息';
 
+
+CREATE TABLE `muchat`.`Untitled`  (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `own_id` bigint NULL COMMENT '归属用户id',
+  `target_id` bigint NULL COMMENT '对方id',
+  `chat_type` varchar(255) NULL COMMENT '聊天类型',
+  `update_time` bigint NULL COMMENT '更新时间',
+  `top_flag` int NULL COMMENT '是否置顶',
+  PRIMARY KEY (`id`)
+);

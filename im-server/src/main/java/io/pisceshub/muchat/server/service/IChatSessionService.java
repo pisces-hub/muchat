@@ -3,6 +3,7 @@ package io.pisceshub.muchat.server.service;
 import io.pisceshub.muchat.common.core.utils.Result;
 import io.pisceshub.muchat.server.common.vo.user.ChatSessionAddReq;
 import io.pisceshub.muchat.server.common.vo.user.ChatSessionInfoResp;
+import io.pisceshub.muchat.server.common.vo.user.ChatSessionUpdateReq;
 
 import java.util.List;
 import java.util.Set;
@@ -16,5 +17,5 @@ public interface IChatSessionService {
 
     Result<Set<ChatSessionInfoResp>> list();
 
-    boolean del(ChatSessionAddReq vo);
+    boolean del(ChatSessionUpdateReq vo);
 }

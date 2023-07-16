@@ -51,7 +51,7 @@ app:
     address: localhost:2181
     path: /muchat/node
   auth2:
-    loginRedirectUri: http://127.0.0.1:8080/#/oAuthLoginResult
+    loginRedirectUri: http://127.0.0.1:8080/oAuthLoginResult
     gitee:
       clientId: 1
       clientSecret: 1

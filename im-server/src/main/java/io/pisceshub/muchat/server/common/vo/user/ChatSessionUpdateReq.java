@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.Objects;
 
 /**
  * @author xiaochangbai
@@ -18,7 +17,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class ChatSessionAddReq implements Serializable {
+public class ChatSessionUpdateReq implements Serializable {
 
 
     @NotNull(message = "对方id不能为空")
@@ -26,6 +25,8 @@ public class ChatSessionAddReq implements Serializable {
 
     @NotNull(message = "聊天类型不能为空")
     private ChatType chatType;
+
+    private Long userId;
 
 
 }

@@ -2,11 +2,14 @@ package io.pisceshub.muchat.server.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import io.pisceshub.muchat.common.core.enums.ChatType;
 import io.pisceshub.muchat.server.common.contant.RedisKey;
 import io.pisceshub.muchat.server.common.entity.Friend;
 import io.pisceshub.muchat.server.common.entity.User;
+import io.pisceshub.muchat.server.common.vo.user.ChatSessionUpdateReq;
 import io.pisceshub.muchat.server.exception.GlobalException;
 import io.pisceshub.muchat.server.mapper.FriendMapper;
+import io.pisceshub.muchat.server.service.IChatSessionService;
 import io.pisceshub.muchat.server.service.IFriendService;
 import io.pisceshub.muchat.server.service.IUserService;
 import io.pisceshub.muchat.server.util.SessionContext;
@@ -33,6 +36,9 @@ public class FriendServiceImpl extends ServiceImpl<FriendMapper, Friend> impleme
     @Lazy
     @Autowired
     private IUserService userService;
+
+    @Autowired
+    private IChatSessionService iChatSessionService;
 
     /**
      * 查询用户的所有好友
@@ -84,6 +90,10 @@ public class FriendServiceImpl extends ServiceImpl<FriendMapper, Friend> impleme
         FriendServiceImpl proxy = (FriendServiceImpl)AopContext.currentProxy();
         proxy.unbindFriend(userId,friendId);
         proxy.unbindFriend(friendId,userId);
+        iChatSessionService.del(ChatSessionUpdateReq.builder()
+                        .chatType(ChatType.PRIVATE)
+                        .targetId(friendId)
+                .build());
         log.info("删除好友，用户id:{},好友id:{}",userId,friendId);
     }
 

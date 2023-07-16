@@ -7,6 +7,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import io.pisceshub.muchat.common.core.enums.ChatType;
 import io.pisceshub.muchat.common.core.model.PageResp;
 import io.pisceshub.muchat.server.adapter.IpSearchAdapter;
 import io.pisceshub.muchat.server.common.contant.Constant;
@@ -17,20 +18,15 @@ import io.pisceshub.muchat.server.common.entity.GroupMember;
 import io.pisceshub.muchat.server.common.entity.User;
 import io.pisceshub.muchat.server.common.enums.GroupEnum;
 import io.pisceshub.muchat.server.common.vo.group.GroupMemberQueryReq;
+import io.pisceshub.muchat.server.common.vo.user.*;
 import io.pisceshub.muchat.server.exception.BusinessException;
 import io.pisceshub.muchat.server.exception.GlobalException;
 import io.pisceshub.muchat.server.exception.NotJoinGroupException;
 import io.pisceshub.muchat.server.mapper.GroupMapper;
-import io.pisceshub.muchat.server.service.IGroupMemberService;
-import io.pisceshub.muchat.server.service.IGroupService;
-import io.pisceshub.muchat.server.service.IUserService;
+import io.pisceshub.muchat.server.service.*;
 import io.pisceshub.muchat.server.util.SessionContext;
 import io.pisceshub.muchat.server.util.BeanUtils;
 import io.pisceshub.muchat.common.core.enums.ResultCode;
-import io.pisceshub.muchat.server.service.IFriendService;
-import io.pisceshub.muchat.server.common.vo.user.GroupInviteReq;
-import io.pisceshub.muchat.server.common.vo.user.GroupMemberResp;
-import io.pisceshub.muchat.server.common.vo.user.GroupVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +57,9 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
 
     @Autowired
     private IpSearchAdapter ipSearchAdapter;
+
+    @Autowired
+    private IChatSessionService iChatSessionService;
 
 
     /**
@@ -165,6 +164,11 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
         }
         // 删除群聊成员
         groupMemberService.removeByGroupAndUserId(groupId, userId);
+
+        iChatSessionService.del(ChatSessionUpdateReq.builder()
+                .chatType(ChatType.GROUP)
+                .targetId(groupId).build()
+        );
         log.info("退出群聊，群聊id:{},群聊名称:{},用户id:{}", group.getId(), group.getName(), userId);
     }
 
@@ -188,6 +192,10 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
         }
         // 删除群聊成员
         groupMemberService.removeByGroupAndUserId(groupId, userId);
+        iChatSessionService.del(ChatSessionUpdateReq.builder()
+                .chatType(ChatType.GROUP)
+                        .userId(userId)
+                .targetId(groupId).build());
         log.info("踢出群聊，群聊id:{},群聊名称:{},用户id:{}", group.getId(), group.getName(), userId);
     }
 
