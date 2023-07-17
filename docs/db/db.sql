@@ -92,7 +92,7 @@ ALTER TABLE `im_user`
 ADD COLUMN `last_login_ip` varchar(30) NULL COMMENT '最新一次登录的ip信息';
 
 
-CREATE TABLE `muchat`.`Untitled`  (
+CREATE TABLE `chat_session`  (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `own_id` bigint NULL COMMENT '归属用户id',
   `target_id` bigint NULL COMMENT '对方id',

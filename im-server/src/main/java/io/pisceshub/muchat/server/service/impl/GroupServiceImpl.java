@@ -354,7 +354,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
                 .collect(Collectors.toMap(User::getId,
                         e -> e));
         users.clear();
-        List<GroupMemberResp> vos = members.stream()
+        return members.stream()
                 .filter(e -> ipMap.containsKey(e.getUserId()))
                 .map(m -> {
                     GroupMemberResp vo = BeanUtils.copyProperties(m, GroupMemberResp.class);
@@ -385,7 +385,6 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
                         }
                     }
                 }).collect(Collectors.toList());
-        return vos;
     }
 
     @Override
