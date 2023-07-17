@@ -79,9 +79,8 @@ muchat
 
 ## 联系方式
 
-QQ: 704566072
 
-![](./docs/images/vx-xiaochangbai.jpg)
+![](./docs/images/wx-public.png)
 
 有任何问题，欢迎给我留言哦
 
