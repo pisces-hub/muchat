@@ -1,7 +1,7 @@
 package io.pisceshub.muchat.server.config;
 
-import io.pisceshub.muchat.server.tcp.algorithm.RouteHandle;
-import io.pisceshub.muchat.server.tcp.algorithm.consistenthash.ConsistentHashHandle;
+import io.pisceshub.muchat.server.core.algorithm.RouteHandle;
+import io.pisceshub.muchat.server.core.algorithm.consistenthash.ConsistentHashHandle;
 import io.pisceshub.muchat.server.util.FileUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.lionsoul.ip2region.xdb.Searcher;

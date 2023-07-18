@@ -1,4 +1,6 @@
-package io.pisceshub.muchat.server.tcp.algorithm.consistenthash;
+package io.pisceshub.muchat.server.core.algorithm.consistenthash;
+
+import io.pisceshub.muchat.server.core.NodeContainer;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
@@ -16,7 +18,7 @@ public abstract class AbstractConsistentHash {
      * @param key
      * @param value
      */
-    protected abstract void add(long key,String value);
+    protected abstract void add(long key,NodeContainer.WNode value);
 
     protected void clear(){}
 
@@ -30,7 +32,7 @@ public abstract class AbstractConsistentHash {
      * @param value
      * @return
      */
-    protected abstract String getFirstNodeValue(String value);
+    protected abstract NodeContainer.WNode getFirstNodeValue(String value);
 
     /**
      * 传入节点列表以及客户端信息获取一个服务节点
@@ -38,9 +40,9 @@ public abstract class AbstractConsistentHash {
      * @param key
      * @return
      */
-    public String process(List<String> nodes,String key){
-        for (String value : nodes) {
-            add(hash(value), value);
+    public NodeContainer.WNode process(List<NodeContainer.WNode> nodes,String key){
+        for (NodeContainer.WNode value : nodes) {
+            add(hash(value.toString()), value);
         }
         sort();
         return getFirstNodeValue(key) ;
@@ -51,7 +53,7 @@ public abstract class AbstractConsistentHash {
      * @param key
      * @return
      */
-    public String process(String key){
+    public NodeContainer.WNode process(String key){
         return getFirstNodeValue(key) ;
     }
 
@@ -60,19 +62,20 @@ public abstract class AbstractConsistentHash {
      * @param nodes
      * @return
      */
-    public void reBuildRing(Collection<String> nodes){
-        for (String value : nodes) {
-            add(hash(value), value);
+    public void reBuildRing(Collection<NodeContainer.WNode> nodes){
+        clear();
+        for (NodeContainer.WNode value : nodes) {
+            add(hash(value.toString()), value);
         }
         sort();
     }
 
     /**
      * hash 运算
-     * @param value
+     * @param key
      * @return
      */
-    public Long hash(String value){
+    public Long hash(String key){
         MessageDigest md5;
         try {
             md5 = MessageDigest.getInstance("MD5");
@@ -82,9 +85,9 @@ public abstract class AbstractConsistentHash {
         md5.reset();
         byte[] keyBytes = null;
         try {
-            keyBytes = value.getBytes("UTF-8");
+            keyBytes = key.getBytes("UTF-8");
         } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException("Unknown string :" + value, e);
+            throw new RuntimeException("Unknown string :" + key, e);
         }
 
         md5.update(keyBytes);

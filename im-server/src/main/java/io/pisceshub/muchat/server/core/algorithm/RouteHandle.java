@@ -1,6 +1,7 @@
-package io.pisceshub.muchat.server.tcp.algorithm;
+package io.pisceshub.muchat.server.core.algorithm;
 
 import io.pisceshub.muchat.common.core.enums.NetProtocolEnum;
+import io.pisceshub.muchat.server.core.NodeContainer;
 
 import java.util.List;
 
@@ -15,5 +16,5 @@ public interface RouteHandle {
      * @param key
      * @return
      */
-    String routeServer(NetProtocolEnum protocolEnum, List<String> values, String key) ;
+    NodeContainer.WNode routeServer(NetProtocolEnum protocolEnum, List<NodeContainer.WNode> values, String key) ;
 }

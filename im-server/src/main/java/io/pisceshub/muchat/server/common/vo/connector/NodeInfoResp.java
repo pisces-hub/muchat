@@ -19,6 +19,6 @@ public class NodeInfoResp {
     private String ip;
 
     @ApiModelProperty("端口信息")
-    private String port;
+    private Integer port;
 
 }

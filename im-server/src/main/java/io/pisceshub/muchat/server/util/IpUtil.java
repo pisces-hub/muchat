@@ -46,6 +46,13 @@ public class IpUtil {
         return "0:0:0:0:0:0:0:1".equals(ip) ? LOCAL_IP : ip;
     }
 
+    public static Integer getIntIp(){
+        String ipStr = getIpAddr(SessionContext.getRequest());
+        String[] ip = ipStr.split("\\.");
+        return (Integer.parseInt(ip[0]) << 24) + (Integer.parseInt(ip[1]) << 16) + (Integer.parseInt(ip[2]) << 8) + Integer.parseInt(ip[3]);
+
+    }
+
 
     public static String getLocalIP() {
         String ip = "";

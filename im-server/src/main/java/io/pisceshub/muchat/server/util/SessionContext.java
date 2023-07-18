@@ -42,6 +42,14 @@ public class SessionContext {
         return session.getId();
     }
 
+    public static Long getUserIdIfExist(){
+        UserSessionInfo session = getSession();
+        if(session==null){
+            return null;
+        }
+        return session.getId();
+    }
+
     @Data
     public static class UserSessionInfo {
 

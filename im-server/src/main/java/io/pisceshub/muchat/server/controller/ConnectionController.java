@@ -45,7 +45,7 @@ public class ConnectionController {
         if(protocol==null){
             protocol = NetProtocolEnum.WS;
         }
-        NodeInfoResp nodeInfoVo = connectionService.node(protocol, SessionContext.getSession().getId());
+        NodeInfoResp nodeInfoVo = connectionService.node(protocol, SessionContext.getUserIdIfExist());
         if(nodeInfoVo==null){
             return ResultUtils.error(ResultCode.NO_AVAILABLE_SERVICES);
         }

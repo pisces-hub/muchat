@@ -11,10 +11,10 @@ spring:
 app:
   ip:
   ws:
-    port: 11111
+    port: -1
     enable: true
   tcp:
-    port: 11112
+    port: -1
     enable: true
   zk:
     path: /muchat/node

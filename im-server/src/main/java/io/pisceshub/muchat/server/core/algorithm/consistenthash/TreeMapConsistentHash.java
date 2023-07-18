@@ -1,9 +1,10 @@
-package io.pisceshub.muchat.server.tcp.algorithm.consistenthash;
+package io.pisceshub.muchat.server.core.algorithm.consistenthash;
 
 
+
+import io.pisceshub.muchat.server.core.NodeContainer;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -11,7 +12,7 @@ import java.util.TreeMap;
  * Function:TreeMap 实现
  */
 public class TreeMapConsistentHash extends AbstractConsistentHash {
-    private TreeMap<Long,String> treeMap;
+    private TreeMap<Long,NodeContainer.WNode> treeMap;
 
     /**
      * 虚拟节点数量
@@ -19,18 +20,18 @@ public class TreeMapConsistentHash extends AbstractConsistentHash {
     private int virtualNodeSize;
 
     public TreeMapConsistentHash(){
-        treeMap = new TreeMap<Long, String>();
+        treeMap = new TreeMap<Long, NodeContainer.WNode>();
         virtualNodeSize = 2;
     }
-    public TreeMapConsistentHash(Collection<String> values, int virtualNodeSize){
-        treeMap = new TreeMap<Long, String>();
+    public TreeMapConsistentHash(Collection<NodeContainer.WNode> values, int virtualNodeSize){
+        treeMap = new TreeMap<Long, NodeContainer.WNode>();
         this.virtualNodeSize = virtualNodeSize;
         this.reBuildRing(values);
     }
 
 
     @Override
-    public void add(long key, String value) {
+    public void add(long key, NodeContainer.WNode value) {
 
         for (int i = 0; i < virtualNodeSize; i++) {
             Long hash = super.hash("vir" + key + i*1000);
@@ -45,9 +46,9 @@ public class TreeMapConsistentHash extends AbstractConsistentHash {
     }
 
     @Override
-    public String getFirstNodeValue(String value) {
+    public NodeContainer.WNode getFirstNodeValue(String value) {
         long hash = super.hash(value);
-        SortedMap<Long, String> last = treeMap.tailMap(hash);
+        SortedMap<Long, NodeContainer.WNode> last = treeMap.tailMap(hash);
         if (!last.isEmpty()) {
             return last.get(last.firstKey());
         }

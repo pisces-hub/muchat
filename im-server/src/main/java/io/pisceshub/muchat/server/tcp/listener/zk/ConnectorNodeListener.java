@@ -5,6 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import io.pisceshub.muchat.common.core.contant.AppConst;
 import io.pisceshub.muchat.common.core.enums.NetProtocolEnum;
 import io.pisceshub.muchat.server.config.properties.AppConfigInfo;
+import io.pisceshub.muchat.server.core.NodeContainer;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.framework.CuratorFramework;
@@ -20,10 +21,8 @@ import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @description:
@@ -43,6 +42,9 @@ public class ConnectorNodeListener implements ApplicationListener<ApplicationSta
     @Autowired
     private List<INodeUpdateNodeEventListener> nodeUpdateNodeEventListeners;
 
+    @Autowired
+    private NodeContainer nodeContainer;
+
     @SneakyThrows
     @Override
     public void onApplicationEvent(ApplicationStartedEvent applicationStartedEvent) {
@@ -50,15 +52,32 @@ public class ConnectorNodeListener implements ApplicationListener<ApplicationSta
                 new RetryNTimes(10, 5000));
         client.start();
 
-        //监听子节点
-        childrenCacheListener(client,NetProtocolEnum.TCP);
-        childrenCacheListener(client,NetProtocolEnum.WS);
-        this.addNode(NetProtocolEnum.TCP,client.getChildren().forPath(buildZkPath(NetProtocolEnum.TCP)));
-        this.addNode(NetProtocolEnum.WS,client.getChildren().forPath(buildZkPath(NetProtocolEnum.WS)));
-
-        if(nodeUpdateNodeEventListeners==null){
-            nodeUpdateNodeEventListeners = Collections.emptyList();
+        for(NetProtocolEnum protocolEnum:NetProtocolEnum.values()){
+            String zkProtocolPath = buildZkPath(protocolEnum);
+            //监听变更
+            childrenCacheListener(zkProtocolPath,protocolEnum);
+            //主动拉取一遍最新数据
+//            List<String> paths = client.getChildren().forPath(zkProtocolPath);
+//            if(CollUtil.isEmpty(paths)){
+//                continue;
+//            }
+//            List<NodeContainer.WNode> nodeList = paths.stream().map(e->{return convertZkNodeToWNote(e,protocolEnum);})
+//                    .filter(Objects::nonNull).collect(Collectors.toList());
+//            this.addNode(protocolEnum,nodeList);
         }
+    }
+
+
+    private NodeContainer.WNode convertZkNodeToWNote(String zkPath,NetProtocolEnum protocolEnum){
+        if(StrUtil.isEmpty(zkPath)){
+            return null;
+        }
+        String[] split = zkPath.split(":");
+        if(split.length<2){
+            return null;
+        }
+        NodeContainer.WNode wNode = NodeContainer.WNode.builder().protocolEnum(protocolEnum).ip(split[0]).port(Integer.valueOf(split[1])).build();
+        return wNode;
     }
 
     private String buildZkPath(NetProtocolEnum netProtocolEnum) throws Exception {
@@ -76,8 +95,7 @@ public class ConnectorNodeListener implements ApplicationListener<ApplicationSta
         return zkPath;
     }
 
-    private void childrenCacheListener(CuratorFramework client,NetProtocolEnum netProtocolEnum) throws Exception {
-        String listenerPath = buildZkPath(netProtocolEnum);
+    private void childrenCacheListener(String listenerPath,NetProtocolEnum netProtocolEnum) throws Exception {
         PathChildrenCache pathChildrenCache = new PathChildrenCache(client, listenerPath,true);
         PathChildrenCacheListener pathChildrenCacheListener = new PathChildrenCacheListener() {
             @Override
@@ -86,11 +104,14 @@ public class ConnectorNodeListener implements ApplicationListener<ApplicationSta
                 if (childData != null) {
                     String path = childData.getPath().substring(listenerPath.length()+1);
                     if(PathChildrenCacheEvent.Type.CHILD_ADDED==event.getType()){
-                        addNode(netProtocolEnum,Arrays.asList(path));
-                        log.info("新的机器上线成功：ws:{},tcp:{}", AppConst.WS_NODES, AppConst.TCP_NODES);
+                        NodeContainer.WNode wNode = convertZkNodeToWNote(path,netProtocolEnum);
+                        if(wNode!=null){
+                            addNode(netProtocolEnum, Collections.singletonList(wNode));
+                        }
                     }else if(PathChildrenCacheEvent.Type.CHILD_REMOVED==event.getType()){
-                        removeNode(netProtocolEnum,path);
-                        log.info("机器下线成功：ws:{},tcp:{}", AppConst.WS_NODES, AppConst.TCP_NODES);
+                        NodeContainer.WNode wNode = convertZkNodeToWNote(path,netProtocolEnum);
+                        removeNode(netProtocolEnum,wNode);
+
                     }
                 }
             }
@@ -99,44 +120,35 @@ public class ConnectorNodeListener implements ApplicationListener<ApplicationSta
         pathChildrenCache.start();
     }
 
-    public void removeNode(NetProtocolEnum netProtocolEnum,String node){
-        if(StrUtil.isBlank(node)){
+    public void removeNode(NetProtocolEnum netProtocolEnum,NodeContainer.WNode node){
+        if(node==null){
             return;
         }
-        if(NetProtocolEnum.TCP.equals(netProtocolEnum)){
-            AppConst.TCP_NODES.remove(node);
+        nodeContainer.remove(netProtocolEnum,node);
+        log.info("机器下线成功：{}", node);
+
+        //发布事件
+        if(CollUtil.isNotEmpty(nodeUpdateNodeEventListeners)){
             nodeUpdateNodeEventListeners.forEach(e->{
-                e.delete(NetProtocolEnum.TCP,node);
-                e.list(NetProtocolEnum.TCP,AppConst.TCP_NODES);
-            });
-        }
-        if(NetProtocolEnum.WS.equals(netProtocolEnum)){
-            AppConst.WS_NODES.remove(node);
-            nodeUpdateNodeEventListeners.forEach(e->{
-                e.delete(NetProtocolEnum.WS,node);
-                e.list(NetProtocolEnum.WS,AppConst.WS_NODES);
+                e.delete(netProtocolEnum,node);
+                e.list(netProtocolEnum,nodeContainer.list(netProtocolEnum));
             });
         }
     }
 
-    public void addNode(NetProtocolEnum netProtocolEnum,List<String> nodes){
+    public void addNode(NetProtocolEnum netProtocolEnum,List<NodeContainer.WNode> nodes){
         if(CollUtil.isEmpty(nodes)){
             return;
         }
-        if(NetProtocolEnum.TCP.equals(netProtocolEnum)){
-            AppConst.TCP_NODES.addAll(nodes);
-            nodeUpdateNodeEventListeners.forEach(e->{
-                e.add(NetProtocolEnum.TCP,nodes);
-                e.list(NetProtocolEnum.TCP,AppConst.TCP_NODES);
-            });
-        }
-        if(NetProtocolEnum.WS.equals(netProtocolEnum)){
-            AppConst.WS_NODES.addAll(nodes);
-            nodeUpdateNodeEventListeners.forEach(e->{
-                e.add(NetProtocolEnum.WS,nodes);
-                e.list(NetProtocolEnum.WS,AppConst.WS_NODES);
-            });
-        }
+        nodeContainer.add(netProtocolEnum,nodes);
+        log.info("新的机器上线成功：{}",nodes);
 
+        //发布事件
+        if(CollUtil.isNotEmpty(nodeUpdateNodeEventListeners)){
+            nodeUpdateNodeEventListeners.forEach(e->{
+                e.add(netProtocolEnum,nodes);
+                e.list(netProtocolEnum,nodeContainer.list(netProtocolEnum));
+            });
+        }
     }
 }

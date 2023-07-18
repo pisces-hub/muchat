@@ -1,6 +1,7 @@
 package io.pisceshub.muchat.server.tcp.listener.zk;
 
 import io.pisceshub.muchat.common.core.enums.NetProtocolEnum;
+import io.pisceshub.muchat.server.core.NodeContainer;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -13,15 +14,15 @@ import java.util.List;
  */
 public interface INodeUpdateNodeEventListener {
 
-    default void delete(NetProtocolEnum netProtocolEnum,String node){
+    default void delete(NetProtocolEnum netProtocolEnum,NodeContainer.WNode node){
 
     }
 
-    default void add(NetProtocolEnum netProtocolEnum,Collection<String> node){
+    default void add(NetProtocolEnum netProtocolEnum,Collection<NodeContainer.WNode> node){
 
     }
 
-    default void list(NetProtocolEnum netProtocolEnum, Collection<String> nodes){
+    default void list(NetProtocolEnum netProtocolEnum, Collection<NodeContainer.WNode> nodes){
 
     }
 

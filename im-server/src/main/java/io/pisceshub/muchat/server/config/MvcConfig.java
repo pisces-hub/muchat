@@ -26,7 +26,7 @@ public class MvcConfig implements WebMvcConfigurer {
                 .excludePathPatterns("/swagger-resources/**")
                 .excludePathPatterns("/webjars/**")
                 .excludePathPatterns("/*/api-docs")
-                .excludePathPatterns("/connect/**")
+                .excludePathPatterns("/connector/**")
         ;
 
 

@@ -1,15 +1,17 @@
 package io.pisceshub.muchat.server.service.impl;
 
 
-import io.pisceshub.muchat.server.tcp.algorithm.RouteHandle;
-import io.pisceshub.muchat.common.core.contant.AppConst;
+import cn.hutool.core.bean.BeanUtil;
+import io.pisceshub.muchat.server.core.NodeContainer;
+import io.pisceshub.muchat.server.core.algorithm.RouteHandle;
 import io.pisceshub.muchat.common.core.enums.NetProtocolEnum;
 import io.pisceshub.muchat.server.service.ConnectionService;
 import io.pisceshub.muchat.server.common.vo.connector.NodeInfoResp;
+import io.pisceshub.muchat.server.util.IpUtil;
+import io.pisceshub.muchat.server.util.SessionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,45 +27,33 @@ public class ConnectionServiceImpl implements ConnectionService {
     @Autowired
     private RouteHandle routeHandle;
 
+    @Autowired
+    private NodeContainer nodeContainer;
+
     @Override
     public List<NodeInfoResp> nodeList() {
-        List<NodeInfoResp> l1 = AppConst.WS_NODES.stream().map(str -> {
-            return assembleNode(str, NetProtocolEnum.WS);
+        return nodeContainer.list(null).stream().map(e->{
+            NodeInfoResp nodeInfoResp = BeanUtil.copyProperties(e, NodeInfoResp.class);
+            nodeInfoResp.setProtocol(e.getProtocolEnum().name());
+            return nodeInfoResp;
         }).collect(Collectors.toList());
-        List<NodeInfoResp> l2 = AppConst.TCP_NODES.stream().map(str -> {
-            return assembleNode(str, NetProtocolEnum.TCP);
-        }).collect(Collectors.toList());
-        l1.addAll(l2);
-
-        return l1;
     }
 
     @Override
     public NodeInfoResp node(NetProtocolEnum netProtocolEnum, Long identify) {
         if(identify==null){
-            throw new RuntimeException();
+            identify = Long.valueOf(IpUtil.getIntIp());
         }
-        String server = null;
-        if(NetProtocolEnum.WS.equals(netProtocolEnum)){
-            server = routeHandle.routeServer(NetProtocolEnum.WS,new ArrayList<>(AppConst.WS_NODES),String.valueOf(identify));
-        }else if(NetProtocolEnum.TCP.equals(netProtocolEnum)){
-            server = routeHandle.routeServer(NetProtocolEnum.TCP,new ArrayList<>(AppConst.WS_NODES),String.valueOf(identify));
-        }else{
+        List<NodeContainer.WNode> nodes = nodeContainer.list(netProtocolEnum);
+        NodeContainer.WNode wNode = routeHandle.routeServer(netProtocolEnum,nodes,String.valueOf(identify));
+        if(wNode==null){
             return null;
         }
-        if(server==null){
-            return null;
-        }
-        return assembleNode(server,netProtocolEnum);
+        NodeInfoResp resp = new NodeInfoResp();
+        resp.setProtocol(wNode.getProtocolEnum().name());
+        resp.setIp(wNode.getIp());
+        resp.setPort(wNode.getPort());
+        return resp;
 
-    }
-
-    private NodeInfoResp assembleNode(String server, NetProtocolEnum netProtocolEnum) {
-        String[] split = server.split(":");
-        NodeInfoResp node = new NodeInfoResp();
-        node.setProtocol(netProtocolEnum.name());
-        node.setIp(split[0]);
-        node.setPort(split[1]);
-        return node;
     }
 }
