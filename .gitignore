@@ -46,8 +46,7 @@ build/
 # git
 *.orig
 .flattened-pom.xml
-demo-api/.flattened-pom.xml
-demo-client/.flattened-pom.xml
+
 
 # Log file
 *.log
