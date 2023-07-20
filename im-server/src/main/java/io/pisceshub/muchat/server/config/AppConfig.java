@@ -47,7 +47,7 @@ public class AppConfig {
             searcher = Searcher.newWithBuffer(cBuff);
             return searcher;
         } catch (Exception e) {
-            log.info(",", e);
+            log.info("初始化ip信息失败2,", e);
             throw new RuntimeException("初始化ip信息失败2",e);
         }
 
