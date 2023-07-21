@@ -9,7 +9,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.pisceshub.muchat.common.cache.AppCache;
 import io.pisceshub.muchat.common.cache.CachePrefix;
+import io.pisceshub.muchat.common.core.contant.AppConst;
 import io.pisceshub.muchat.common.core.contant.RedisKey;
+import io.pisceshub.muchat.common.core.utils.JwtUtil;
 import io.pisceshub.muchat.common.core.utils.MixUtils;
 import io.pisceshub.muchat.server.adapter.IpSearchAdapter;
 import io.pisceshub.muchat.server.common.contant.Constant;
@@ -86,7 +88,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             throw new GlobalException(ResultCode.PROGRAM_ERROR,"用户不存在");
         }
         if(!passwordEncoder.matches(dto.getPassword(),user.getPassword())){
-            throw  new GlobalException(ResultCode.PASSWOR_ERROR);
+            throw new GlobalException(ResultCode.PASSWOR_ERROR);
         }
         user.setLastLoginIp(IpUtil.getIpAddr(SessionContext.getRequest()));
         this.updateById(user);
@@ -97,13 +99,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public LoginResp buildLoginResp(User user){
         SessionContext.UserSessionInfo session = BeanUtils.copyProperties(user, SessionContext.UserSessionInfo.class);
         String strJson = JSON.toJSONString(session);
-        String accessToken = JwtUtil.sign(user.getId(),strJson, Constant.ACCESS_TOKEN_EXPIRE,Constant.ACCESS_TOKEN_SECRET);
-        String refreshToken = JwtUtil.sign(user.getId(),strJson, Constant.REFRESH_TOKEN_EXPIRE, Constant.REFRESH_TOKEN_SECRET);
+        String accessToken = JwtUtil.sign(user.getId(),strJson, AppConst.ACCESS_TOKEN_EXPIRE, AppConst.ACCESS_TOKEN_SECRET);
+        String refreshToken = JwtUtil.sign(user.getId(),strJson, AppConst.REFRESH_TOKEN_EXPIRE, AppConst.REFRESH_TOKEN_SECRET);
         LoginResp vo = new LoginResp();
         vo.setAccessToken(accessToken);
-        vo.setAccessTokenExpiresIn(Constant.ACCESS_TOKEN_EXPIRE);
+        vo.setAccessTokenExpiresIn(AppConst.ACCESS_TOKEN_EXPIRE);
         vo.setRefreshToken(refreshToken);
-        vo.setRefreshTokenExpiresIn(Constant.REFRESH_TOKEN_EXPIRE);
+        vo.setRefreshTokenExpiresIn(AppConst.REFRESH_TOKEN_EXPIRE);
         return vo;
     }
 
@@ -117,16 +119,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public LoginResp refreshToken(String refreshToken) {
         try{
             //验证 token
-            JwtUtil.checkSign(refreshToken, Constant.REFRESH_TOKEN_SECRET);
+            JwtUtil.checkSign(refreshToken, AppConst.REFRESH_TOKEN_SECRET);
             String strJson = JwtUtil.getInfo(refreshToken);
             Long userId = JwtUtil.getUserId(refreshToken);
-            String accessToken = JwtUtil.sign(userId,strJson, Constant.ACCESS_TOKEN_EXPIRE,Constant.ACCESS_TOKEN_SECRET);
-            String newRefreshToken = JwtUtil.sign(userId,strJson, Constant.REFRESH_TOKEN_EXPIRE, Constant.REFRESH_TOKEN_SECRET);
+            String accessToken = JwtUtil.sign(userId,strJson, AppConst.ACCESS_TOKEN_EXPIRE,AppConst.ACCESS_TOKEN_SECRET);
+            String newRefreshToken = JwtUtil.sign(userId,strJson, AppConst.REFRESH_TOKEN_EXPIRE, AppConst.REFRESH_TOKEN_SECRET);
             LoginResp vo =new LoginResp();
             vo.setAccessToken(accessToken);
-            vo.setAccessTokenExpiresIn(Constant.ACCESS_TOKEN_EXPIRE);
+            vo.setAccessTokenExpiresIn(AppConst.ACCESS_TOKEN_EXPIRE);
             vo.setRefreshToken(newRefreshToken);
-            vo.setRefreshTokenExpiresIn(Constant.REFRESH_TOKEN_EXPIRE);
+            vo.setRefreshTokenExpiresIn(AppConst.REFRESH_TOKEN_EXPIRE);
             return vo;
         }catch (JWTVerificationException e) {
             throw new GlobalException("refreshToken已失效");

@@ -5,10 +5,7 @@ import io.pisceshub.muchat.common.core.contant.RedisKey;
 import io.pisceshub.muchat.common.core.enums.IMCmdType;
 import io.pisceshub.muchat.common.core.model.IMRecvInfo;
 import io.pisceshub.muchat.common.core.model.PrivateMessageInfo;
-import io.pisceshub.muchat.connector.netty.processor.MessageProcessor;
-import io.pisceshub.muchat.connector.netty.processor.ProcessorFactory;
 import io.pisceshub.muchat.connector.netty.IMServerGroup;
-import io.pisceshub.muchat.connector.netty.ws.WebSocketServer;
 import io.pisceshub.muchat.connector.task.handler.MessageHandler;
 import io.pisceshub.muchat.connector.task.handler.MessageHandlerFactory;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +33,8 @@ public class PullUnreadPrivateMessageTask extends  AbstractPullMessageTask {
             redisTemplate.opsForList().leftPop(key);
             MessageHandler messageHandler = MessageHandlerFactory.createHandler(IMCmdType.PRIVATE_MESSAGE);
             if(messageHandler!=null){
-                messageHandler.handler((IMRecvInfo)o);
+                PrivateMessageInfo recvInfo = (PrivateMessageInfo)o;
+                messageHandler.handler(recvInfo);
             }
         }
     }

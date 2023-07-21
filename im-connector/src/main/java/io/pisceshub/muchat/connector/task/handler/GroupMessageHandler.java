@@ -19,16 +19,14 @@ import java.util.List;
 
 @Slf4j
 @Component
-public class GroupMessageHandler implements MessageHandler<IMRecvInfo<GroupMessageInfo>> {
+public class GroupMessageHandler implements MessageHandler<GroupMessageInfo> {
 
     @Autowired
     private RedisTemplate<String,Object> redisTemplate;
 
-    @Async
     @Override
-    public void handler(IMRecvInfo<GroupMessageInfo> recvInfo) {
-        GroupMessageInfo messageInfo = recvInfo.getData();
-        List<Long> recvIds = recvInfo.getRecvIds();
+    public void handler(GroupMessageInfo messageInfo) {
+        List<Long> recvIds = messageInfo.getRecvIds();
         log.info("接收到群消息，发送者:{},群id:{},接收id:{}，内容:{}",messageInfo.getSendId(),messageInfo.getGroupId(),recvIds,messageInfo.getContent());
         for(Long recvId:recvIds){
             IMSendCode code = null;

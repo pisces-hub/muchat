@@ -2,9 +2,6 @@ package io.pisceshub.muchat.connector.task.handler;
 
 import io.pisceshub.muchat.common.core.enums.IMCmdType;
 import io.pisceshub.muchat.common.core.utils.SpringContextHolder;
-import io.pisceshub.muchat.connector.netty.processor.HeartbeatProcessor;
-import io.pisceshub.muchat.connector.netty.processor.LoginProcessor;
-import io.pisceshub.muchat.connector.netty.processor.MessageProcessor;
 
 public class MessageHandlerFactory {
 

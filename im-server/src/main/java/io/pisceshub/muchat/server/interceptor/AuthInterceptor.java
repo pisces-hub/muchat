@@ -3,9 +3,10 @@ package io.pisceshub.muchat.server.interceptor;
 
 import com.alibaba.fastjson.JSON;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import io.pisceshub.muchat.common.core.contant.AppConst;
 import io.pisceshub.muchat.server.common.contant.Constant;
 import io.pisceshub.muchat.server.exception.GlobalException;
-import io.pisceshub.muchat.server.util.JwtUtil;
+import io.pisceshub.muchat.common.core.utils.JwtUtil;
 import io.pisceshub.muchat.common.core.enums.ResultCode;
 import io.pisceshub.muchat.server.util.SessionContext;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +34,7 @@ public class AuthInterceptor implements HandlerInterceptor {
         }
         try{
             //验证 token
-            JwtUtil.checkSign(token, Constant.ACCESS_TOKEN_SECRET);
+            JwtUtil.checkSign(token, AppConst.ACCESS_TOKEN_SECRET);
         }catch (
         JWTVerificationException e) {
             log.error("token已失效，url:{}",request.getRequestURI());

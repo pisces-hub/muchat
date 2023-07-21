@@ -38,15 +38,10 @@ public class IMSender {
         // 如果对方在线，将数据存储至redis，等待拉取推送
         if (serverId != null) {
             List<PrivateMessageInfo> recvInfos = Arrays.stream(messageInfos).map(e -> {
-                IMRecvInfo<PrivateMessageInfo> recvInfo = new IMRecvInfo<>();
-                recvInfo.setCmd(IMCmdType.PRIVATE_MESSAGE.code());
-                recvInfo.setRecvIds(Collections.singletonList(recvId));
-                recvInfo.setData(e);
+                e.setRecvId(recvId);
                 return e;
             }).collect(Collectors.toList());
-            String sendKey = RedisKey.IM_UNREAD_PRIVATE_QUEUE + serverId;
-            redisTemplate.opsForList().rightPushAll(sendKey, recvInfos);
-
+            redisTemplate.opsForList().rightPushAll(RedisKey.IM_UNREAD_PRIVATE_QUEUE + serverId, recvInfos);
             //todo next 加一个发送中的状态
             return;
         }
@@ -89,12 +84,9 @@ public class IMSender {
         });
         // 逐个server发送
         for (Map.Entry<Integer,List<Long>> entry : serverMap.entrySet()) {
-            List<IMRecvInfo> recvInfos = Arrays.stream(messageInfos).map(e->{
-                IMRecvInfo<GroupMessageInfo> recvInfo = new IMRecvInfo<>();
-                recvInfo.setCmd(IMCmdType.GROUP_MESSAGE.code());
-                recvInfo.setRecvIds(entry.getValue());
-                recvInfo.setData(e);
-                return recvInfo;
+            List<GroupMessageInfo> recvInfos = Arrays.stream(messageInfos).map(e->{
+                e.setRecvIds(entry.getValue());
+                return e;
             }).collect(Collectors.toList());
             String key = RedisKey.IM_UNREAD_GROUP_QUEUE +entry.getKey();
             redisTemplate.opsForList().rightPushAll(key,recvInfos);

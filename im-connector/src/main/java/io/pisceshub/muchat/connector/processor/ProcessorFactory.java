@@ -1,9 +1,7 @@
-package io.pisceshub.muchat.connector.netty.processor;
+package io.pisceshub.muchat.connector.processor;
 
 import io.pisceshub.muchat.common.core.enums.IMCmdType;
 import io.pisceshub.muchat.common.core.utils.SpringContextHolder;
-import io.pisceshub.muchat.connector.task.handler.GroupMessageHandler;
-import io.pisceshub.muchat.connector.task.handler.PrivateMessageHandler;
 
 public class ProcessorFactory {
 

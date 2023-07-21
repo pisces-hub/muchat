@@ -4,8 +4,9 @@ import io.pisceshub.muchat.common.core.contant.RedisKey;
 import io.pisceshub.muchat.common.core.enums.IMCmdType;
 import io.pisceshub.muchat.common.core.model.IMSendInfo;
 import io.pisceshub.muchat.connector.contant.ConnectorConst;
-import io.pisceshub.muchat.connector.netty.processor.MessageProcessor;
-import io.pisceshub.muchat.connector.netty.processor.ProcessorFactory;
+import io.pisceshub.muchat.connector.listener.event.UserOnlineStateEvent;
+import io.pisceshub.muchat.connector.processor.MessageProcessor;
+import io.pisceshub.muchat.connector.processor.ProcessorFactory;
 import io.pisceshub.muchat.common.core.utils.SpringContextHolder;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -59,7 +60,7 @@ public class IMChannelHandler extends SimpleChannelInboundHandler<IMSendInfo> {
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws  Exception {
         log.error(cause.getMessage());
         //关闭上下文
-        //ctx.close();
+        ctx.close();
     }
 
     /**
@@ -80,12 +81,9 @@ public class IMChannelHandler extends SimpleChannelInboundHandler<IMSendInfo> {
         ChannelHandlerContext context = UserChannelCtxMap.getChannelCtx(userId);
         // 判断一下，避免异地登录导致的误删
         if(context != null && ctx.channel().id().equals(context.channel().id())){
+            SpringContextHolder.sendEvent(UserOnlineStateEvent.builder().userId(userId).event(UserOnlineStateEvent.Event.OFFLINE).ctx(ctx).build());
             // 移除channel
             UserChannelCtxMap.removeChannelCtx(userId);
-            // 用户下线
-            RedisTemplate redisTemplate = SpringContextHolder.getBean("redisTemplate");
-            String key = RedisKey.IM_USER_SERVER_ID + userId;
-            redisTemplate.delete(key);
             log.info("断开连接,userId:{}",userId);
         }
     }
@@ -98,7 +96,8 @@ public class IMChannelHandler extends SimpleChannelInboundHandler<IMSendInfo> {
                 // 在规定时间内没有收到客户端的上行数据, 主动断开连接
                 AttributeKey<Long> attr = AttributeKey.valueOf(ConnectorConst.USER_ID);
                 Long userId = ctx.channel().attr(attr).get();
-                log.info("心跳超时，即将断开连接,用户id:{} ",userId);
+                SpringContextHolder.sendEvent(UserOnlineStateEvent.builder().userId(userId).event(UserOnlineStateEvent.Event.OFFLINE).ctx(ctx).build());
+                log.info("心跳超时，断开连接,用户id:{} ",userId);
                 ctx.channel().close();
             }
         } else {

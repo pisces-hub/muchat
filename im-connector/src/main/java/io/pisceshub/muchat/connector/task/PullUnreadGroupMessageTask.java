@@ -4,10 +4,7 @@ import io.pisceshub.muchat.common.core.contant.RedisKey;
 import io.pisceshub.muchat.common.core.enums.IMCmdType;
 import io.pisceshub.muchat.common.core.model.GroupMessageInfo;
 import io.pisceshub.muchat.common.core.model.IMRecvInfo;
-import io.pisceshub.muchat.connector.netty.processor.MessageProcessor;
-import io.pisceshub.muchat.connector.netty.processor.ProcessorFactory;
 import io.pisceshub.muchat.connector.netty.IMServerGroup;
-import io.pisceshub.muchat.connector.netty.ws.WebSocketServer;
 import io.pisceshub.muchat.connector.task.handler.MessageHandler;
 import io.pisceshub.muchat.connector.task.handler.MessageHandlerFactory;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +29,7 @@ public class PullUnreadGroupMessageTask extends AbstractPullMessageTask {
         List messageInfos = redisTemplate.opsForList().range(key,0,ONES_PULL_MESSAGE_COUNT);
         for(Object o: messageInfos){
             redisTemplate.opsForList().leftPop(key);
-            IMRecvInfo<GroupMessageInfo> recvInfo = (IMRecvInfo)o;
+            GroupMessageInfo recvInfo = (GroupMessageInfo)o;
             MessageHandler messageHandler = MessageHandlerFactory.createHandler(IMCmdType.GROUP_MESSAGE);
             messageHandler.handler(recvInfo);
         }

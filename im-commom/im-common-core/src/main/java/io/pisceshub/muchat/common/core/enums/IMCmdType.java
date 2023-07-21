@@ -4,6 +4,7 @@ package io.pisceshub.muchat.common.core.enums;
 
 public enum IMCmdType {
 
+    ERROR(-1,"信息异常"),
     LOGIN(0,"登陆"),
     HEART_BEAT(1,"心跳"),
     FORCE_LOGUT(2,"强制下线"),

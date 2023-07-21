@@ -13,15 +13,14 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class PrivateMessageHandler implements MessageHandler<IMRecvInfo<PrivateMessageInfo>>  {
+public class PrivateMessageHandler implements MessageHandler<PrivateMessageInfo>  {
 
     @Autowired
     private RedisTemplate<String,Object> redisTemplate;
 
     @Override
-    public void handler(IMRecvInfo<PrivateMessageInfo> recvInfo) {
-        PrivateMessageInfo messageInfo = recvInfo.getData();
-        Long recvId = recvInfo.getRecvIds().get(0);
+    public void handler(PrivateMessageInfo messageInfo) {
+        Long recvId = messageInfo.getRecvId();
         log.info("接收到消息，发送者:{},接收者:{}，内容:{}",messageInfo.getSendId(),recvId,messageInfo.getContent());
         IMSendCode code = null;
         try{

@@ -1,5 +1,6 @@
 package io.pisceshub.muchat.connector.netty.ws;
 
+import io.pisceshub.muchat.common.core.contant.AppConst;
 import io.pisceshub.muchat.common.core.enums.NetProtocolEnum;
 import io.pisceshub.muchat.common.core.utils.MixUtils;
 import io.pisceshub.muchat.common.core.utils.SpringContextHolder;
@@ -77,7 +78,7 @@ public class WebSocketServer implements IMServer {
                     protected void initChannel(Channel ch) throws Exception {
                         // 获取职责链
                         ChannelPipeline pipeline = ch.pipeline();
-                        pipeline.addLast(new IdleStateHandler(15, 0, 0, TimeUnit.SECONDS));
+                        pipeline.addLast(new IdleStateHandler(0, 0, AppConst.ONLINE_TIMEOUT_SECOND, TimeUnit.SECONDS));
                         pipeline.addLast("http-codec", new HttpServerCodec());
                         pipeline.addLast("aggregator", new HttpObjectAggregator(65535));
                         pipeline.addLast("http-chunked", new ChunkedWriteHandler());

@@ -1,4 +1,4 @@
-package io.pisceshub.muchat.server.util;
+package io.pisceshub.muchat.common.core.utils;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
