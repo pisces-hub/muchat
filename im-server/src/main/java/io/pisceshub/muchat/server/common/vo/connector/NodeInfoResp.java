@@ -21,4 +21,6 @@ public class NodeInfoResp {
     @ApiModelProperty("端口信息")
     private Integer port;
 
+    @ApiModelProperty("最近上线时间")
+    private Long registerTime;
 }

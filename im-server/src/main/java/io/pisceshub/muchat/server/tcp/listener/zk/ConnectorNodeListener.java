@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import io.pisceshub.muchat.common.core.contant.AppConst;
 import io.pisceshub.muchat.common.core.enums.NetProtocolEnum;
+import io.pisceshub.muchat.common.core.utils.MixUtils;
 import io.pisceshub.muchat.server.config.properties.AppConfigInfo;
 import io.pisceshub.muchat.server.core.NodeContainer;
 import lombok.SneakyThrows;
@@ -68,7 +69,8 @@ public class ConnectorNodeListener implements ApplicationListener<ApplicationSta
     }
 
 
-    private NodeContainer.WNode convertZkNodeToWNote(String zkPath,NetProtocolEnum protocolEnum){
+    private NodeContainer.WNode convertZkNodeToWNote(ChildData childData,String parentPath,NetProtocolEnum protocolEnum){
+        String zkPath = childData.getPath().substring(parentPath.length()+1);
         if(StrUtil.isEmpty(zkPath)){
             return null;
         }
@@ -76,7 +78,12 @@ public class ConnectorNodeListener implements ApplicationListener<ApplicationSta
         if(split.length<2){
             return null;
         }
-        NodeContainer.WNode wNode = NodeContainer.WNode.builder().protocolEnum(protocolEnum).ip(split[0]).port(Integer.valueOf(split[1])).build();
+        NodeContainer.WNode wNode = NodeContainer.WNode.builder()
+                .protocolEnum(protocolEnum)
+                .ip(split[0])
+                .port(Integer.valueOf(split[1]))
+                .registerTime(MixUtils.BytesToLong(childData.getData()))
+                .build();
         return wNode;
     }
 
@@ -102,14 +109,13 @@ public class ConnectorNodeListener implements ApplicationListener<ApplicationSta
             public void childEvent(CuratorFramework client, PathChildrenCacheEvent event) throws Exception {
                 ChildData childData = event.getData();
                 if (childData != null) {
-                    String path = childData.getPath().substring(listenerPath.length()+1);
                     if(PathChildrenCacheEvent.Type.CHILD_ADDED==event.getType()){
-                        NodeContainer.WNode wNode = convertZkNodeToWNote(path,netProtocolEnum);
+                        NodeContainer.WNode wNode = convertZkNodeToWNote(childData,listenerPath,netProtocolEnum);
                         if(wNode!=null){
                             addNode(netProtocolEnum, Collections.singletonList(wNode));
                         }
                     }else if(PathChildrenCacheEvent.Type.CHILD_REMOVED==event.getType()){
-                        NodeContainer.WNode wNode = convertZkNodeToWNote(path,netProtocolEnum);
+                        NodeContainer.WNode wNode = convertZkNodeToWNote(childData,listenerPath,netProtocolEnum);
                         removeNode(netProtocolEnum,wNode);
 
                     }

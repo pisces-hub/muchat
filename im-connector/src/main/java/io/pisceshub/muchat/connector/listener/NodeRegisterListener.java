@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.net.UnknownHostException;
 
 /**
@@ -30,51 +31,24 @@ public class NodeRegisterListener {
     @Autowired
     private AppConfigProperties appConfigProperties;
 
+    @Autowired
     private CuratorFramework client;
 
     @SneakyThrows
     @EventListener(classes = NodeRegisterEvent.class)
     public void onApplicationEvent(NodeRegisterEvent event) {
-        if(event==null){
-            return;
-        }
-        if(client==null || !client.isStarted()){
-            synchronized (this){
-                if(client==null || !client.isStarted()){
-                    client = CuratorFrameworkFactory.newClient(appConfigProperties.getZk().getAddress(),
-                            new RetryNTimes(10, 5000));
-                    client.start();
-                }
-            }
-        }
 
-        this.registerEphemeralNode(event.getNetProtocolEnum(),event.getPort());
+        NetProtocolEnum protocolEnum = event.getNetProtocolEnum();
+        Integer port = event.getPort();
 
-    }
-
-    private boolean registerEphemeralNode(NetProtocolEnum protocolEnum, Integer port) throws Exception {
-
-        String path = appConfigProperties.getZk().getPath()+"/"+protocolEnum;
-
-        String[] paths = path.split("/");
-        String parentPath = "";
-        for (String p:paths){
-            if(StrUtil.isBlank(p)){
-                continue;
-            }
-            parentPath+="/"+p;
-            if(client.checkExists().forPath(parentPath)==null){
-                client.create().forPath(parentPath);
-            }
-        }
+        String protocolPath = appConfigProperties.getZk().getPath()+"/"+protocolEnum;
+        checkZkPath(protocolPath);
 
 
-        String info = buildNodeInfo(port);
-        String nodePath = path+"/"+info;
-        if(client.checkExists().forPath(nodePath)!=null){
-            client.delete().forPath(nodePath);
-        }
-        client.create().withMode(CreateMode.EPHEMERAL).forPath(nodePath);
+        String nodePath = protocolPath+"/"+buildNodeInfo(port);
+        delPath(nodePath);
+
+        client.create().withMode(CreateMode.EPHEMERAL).forPath(nodePath,MixUtils.LongToBytes(event.getRegisterTime()));
         log.info("zk注册完毕,nodePath:{}",nodePath);
 
         Runtime.getRuntime().addShutdownHook(new Thread(()->{
@@ -87,10 +61,40 @@ public class NodeRegisterListener {
             }
         }));
 
-        return true;
     }
 
-    private String buildNodeInfo(Integer port) throws UnknownHostException {
+    /**
+     * 删除path
+     * @param nodePath
+     * @throws Exception
+     */
+    private void delPath(String nodePath) throws Exception {
+        if(client.checkExists().forPath(nodePath)!=null){
+            client.delete().forPath(nodePath);
+        }
+    }
+
+    /**
+     * 检查路径是否存在，不存在就创建
+     * @param zkPath
+     * @throws Exception
+     */
+    private void checkZkPath(String zkPath) throws Exception {
+        String[] paths = zkPath.split("/");
+        String parentPath = "";
+        for (String p:paths){
+            if(StrUtil.isBlank(p)){
+                continue;
+            }
+            parentPath+="/"+p;
+            if(client.checkExists().forPath(parentPath)==null){
+                client.create().forPath(parentPath);
+            }
+        }
+    }
+
+
+    private String buildNodeInfo(Integer port){
         String ip = appConfigProperties.getIp();
         if(StrUtil.isBlank(ip)){
             ip = MixUtils.getInet4Address();

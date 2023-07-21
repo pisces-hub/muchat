@@ -26,7 +26,6 @@ public class MixUtils {
             }
             try(ServerSocket serverSocket = new ServerSocket(port)) {
                 USE_PORT.add(port);
-                System.out.println("可用端口:"+port);
                 return port;
             } catch (IOException e) {
             }
@@ -68,16 +67,21 @@ public class MixUtils {
         return arrays[index];
     }
 
-    public static void main(String[] args) {
-        String[] ss = new String[]{"aa","b","c","d","e"};
-        System.out.println(random(ss));
-        System.out.println(random(ss));
-        System.out.println(random(ss));
-        System.out.println(random(ss));
-        System.out.println(random(ss));
-        System.out.println(random(ss));
-        System.out.println(random(ss));
-        System.out.println(random(ss));
-        System.out.println(random(ss));
+
+    public static byte[] LongToBytes(long values) {
+        byte[] buffer = new byte[8];
+        for (int i = 0; i < 8; i++) {
+            int offset = 64 - (i + 1) * 8;
+            buffer[i] = (byte) ((values >> offset) & 0xff);
+        }
+        return buffer;
+    }
+
+    public static long BytesToLong(byte[] buffer) {
+        long  values = 0;
+        for (int i = 0; i < 8; i++) {
+            values <<= 8; values|= (buffer[i] & 0xff);
+        }
+        return values;
     }
 }

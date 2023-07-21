@@ -92,10 +92,14 @@ public class TcpSocketServer implements IMServer {
             // 就绪标志
             this.ready = true;
             SpringContextHolder.sendEvent(
-                    NodeRegisterEvent.builder().netProtocolEnum(NetProtocolEnum.TCP).port(port).build());
+                    NodeRegisterEvent.builder()
+                            .netProtocolEnum(NetProtocolEnum.TCP)
+                            .port(port)
+                            .registerTime(System.currentTimeMillis())
+                            .build());
             log.info("tcp server 初始化完成,端口：{}",port);
             // 等待服务端口关闭
-            //channel.closeFuture().sync();
+//            channel.closeFuture().sync();
         } catch (InterruptedException e) {
             log.error("tcp server 初始化异常",e);
         }

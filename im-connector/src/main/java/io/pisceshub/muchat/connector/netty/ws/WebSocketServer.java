@@ -100,10 +100,14 @@ public class WebSocketServer implements IMServer {
             // 就绪标志
             this.ready = true;
             SpringContextHolder.sendEvent(
-                    NodeRegisterEvent.builder().netProtocolEnum(NetProtocolEnum.WS).port(port).build());
+                    NodeRegisterEvent.builder()
+                            .netProtocolEnum(NetProtocolEnum.WS)
+                            .port(port)
+                            .registerTime(System.currentTimeMillis())
+                            .build());
             log.info("websocket server 初始化完成,端口：{}",port);
             // 等待服务端口关闭
-            //channel.closeFuture().sync();
+//            channel.closeFuture().sync();
         } catch (InterruptedException e) {
             log.error("websocket server 初始化异常",e);
         }

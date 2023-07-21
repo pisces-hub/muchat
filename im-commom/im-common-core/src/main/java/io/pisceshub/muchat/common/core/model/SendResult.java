@@ -1,9 +1,15 @@
 package io.pisceshub.muchat.common.core.model;
 
 import io.pisceshub.muchat.common.core.enums.IMSendCode;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class SendResult<T> {
 
     /*

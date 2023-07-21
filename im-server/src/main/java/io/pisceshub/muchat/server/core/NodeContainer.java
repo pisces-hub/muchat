@@ -90,6 +90,8 @@ public class NodeContainer {
 
         private NetProtocolEnum protocolEnum;
 
+        private Long registerTime;
+
 
         @Override
         public boolean equals(Object o) {

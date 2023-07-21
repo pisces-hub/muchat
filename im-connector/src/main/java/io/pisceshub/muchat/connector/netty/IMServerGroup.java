@@ -48,12 +48,6 @@ public class IMServerGroup implements CommandLineRunner  {
             if(imServer.enable()){
                 imServer.start();
             }
-//            else{
-//                String className = imServer.getClass().getSimpleName();
-//                String beanName = className.substring(0,1).toLowerCase()+className.substring(1);
-//                SpringContextHolder.removeBean(beanName);
-//                log.info("移除bean:{},{}",className,beanName);
-//            }
         }
     }
 

@@ -19,8 +19,6 @@ import java.util.List;
 @Component
 public class PullUnreadGroupMessageTask extends  AbstractPullMessageTask {
 
-    @Autowired
-    private WebSocketServer WSServer;
 
     @Autowired
     private RedisTemplate<String,Object> redisTemplate;
@@ -36,7 +34,9 @@ public class PullUnreadGroupMessageTask extends  AbstractPullMessageTask {
             redisTemplate.opsForList().leftPop(key);
             IMRecvInfo<GroupMessageInfo> recvInfo = (IMRecvInfo)o;
             MessageProcessor processor = ProcessorFactory.createProcessor(IMCmdType.GROUP_MESSAGE);
-            processor.process(recvInfo);
+            if(processor!=null){
+                processor.process(recvInfo);
+            }
         }
     }
 
