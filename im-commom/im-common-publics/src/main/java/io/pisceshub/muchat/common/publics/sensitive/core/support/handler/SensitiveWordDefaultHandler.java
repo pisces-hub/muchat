@@ -14,6 +14,7 @@ import io.pisceshub.muchat.common.publics.sensitive.core.api.*;
 import io.pisceshub.muchat.common.publics.sensitive.core.support.check.SensitiveCheckUrl;
 import io.pisceshub.muchat.common.publics.sensitive.core.support.replace.SensitiveWordReplaceContext;
 import io.pisceshub.muchat.common.publics.sensitive.core.support.result.WordResult;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,6 +26,7 @@ import java.util.List;
  * xiaochangbai
  *
  */
+@Slf4j
 @ThreadSafe
 public class SensitiveWordDefaultHandler implements IWordHandler {
 
@@ -57,7 +59,7 @@ public class SensitiveWordDefaultHandler implements IWordHandler {
             }
         }
         wordContext.setRootNode(rootNode);
-        System.out.println("敏感词初始化完成，共"+collection.size()+"个词，耗时:"+(System.currentTimeMillis()-startTime)/1000.0+"/s");
+        log.info("敏感词初始化完成，共{}个词,加载耗时:{}/s",collection.size(),(System.currentTimeMillis()-startTime)/1000.0);
     }
 
     /**

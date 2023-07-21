@@ -1,6 +1,5 @@
 package io.pisceshub.muchat.sdk;
 
-import io.pisceshub.muchat.sdk.listener.MessageListenerMulticaster;
 import io.pisceshub.muchat.sdk.sender.IMSender;
 import io.pisceshub.muchat.common.core.model.GroupMessageInfo;
 import io.pisceshub.muchat.common.core.model.PrivateMessageInfo;
@@ -12,8 +11,6 @@ import java.util.List;
 @Configuration
 public class IMClient {
 
-    @Autowired
-    private MessageListenerMulticaster listenerMulticaster;
     @Autowired
     private IMSender imSender;
 

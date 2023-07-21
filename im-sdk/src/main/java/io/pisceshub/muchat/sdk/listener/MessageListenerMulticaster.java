@@ -16,7 +16,7 @@ public class MessageListenerMulticaster {
     @Autowired(required = false)
     private List<MessageListener>  messageListeners  = Collections.emptyList();
 
-    public  void multicast(IMListenerType type, SendResult result){
+    public void multicast(IMListenerType type, SendResult result){
         for(MessageListener listener:messageListeners){
             IMListener annotation = listener.getClass().getAnnotation(IMListener.class);
             if(annotation!=null && (annotation.type().equals(IMListenerType.ALL) || annotation.type().equals(type))){

@@ -21,7 +21,6 @@ spring:
       max-request-size: 50MB
   main:
     allow-circular-references: true
-    allow-bean-definition-overriding: true
 
 mybatis-plus:
   configuration:

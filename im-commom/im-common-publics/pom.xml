@@ -11,4 +11,14 @@
 
     <artifactId>im-common-publics</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.pisceshub.muchat</groupId>
+            <artifactId>im-common-core</artifactId>
+        </dependency>
+    </dependencies>
 </project>
