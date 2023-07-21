@@ -7,6 +7,7 @@ import io.netty.channel.epoll.EpollServerSocketChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.ServerSocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.pisceshub.muchat.common.core.ThreadFactoryImpl;
 
 
 public class NettyEventLoopFactory {
@@ -20,7 +21,8 @@ public class NettyEventLoopFactory {
 
 
     public static EventLoopGroup eventLoopGroup(int threads) {
-        return shouldEpoll() ? new EpollEventLoopGroup(threads) : new NioEventLoopGroup(threads);
+        return shouldEpoll() ? new EpollEventLoopGroup(threads,new ThreadFactoryImpl("NettyServerEPOLLSelector_"))
+                : new NioEventLoopGroup(threads,new ThreadFactoryImpl("NettyServerSelector_"));
     }
 
 

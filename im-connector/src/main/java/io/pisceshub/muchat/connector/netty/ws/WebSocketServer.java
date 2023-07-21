@@ -65,6 +65,11 @@ public class WebSocketServer implements IMServer {
         bootstrap.group(bossGroup, workGroup)
                 // 设置服务端NIO通信类型
                 .channel(NettyEventLoopFactory.serverSocketChannelClass())
+                .option(ChannelOption.SO_BACKLOG, 1024)
+                .option(ChannelOption.SO_REUSEADDR, true)
+                .childOption(ChannelOption.SO_KEEPALIVE, false)
+                // 表示连接保活，相当于心跳机制，默认为7200s
+                .childOption(ChannelOption.TCP_NODELAY, true)
                 // 设置ChannelPipeline，也就是业务职责链，由处理的Handler串联而成，由从线程池处理
                 .childHandler(new ChannelInitializer<Channel>() {
                     // 添加处理的Handler，通常包括消息编解码、业务处理，也可以是日志、权限、过滤等
@@ -81,13 +86,7 @@ public class WebSocketServer implements IMServer {
                         pipeline.addLast("decode",new MessageProtocolDecoder());
                         pipeline.addLast("handler", new IMChannelHandler());
                     }
-                })
-                // bootstrap 还可以设置TCP参数，根据需要可以分别设置主线程池和从线程池参数，来优化服务端性能。
-                // 其中主线程池使用option方法来设置，从线程池使用childOption方法设置。
-                // backlog表示主线程池中在套接口排队的最大数量，队列由未连接队列（三次握手未完成的）和已连接队列
-                .option(ChannelOption.SO_BACKLOG, 5)
-                // 表示连接保活，相当于心跳机制，默认为7200s
-                .childOption(ChannelOption.SO_KEEPALIVE, true);
+                });
 
         try {
             Integer port = appConfigProperties.getWs().getPort();
@@ -106,8 +105,6 @@ public class WebSocketServer implements IMServer {
                             .registerTime(System.currentTimeMillis())
                             .build());
             log.info("websocket server 初始化完成,端口：{}",port);
-            // 等待服务端口关闭
-//            channel.closeFuture().sync();
         } catch (InterruptedException e) {
             log.error("websocket server 初始化异常",e);
         }
