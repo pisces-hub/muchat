@@ -29,11 +29,11 @@ public class IMServerGroup implements CommandLineRunner  {
      * @return
      **/
     public boolean isReady(){
-        for(IMServer imServer:imServers){
-            if(imServer.enable() && !imServer.isReady()){
-                return false;
-            }
-        }
+//        for(IMServer imServer:imServers){
+//            if(imServer.enable() && !imServer.isReady()){
+//                return false;
+//            }
+//        }
         return true;
     }
 

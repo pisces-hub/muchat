@@ -11,47 +11,40 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Slf4j
-public  abstract class AbstractPullMessageTask{
+public abstract class AbstractPullMessageTask{
 
-    private int threadNum = 1;
-    private ExecutorService executorService;
+    private ExecutorService executorService = Executors.newFixedThreadPool(1);
+
+    /**
+     * 每次拉取消息的数量
+     */
+    protected final static Integer ONES_PULL_MESSAGE_COUNT = 200;
 
     @Autowired
-    private IMServerGroup serverGroup;
+    private IMServerGroup serverGroup ;
 
-    public  AbstractPullMessageTask(){
-        this.threadNum = 1;
-    }
 
-    public  AbstractPullMessageTask(int threadNum){
-        this.threadNum = threadNum;
-    }
 
     @PostConstruct
     public void init(){
-        // 初始化定时器
-        executorService = Executors.newFixedThreadPool(threadNum);
-
-        for(int i=0;i<threadNum;i++){
-            executorService.execute(new Runnable() {
-                @SneakyThrows
-                @Override
-                public void run() {
-                    try{
-                        if(serverGroup.isReady()){
-                            pullMessage();
-                        }
-                        Thread.sleep(100);
-                    }catch (Exception e){
-                        log.error("任务调度异常",e);
-                        Thread.sleep(200);
+        executorService.execute(new Runnable() {
+            @SneakyThrows
+            @Override
+            public void run() {
+                try{
+                    if(serverGroup.isReady()){
+                        pullMessage();
                     }
-                    if(!executorService.isShutdown()){
-                        executorService.execute(this);
-                    }
+                    Thread.sleep(10);
+                }catch (Exception e){
+                    log.error("任务调度异常",e);
+                    Thread.sleep(200);
                 }
-            });
-        }
+                if(!executorService.isShutdown()){
+                    executorService.execute(this);
+                }
+            }
+        });
     }
 
     @PreDestroy

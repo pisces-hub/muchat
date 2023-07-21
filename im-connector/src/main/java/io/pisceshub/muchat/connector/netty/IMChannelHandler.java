@@ -3,6 +3,7 @@ package io.pisceshub.muchat.connector.netty;
 import io.pisceshub.muchat.common.core.contant.RedisKey;
 import io.pisceshub.muchat.common.core.enums.IMCmdType;
 import io.pisceshub.muchat.common.core.model.IMSendInfo;
+import io.pisceshub.muchat.connector.contant.ConnectorConst;
 import io.pisceshub.muchat.connector.netty.processor.MessageProcessor;
 import io.pisceshub.muchat.connector.netty.processor.ProcessorFactory;
 import io.pisceshub.muchat.common.core.utils.SpringContextHolder;
@@ -32,9 +33,19 @@ public class IMChannelHandler extends SimpleChannelInboundHandler<IMSendInfo> {
      */
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, IMSendInfo sendInfo) throws  Exception {
+        if(sendInfo==null){
+            return;
+        }
+        IMCmdType imCmdType = IMCmdType.fromCode(sendInfo.getCmd());
+        if(imCmdType==null){
+            return;
+        }
         // 创建处理器进行处理
-        MessageProcessor processor = ProcessorFactory.createProcessor(IMCmdType.fromCode(sendInfo.getCmd()));
-        processor.process(ctx,processor.transForm(sendInfo.getData()));
+        MessageProcessor processor = ProcessorFactory.createProcessor(imCmdType);
+        if(processor==null){
+            return;
+        }
+        processor.process(ctx,sendInfo.getData());
     }
 
     /**
@@ -64,7 +75,7 @@ public class IMChannelHandler extends SimpleChannelInboundHandler<IMSendInfo> {
 
     @Override
     public void handlerRemoved(ChannelHandlerContext ctx) throws  Exception {
-        AttributeKey<Long> attr = AttributeKey.valueOf("USER_ID");
+        AttributeKey<Long> attr = AttributeKey.valueOf(ConnectorConst.USER_ID);
         Long userId = ctx.channel().attr(attr).get();
         ChannelHandlerContext context = UserChannelCtxMap.getChannelCtx(userId);
         // 判断一下，避免异地登录导致的误删
@@ -85,7 +96,7 @@ public class IMChannelHandler extends SimpleChannelInboundHandler<IMSendInfo> {
             IdleState state = ((IdleStateEvent) evt).state();
             if (state == IdleState.READER_IDLE) {
                 // 在规定时间内没有收到客户端的上行数据, 主动断开连接
-                AttributeKey<Long> attr = AttributeKey.valueOf("USER_ID");
+                AttributeKey<Long> attr = AttributeKey.valueOf(ConnectorConst.USER_ID);
                 Long userId = ctx.channel().attr(attr).get();
                 log.info("心跳超时，即将断开连接,用户id:{} ",userId);
                 ctx.channel().close();

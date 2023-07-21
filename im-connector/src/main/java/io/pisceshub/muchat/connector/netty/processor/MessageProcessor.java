@@ -3,15 +3,8 @@ package io.pisceshub.muchat.connector.netty.processor;
 
 import io.netty.channel.ChannelHandlerContext;
 
-public abstract class MessageProcessor<T> {
+public interface MessageProcessor {
 
-    public void process(ChannelHandlerContext ctx,T data){}
-
-    public void process(T data){}
-
-     public T transForm(Object o){
-         return (T)o;
-     }
-
+    public void process(ChannelHandlerContext ctx,Object data);
 
 }

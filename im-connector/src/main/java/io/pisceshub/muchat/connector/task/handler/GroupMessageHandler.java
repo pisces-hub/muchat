@@ -1,4 +1,4 @@
-package io.pisceshub.muchat.connector.netty.processor;
+package io.pisceshub.muchat.connector.task.handler;
 
 import io.pisceshub.muchat.common.core.contant.RedisKey;
 import io.pisceshub.muchat.common.core.enums.IMCmdType;
@@ -19,55 +19,39 @@ import java.util.List;
 
 @Slf4j
 @Component
-public class GroupMessageProcessor extends  MessageProcessor<IMRecvInfo<GroupMessageInfo>> {
+public class GroupMessageHandler implements MessageHandler<IMRecvInfo<GroupMessageInfo>> {
 
     @Autowired
     private RedisTemplate<String,Object> redisTemplate;
 
     @Async
     @Override
-    public void process(IMRecvInfo<GroupMessageInfo> recvInfo) {
+    public void handler(IMRecvInfo<GroupMessageInfo> recvInfo) {
         GroupMessageInfo messageInfo = recvInfo.getData();
         List<Long> recvIds = recvInfo.getRecvIds();
         log.info("接收到群消息，发送者:{},群id:{},接收id:{}，内容:{}",messageInfo.getSendId(),messageInfo.getGroupId(),recvIds,messageInfo.getContent());
         for(Long recvId:recvIds){
+            IMSendCode code = null;
             try {
                 ChannelHandlerContext channelCtx = UserChannelCtxMap.getChannelCtx(recvId);
-                if(channelCtx != null){
+                if(channelCtx != null && channelCtx.channel().isOpen()){
                     // 推送消息到用户
-                    IMSendInfo sendInfo = new IMSendInfo();
-                    sendInfo.setCmd(IMCmdType.GROUP_MESSAGE.code());
-                    sendInfo.setData(messageInfo);
+                    IMSendInfo<Object> sendInfo = IMSendInfo.builder().cmd(IMCmdType.GROUP_MESSAGE.code()).data(messageInfo).build();
                     channelCtx.channel().writeAndFlush(sendInfo);
-                    // 消息发送成功确认
-                    String key = RedisKey.IM_RESULT_GROUP_QUEUE;
-                    SendResult sendResult = new SendResult();
-                    sendResult.setRecvId(recvId);
-                    sendResult.setCode(IMSendCode.SUCCESS);
-                    sendResult.setMessageInfo(messageInfo);
-                    redisTemplate.opsForList().rightPush(key,sendResult);
-
+                    code = IMSendCode.SUCCESS;
                 }else {
                     // 消息发送失败确认
-                    String key = RedisKey.IM_RESULT_GROUP_QUEUE;
-                    SendResult sendResult = new SendResult();
-                    sendResult.setRecvId(recvId);
-                    sendResult.setCode(IMSendCode.NOT_FIND_CHANNEL);
-                    sendResult.setMessageInfo(messageInfo);
-                    redisTemplate.opsForList().rightPush(key,sendResult);
+                    code = IMSendCode.NOT_FIND_CHANNEL;
                     log.error("未找到WS连接,发送者:{},群id:{},接收id:{}，内容:{}",messageInfo.getSendId(),messageInfo.getGroupId(),recvIds,messageInfo.getContent());
                 }
             }catch (Exception e){
                 // 消息发送失败确认
-                String key = RedisKey.IM_RESULT_GROUP_QUEUE;
-                SendResult sendResult = new SendResult();
-                sendResult.setRecvId(recvId);
-                sendResult.setCode(IMSendCode.UNKONW_ERROR);
-                sendResult.setMessageInfo(messageInfo);
-                redisTemplate.opsForList().rightPush(key,sendResult);
+                code = IMSendCode.UNKONW_ERROR;
                 log.error("发送消息异常,发送者:{},群id:{},接收id:{}，内容:{}",messageInfo.getSendId(),messageInfo.getGroupId(),recvIds,messageInfo.getContent());
             }
+            // 消息发送成功确认
+            SendResult<Object> sendResult = SendResult.builder().code(code).recvId(recvId).messageInfo(messageInfo).build();
+            redisTemplate.opsForList().rightPush(RedisKey.IM_RESULT_GROUP_QUEUE,sendResult);
         }
     }
-
 }

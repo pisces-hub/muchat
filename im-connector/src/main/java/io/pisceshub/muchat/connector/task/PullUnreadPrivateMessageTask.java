@@ -9,6 +9,8 @@ import io.pisceshub.muchat.connector.netty.processor.MessageProcessor;
 import io.pisceshub.muchat.connector.netty.processor.ProcessorFactory;
 import io.pisceshub.muchat.connector.netty.IMServerGroup;
 import io.pisceshub.muchat.connector.netty.ws.WebSocketServer;
+import io.pisceshub.muchat.connector.task.handler.MessageHandler;
+import io.pisceshub.muchat.connector.task.handler.MessageHandlerFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -21,8 +23,6 @@ import java.util.List;
 @Component
 public class PullUnreadPrivateMessageTask extends  AbstractPullMessageTask {
 
-    @Autowired
-    private WebSocketServer WSServer;
 
     @Autowired
     private RedisTemplate<String,Object> redisTemplate;
@@ -31,13 +31,13 @@ public class PullUnreadPrivateMessageTask extends  AbstractPullMessageTask {
     public void pullMessage() {
         // 从redis拉取未读消息
         String key = RedisKey.IM_UNREAD_PRIVATE_QUEUE + IMServerGroup.serverId;
-        List messageInfos = redisTemplate.opsForList().range(key,0,-1);
+        List messageInfos = redisTemplate.opsForList().range(key,0,ONES_PULL_MESSAGE_COUNT);
         for(Object o: messageInfos){
             redisTemplate.opsForList().leftPop(key);
-            IMRecvInfo<PrivateMessageInfo> recvInfo = (IMRecvInfo)o;
-            MessageProcessor processor = ProcessorFactory.createProcessor(IMCmdType.PRIVATE_MESSAGE);
-            processor.process(recvInfo);
-
+            MessageHandler messageHandler = MessageHandlerFactory.createHandler(IMCmdType.PRIVATE_MESSAGE);
+            if(messageHandler!=null){
+                messageHandler.handler((IMRecvInfo)o);
+            }
         }
     }
 
