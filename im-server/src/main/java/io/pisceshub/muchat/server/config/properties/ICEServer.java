@@ -1,4 +1,4 @@
-package io.pisceshub.muchat.server.config;
+package io.pisceshub.muchat.server.config.properties;
 
 
 import lombok.Data;

@@ -156,6 +156,15 @@
             <appender-ref ref="WARN_FILE"/>
         </root>
     </springProfile>
+    <springProfile name="dev-real">
+        <root level="info">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="DEBUG_FILE"/>
+            <appender-ref ref="INFO_FILE"/>
+            <appender-ref ref="ERROR_FILE"/>
+            <appender-ref ref="WARN_FILE"/>
+        </root>
+    </springProfile>
 
     <!-- 4.2 测试环境:输出到文档  -->
     <springProfile name="fat">

@@ -1,5 +1,6 @@
 package io.pisceshub.muchat.server.config;
 
+import io.pisceshub.muchat.server.config.properties.ICEServer;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;

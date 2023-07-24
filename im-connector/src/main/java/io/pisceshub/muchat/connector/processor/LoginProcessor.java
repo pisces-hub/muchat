@@ -23,7 +23,7 @@ public class LoginProcessor implements MessageProcessor {
 
     @Override
     synchronized public void process(ChannelHandlerContext ctx, Object obj) {
-        LoginInfo loginInfo =  JSONObject.parseObject(String.valueOf(obj),LoginInfo.class);
+        LoginInfo loginInfo =  JSONObject.parseObject(JSONObject.toJSONString(obj),LoginInfo.class);
 
         Long userId = parseUserId(ctx,loginInfo.getToken());
 
