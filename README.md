@@ -89,6 +89,29 @@ muchat
 
 ## 点下star吧
 喜欢的朋友麻烦点个star，鼓励一下作者吧！
+
+
+
+## 贡献者列表
+<p>
+<a href="https://gitee.com/imalasong" target="_blank">
+<img src="docs/images/assets/developer/imalasong.png" width="12%">
+</a>
+<a href="https://gitee.com/xiaochangbai" target="_blank">
+<img src="docs/images/assets/developer/xiaochangbai.png" width="12%">
+</a>
+<a href="https://gitee.com/ilovea" target="_blank">
+<img src="docs/images/assets/developer/ilovea.png" width="12%">
+</a>
+<a href="https://gitee.com/uimoa" target="_blank">
+<img src="docs/images/assets/developer/uimoa.png" width="12%">
+</a>
+<a href="https://gitee.com/tomlia" target="_blank">
+<img src="docs/images/assets/developer/tomlia.png" width="12%">
+</a>
+</p>
+
+
 ## 许可证
 
 [Apache License 2.0](https://github.com/pisces-hub/muchat/blob/develop/LICENSE)
