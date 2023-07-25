@@ -1,13 +1,18 @@
 package io.pisceshub.muchat.connector.remote.netty;
 
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.ChannelPipeline;
 import io.netty.channel.EventLoopGroup;
+import io.netty.handler.timeout.IdleStateHandler;
+import io.pisceshub.muchat.common.core.contant.AppConst;
 import io.pisceshub.muchat.common.core.utils.MixUtils;
 import io.pisceshub.muchat.connector.config.AppConfigProperties;
 import io.pisceshub.muchat.connector.remote.IMServer;
 import io.pisceshub.muchat.connector.remote.netty.factory.NettyEventLoopFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * @description:
@@ -40,6 +45,11 @@ public abstract class AbstractRemoteServer implements IMServer {
 
     protected abstract AppConfigProperties.TcpNode nodeInfo();
 
+
+    protected void addPipeline(ChannelPipeline pipeline){
+        pipeline.addLast(new IdleStateHandler(0, 0, AppConst.ONLINE_TIMEOUT_SECOND, TimeUnit.SECONDS));
+        pipeline.addLast(new IMChannelHandler());
+    }
 
     protected Integer port(){
         AppConfigProperties.TcpNode tcpNode = nodeInfo();

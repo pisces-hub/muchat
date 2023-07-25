@@ -8,7 +8,7 @@ import io.pisceshub.muchat.common.core.model.IMSendInfo;
 import io.pisceshub.muchat.common.core.model.LoginInfo;
 import io.pisceshub.muchat.common.core.utils.SpringContextHolder;
 import io.pisceshub.muchat.connector.contant.ConnectorConst;
-import io.pisceshub.muchat.connector.listener.event.UserOnlineStateEvent;
+import io.pisceshub.muchat.connector.listener.event.UserEvent;
 import io.pisceshub.muchat.connector.remote.netty.UserChannelCtxMap;
 import io.pisceshub.muchat.connector.utils.SendMessageUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -30,8 +30,8 @@ public class LoginProcessor implements MessageProcessor {
         ChannelHandlerContext context = UserChannelCtxMap.getChannelCtx(userId);
         if(context != null){
             // 不允许多地登录,强制下线
-            SendMessageUtils.send(ctx,IMSendInfo.create(IMCmdType.FORCE_LOGUT,"强制下线"));
-            SendMessageUtils.close(ctx);
+            SendMessageUtils.send(context,IMSendInfo.create(IMCmdType.FORCE_LOGUT,"强制下线"));
+            SendMessageUtils.close(context);
         }
         // 绑定用户和channel
         UserChannelCtxMap.addChannelCtx(userId,ctx);
@@ -39,7 +39,6 @@ public class LoginProcessor implements MessageProcessor {
         ctx.channel().attr(AttributeKey.valueOf(ConnectorConst.USER_ID)).set(userId);
         // 心跳次数
         ctx.channel().attr(AttributeKey.valueOf(ConnectorConst.HEARTBEAT_TIMES)).set(0L);
-        // 在redis上记录每个user的channelId，15秒没有心跳，则自动过期
-        SpringContextHolder.sendEvent(UserOnlineStateEvent.builder().userId(userId).event(UserOnlineStateEvent.Event.ONLINE).ctx(ctx).build());
+        SpringContextHolder.sendEvent(UserEvent.buildOnlineEvent(userId,ctx));
     }
 }

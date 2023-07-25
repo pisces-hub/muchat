@@ -1,5 +1,6 @@
 package io.pisceshub.muchat.connector.remote.netty;
 
+import cn.hutool.core.date.DateUtil;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.timeout.IdleState;
@@ -9,7 +10,7 @@ import io.pisceshub.muchat.common.core.enums.IMCmdType;
 import io.pisceshub.muchat.common.core.model.IMSendInfo;
 import io.pisceshub.muchat.common.core.utils.SpringContextHolder;
 import io.pisceshub.muchat.connector.contant.ConnectorConst;
-import io.pisceshub.muchat.connector.listener.event.UserOnlineStateEvent;
+import io.pisceshub.muchat.connector.listener.event.UserEvent;
 import io.pisceshub.muchat.connector.processor.MessageProcessor;
 import io.pisceshub.muchat.connector.processor.ProcessorFactory;
 import lombok.extern.slf4j.Slf4j;
@@ -57,6 +58,8 @@ public class IMChannelHandler extends SimpleChannelInboundHandler<IMSendInfo> {
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws  Exception {
         log.error(cause.getMessage());
+        Long userId = this.getUserIdFromChannelContext(ctx);
+        SpringContextHolder.sendEvent(UserEvent.buildOfflineEvent(userId,ctx));
         //关闭上下文
         ctx.close();
     }
@@ -74,12 +77,11 @@ public class IMChannelHandler extends SimpleChannelInboundHandler<IMSendInfo> {
 
     @Override
     public void handlerRemoved(ChannelHandlerContext ctx) throws  Exception {
-        AttributeKey<Long> attr = AttributeKey.valueOf(ConnectorConst.USER_ID);
-        Long userId = ctx.channel().attr(attr).get();
+        Long userId = this.getUserIdFromChannelContext(ctx);
         ChannelHandlerContext context = UserChannelCtxMap.getChannelCtx(userId);
         // 判断一下，避免异地登录导致的误删
         if(context != null && ctx.channel().id().equals(context.channel().id())){
-            SpringContextHolder.sendEvent(UserOnlineStateEvent.builder().userId(userId).event(UserOnlineStateEvent.Event.OFFLINE).ctx(ctx).build());
+            SpringContextHolder.sendEvent(UserEvent.buildOfflineEvent(userId,ctx));
             // 移除channel
             UserChannelCtxMap.removeChannelCtx(userId);
             log.info("断开连接,userId:{}",userId);
@@ -90,17 +92,26 @@ public class IMChannelHandler extends SimpleChannelInboundHandler<IMSendInfo> {
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
         if (evt instanceof IdleStateEvent) {
             IdleState state = ((IdleStateEvent) evt).state();
+            log.info("IdleStateEvent,time={},state={}", DateUtil.now(),state);
             if (state == IdleState.ALL_IDLE) {
                 // 在规定时间内没有收到客户端的上行数据, 主动断开连接
-                AttributeKey<Long> attr = AttributeKey.valueOf(ConnectorConst.USER_ID);
-                Long userId = ctx.channel().attr(attr).get();
-                SpringContextHolder.sendEvent(UserOnlineStateEvent.builder().userId(userId).event(UserOnlineStateEvent.Event.OFFLINE).ctx(ctx).build());
+                Long userId = this.getUserIdFromChannelContext(ctx);
+                if(userId==null){
+                    return;
+                }
+                SpringContextHolder.sendEvent(UserEvent.buildOfflineEvent(userId,ctx));
                 log.info("心跳超时，断开连接,用户id:{} ",userId);
                 ctx.channel().close();
             }
         } else {
             super.userEventTriggered(ctx, evt);
         }
+    }
 
+
+    private Long getUserIdFromChannelContext(ChannelHandlerContext ctx){
+        AttributeKey<Long> attr = AttributeKey.valueOf(ConnectorConst.USER_ID);
+        Long userId = ctx.channel().attr(attr).get();
+        return userId;
     }
 }

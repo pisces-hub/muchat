@@ -58,10 +58,10 @@ public class TcpSocketServer extends AbstractRemoteServer {
                     protected void initChannel(Channel ch) throws Exception {
                         // 获取职责链
                         ChannelPipeline pipeline = ch.pipeline();
-                        pipeline.addLast(new IdleStateHandler(0, 0, AppConst.ONLINE_TIMEOUT_SECOND, TimeUnit.SECONDS));
                         pipeline.addLast("encode", new MessageProtocolEncoder());
                         pipeline.addLast("decode", new MessageProtocolDecoder());
                         pipeline.addLast("handler", new IMChannelHandler());
+                        addPipeline(pipeline);
                     }
                 });
 

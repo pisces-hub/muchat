@@ -1,11 +1,10 @@
 package io.pisceshub.muchat.connector.listener;
 
 import io.pisceshub.muchat.common.cache.AppCache;
-import io.pisceshub.muchat.common.core.contant.AppConst;
 import io.pisceshub.muchat.common.core.contant.RedisKey;
 import io.pisceshub.muchat.common.core.enums.IMCmdType;
 import io.pisceshub.muchat.common.core.model.IMSendInfo;
-import io.pisceshub.muchat.connector.listener.event.UserOnlineStateEvent;
+import io.pisceshub.muchat.connector.listener.event.UserEvent;
 import io.pisceshub.muchat.connector.remote.IMServerGroup;
 import io.pisceshub.muchat.connector.utils.SendMessageUtils;
 import lombok.SneakyThrows;
@@ -14,7 +13,6 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author XDD
@@ -32,15 +30,15 @@ public class UserOnlineStateListener {
 
 
     @SneakyThrows
-    @EventListener(classes = UserOnlineStateEvent.class)
-    public void onApplicationEvent(UserOnlineStateEvent event) {
+    @EventListener(classes = UserEvent.class)
+    public void onApplicationEvent(UserEvent event) {
 
-        if(UserOnlineStateEvent.Event.ONLINE.equals(event.getEvent())){
+        if(UserEvent.Event.ONLINE.equals(event.getEvent())){
             String key = RedisKey.IM_USER_SERVER_ID+event.getUserId();
             appCache.put(key,IMServerGroup.serverId);
             // 响应ws
             SendMessageUtils.send(event.getCtx(), IMSendInfo.create(IMCmdType.LOGIN,"登录成功"));
-        }else if(UserOnlineStateEvent.Event.OFFLINE.equals(event.getEvent())){
+        }else if(UserEvent.Event.OFFLINE.equals(event.getEvent())){
             // 用户下线
             String key = RedisKey.IM_USER_SERVER_ID + event.getUserId();
             appCache.remove(key);

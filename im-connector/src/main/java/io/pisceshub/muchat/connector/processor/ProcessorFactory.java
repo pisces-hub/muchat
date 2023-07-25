@@ -9,10 +9,10 @@ public class ProcessorFactory {
         MessageProcessor  processor = null;
         switch (cmd){
             case LOGIN:
-                processor = SpringContextHolder.getApplicationContext().getBean(LoginProcessor.class);
+                processor = SpringContextHolder.getBean(LoginProcessor.class);
                 break;
             case HEART_BEAT:
-                processor = SpringContextHolder.getApplicationContext().getBean(HeartbeatProcessor.class);
+                processor = SpringContextHolder.getBean(HeartbeatProcessor.class);
                 break;
             default:
                 break;

@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Data
-public class UserOnlineStateEvent {
+public class UserEvent {
 
     private ChannelHandlerContext ctx;
 
@@ -23,6 +23,15 @@ public class UserOnlineStateEvent {
 
     private Event event;
 
+
+
+    public static UserEvent buildOnlineEvent(Long userId, ChannelHandlerContext ctx){
+        return UserEvent.builder().ctx(ctx).userId(userId).event(Event.ONLINE).build();
+    }
+
+    public static UserEvent buildOfflineEvent(Long userId, ChannelHandlerContext ctx){
+        return UserEvent.builder().ctx(ctx).userId(userId).event(Event.OFFLINE).build();
+    }
 
     public static enum Event{
 
