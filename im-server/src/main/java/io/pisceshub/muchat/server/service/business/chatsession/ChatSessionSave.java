@@ -1,7 +1,6 @@
 package io.pisceshub.muchat.server.service.business.chatsession;
 
 import io.pisceshub.muchat.server.common.dto.ChatSessionInfoDto;
-import io.pisceshub.muchat.server.common.vo.user.ChatSessionAddReq;
 
 import java.util.Set;
 

@@ -8,15 +8,14 @@ import io.pisceshub.muchat.connector.listener.event.NodeRegisterEvent;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.framework.CuratorFramework;
-import org.apache.curator.framework.CuratorFrameworkFactory;
-import org.apache.curator.retry.RetryNTimes;
+import org.apache.curator.framework.recipes.nodes.PersistentEphemeralNode;
 import org.apache.zookeeper.CreateMode;
+import org.apache.zookeeper.data.Stat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
-import java.net.UnknownHostException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author XDD
@@ -47,7 +46,6 @@ public class NodeRegisterListener {
 
         String nodePath = protocolPath+"/"+buildNodeInfo(port);
         delPath(nodePath);
-
         client.create().withMode(CreateMode.EPHEMERAL).forPath(nodePath,MixUtils.LongToBytes(event.getRegisterTime()));
         log.info("zk注册完毕,nodePath:{}",nodePath);
 
@@ -69,7 +67,8 @@ public class NodeRegisterListener {
      * @throws Exception
      */
     private void delPath(String nodePath) throws Exception {
-        if(client.checkExists().forPath(nodePath)!=null){
+        Stat stat = client.checkExists().forPath(nodePath);
+        if(stat!=null){
             client.delete().forPath(nodePath);
         }
     }

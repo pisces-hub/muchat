@@ -310,4 +310,15 @@ public class RedisCacheImpl implements AppCache {
     public Long zRemove(String key, String... value) {
         return redisTemplate.opsForZSet().remove(key, value);
     }
+
+    @Override
+    public List<Object> listPop(String key,int length) {
+        return redisTemplate.opsForList().leftPop(key,length);
+    }
+
+    @Override
+    public boolean listPush(String key, Object obj) {
+        Long aLong = redisTemplate.opsForList().rightPush(key, obj);
+        return aLong!=null && aLong>0;
+    }
 }

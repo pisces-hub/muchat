@@ -1,14 +1,14 @@
 package io.pisceshub.muchat.server.service.thirdparty;
 
-import io.pisceshub.muchat.server.common.contant.Constant;
-import io.pisceshub.muchat.server.util.SessionContext;
-import io.pisceshub.muchat.server.util.FileUtil;
-import io.pisceshub.muchat.server.util.ImageUtil;
 import io.pisceshub.muchat.common.core.enums.FileType;
 import io.pisceshub.muchat.common.core.enums.ResultCode;
-import io.pisceshub.muchat.server.exception.GlobalException;
-import io.pisceshub.muchat.server.util.MinioUtil;
+import io.pisceshub.muchat.server.common.contant.Constant;
 import io.pisceshub.muchat.server.common.vo.common.UploadImageResp;
+import io.pisceshub.muchat.server.exception.GlobalException;
+import io.pisceshub.muchat.server.util.FileUtil;
+import io.pisceshub.muchat.server.util.ImageUtil;
+import io.pisceshub.muchat.server.util.MinioUtil;
+import io.pisceshub.muchat.server.util.SessionContext;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +21,6 @@ import java.io.IOException;
 
 /*
  * 文件上传服务
- * @Author Blue
- * @Date 2022/10/28
  */
 @Slf4j
 @Service

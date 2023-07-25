@@ -2,8 +2,8 @@ package io.pisceshub.muchat.server.controller;
 
 import io.pisceshub.muchat.common.core.utils.Result;
 import io.pisceshub.muchat.common.core.utils.ResultUtils;
-import io.pisceshub.muchat.server.service.thirdparty.FileService;
 import io.pisceshub.muchat.server.common.vo.common.UploadImageResp;
+import io.pisceshub.muchat.server.service.thirdparty.FileService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;

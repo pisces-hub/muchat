@@ -1,6 +1,5 @@
 package io.pisceshub.muchat.server.util;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import io.pisceshub.muchat.common.core.enums.ResultCode;
 import io.pisceshub.muchat.server.exception.GlobalException;
 import lombok.Data;
@@ -9,11 +8,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 
-/*
- * @Description
- * @Author Blue
- * @Date 2022/10/21
- */
+
 public class SessionContext {
 
 

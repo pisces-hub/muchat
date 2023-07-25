@@ -11,14 +11,7 @@ import lombok.EqualsAndHashCode;
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- * <p>
- *  用户
- * </p>
- *
- * @author blue
- * @since 2022-10-01
- */
+
 @Data
 @EqualsAndHashCode(callSuper = false)
 @TableName("im_user")

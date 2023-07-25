@@ -1,9 +1,7 @@
 package io.pisceshub.muchat.connector.task;
 
-import io.pisceshub.muchat.connector.netty.IMServerGroup;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -20,10 +18,6 @@ public abstract class AbstractPullMessageTask{
      */
     protected final static Integer ONES_PULL_MESSAGE_COUNT = 200;
 
-    @Autowired
-    private IMServerGroup serverGroup ;
-
-
 
     @PostConstruct
     public void init(){
@@ -32,9 +26,7 @@ public abstract class AbstractPullMessageTask{
             @Override
             public void run() {
                 try{
-                    if(serverGroup.isReady()){
-                        pullMessage();
-                    }
+                    pullMessage();
                     Thread.sleep(10);
                 }catch (Exception e){
                     log.error("任务调度异常",e);

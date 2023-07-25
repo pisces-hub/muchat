@@ -1,4 +1,4 @@
-package io.pisceshub.muchat.connector.netty;
+package io.pisceshub.muchat.connector.remote.netty;
 
 import io.netty.channel.ChannelHandlerContext;
 

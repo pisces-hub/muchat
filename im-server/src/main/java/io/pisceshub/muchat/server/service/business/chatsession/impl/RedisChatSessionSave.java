@@ -2,19 +2,13 @@ package io.pisceshub.muchat.server.service.business.chatsession.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import io.pisceshub.muchat.server.common.dto.ChatSessionInfoDto;
-import io.pisceshub.muchat.server.common.vo.user.ChatSessionInfoResp;
 import io.pisceshub.muchat.server.service.business.chatsession.ChatSessionSave;
-import io.pisceshub.muchat.server.util.BeanUtils;
-import io.pisceshub.muchat.server.util.SessionContext;
-import io.pisceshub.muchat.server.common.vo.user.ChatSessionAddReq;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.DefaultTypedTuple;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
-import org.springframework.stereotype.Component;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Collections;
+import java.util.Set;
 
 /**
  * @author xiaochangbai

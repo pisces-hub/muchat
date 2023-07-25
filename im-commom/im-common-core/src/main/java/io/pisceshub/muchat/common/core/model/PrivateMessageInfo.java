@@ -2,8 +2,6 @@ package io.pisceshub.muchat.common.core.model;
 
 import lombok.Data;
 
-import java.util.Date;
-
 @Data
 public class PrivateMessageInfo extends CommonMessageInfo{
 

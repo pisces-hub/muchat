@@ -1,18 +1,16 @@
 package io.pisceshub.muchat.connector.task.handler;
 
+import io.netty.channel.ChannelHandlerContext;
+import io.pisceshub.muchat.common.cache.AppCache;
 import io.pisceshub.muchat.common.core.contant.RedisKey;
 import io.pisceshub.muchat.common.core.enums.IMCmdType;
 import io.pisceshub.muchat.common.core.enums.IMSendCode;
 import io.pisceshub.muchat.common.core.model.GroupMessageInfo;
-import io.pisceshub.muchat.common.core.model.IMRecvInfo;
 import io.pisceshub.muchat.common.core.model.IMSendInfo;
 import io.pisceshub.muchat.common.core.model.SendResult;
-import io.pisceshub.muchat.connector.netty.UserChannelCtxMap;
-import io.netty.channel.ChannelHandlerContext;
+import io.pisceshub.muchat.connector.remote.netty.UserChannelCtxMap;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -21,8 +19,10 @@ import java.util.List;
 @Component
 public class GroupMessageHandler implements MessageHandler<GroupMessageInfo> {
 
+
+
     @Autowired
-    private RedisTemplate<String,Object> redisTemplate;
+    private AppCache appCache;
 
     @Override
     public void handler(GroupMessageInfo messageInfo) {
@@ -49,7 +49,7 @@ public class GroupMessageHandler implements MessageHandler<GroupMessageInfo> {
             }
             // 消息发送成功确认
             SendResult<Object> sendResult = SendResult.builder().code(code).recvId(recvId).messageInfo(messageInfo).build();
-            redisTemplate.opsForList().rightPush(RedisKey.IM_RESULT_GROUP_QUEUE,sendResult);
+            appCache.listPush(RedisKey.IM_RESULT_GROUP_QUEUE,sendResult);
         }
     }
 }

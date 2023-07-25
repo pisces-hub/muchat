@@ -2,14 +2,12 @@ package io.pisceshub.muchat.sdk.listener;
 
 
 import cn.hutool.core.collection.CollUtil;
-import io.pisceshub.muchat.sdk.annotation.IMListener;
 import io.pisceshub.muchat.common.core.enums.IMListenerType;
 import io.pisceshub.muchat.common.core.model.SendResult;
+import io.pisceshub.muchat.sdk.annotation.IMListener;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
 import java.util.List;
 
 @AllArgsConstructor

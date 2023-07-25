@@ -1,10 +1,10 @@
-package io.pisceshub.muchat.connector.netty.tcp.endecode;
+package io.pisceshub.muchat.connector.remote.netty.tcp.endecode;
 
-import io.pisceshub.muchat.common.core.model.IMSendInfo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
+import io.pisceshub.muchat.common.core.model.IMSendInfo;
 
 public class MessageProtocolEncoder extends MessageToByteEncoder<IMSendInfo> {
 

@@ -2,7 +2,6 @@ package io.pisceshub.muchat.server.common.vo.group;
 
 import io.pisceshub.muchat.common.core.model.PageReq;
 import lombok.Data;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.validation.constraints.NotNull;
 

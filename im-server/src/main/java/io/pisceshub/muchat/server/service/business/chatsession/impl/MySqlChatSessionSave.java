@@ -9,8 +9,6 @@ import io.pisceshub.muchat.server.common.entity.ChatSession;
 import io.pisceshub.muchat.server.mapper.ChatSessionMapper;
 import io.pisceshub.muchat.server.service.business.chatsession.ChatSessionSave;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;

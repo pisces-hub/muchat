@@ -1,8 +1,8 @@
 package io.pisceshub.muchat.sdk;
 
-import io.pisceshub.muchat.sdk.sender.IMSender;
 import io.pisceshub.muchat.common.core.model.GroupMessageInfo;
 import io.pisceshub.muchat.common.core.model.PrivateMessageInfo;
+import io.pisceshub.muchat.sdk.sender.IMSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 

@@ -1,4 +1,4 @@
-package io.pisceshub.muchat.connector.netty.factory;
+package io.pisceshub.muchat.connector.remote.netty.factory;
 
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.epoll.Epoll;

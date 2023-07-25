@@ -1,11 +1,11 @@
-package io.pisceshub.muchat.connector.netty.tcp.endecode;
+package io.pisceshub.muchat.connector.remote.netty.tcp.endecode;
 
-import io.pisceshub.muchat.common.core.model.IMSendInfo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ReplayingDecoder;
 import io.netty.util.CharsetUtil;
+import io.pisceshub.muchat.common.core.model.IMSendInfo;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;

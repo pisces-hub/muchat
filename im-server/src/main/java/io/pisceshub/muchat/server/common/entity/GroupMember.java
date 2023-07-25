@@ -12,12 +12,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * <p>
  * 群成员
- * </p>
- *
- * @author blue
- * @since 2022-10-31
  */
 @Data
 @EqualsAndHashCode(callSuper = false)

@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * 缓存接口
  */
-public interface AppCache<T> {
+public interface AppCache {
 
     /**
      * Get an item from the cache, nontransactionally
@@ -20,7 +20,7 @@ public interface AppCache<T> {
      * @param key 缓存key
      * @return the cached object or <tt>null</tt>
      */
-    T get(Object key);
+    Object get(Object key);
 
     /**
      * Get an item from the cache, nontransactionally
@@ -61,7 +61,7 @@ public interface AppCache<T> {
      * @param key   缓存key
      * @param value 缓存value
      */
-    void put(Object key, T value);
+    void put(Object key, Object value);
 
     /**
      * 往缓存中写入内容
@@ -70,7 +70,7 @@ public interface AppCache<T> {
      * @param value 缓存value
      * @param exp   超时时间，单位为秒
      */
-    void put(Object key, T value, Long exp);
+    void put(Object key, Object value, Long exp);
 
     /**
      * 往缓存中写入内容
@@ -80,7 +80,7 @@ public interface AppCache<T> {
      * @param exp      过期时间
      * @param timeUnit 过期单位
      */
-    void put(Object key, T value, Long exp, TimeUnit timeUnit);
+    void put(Object key, Object value, Long exp, TimeUnit timeUnit);
 
     /**
      * 删除
@@ -126,7 +126,7 @@ public interface AppCache<T> {
      * @param hashKey map value
      * @return 返回缓存中的数据
      */
-    T getHash(Object key, Object hashKey);
+    Object getHash(Object key, Object hashKey);
 
     /**
      * 读取缓存值
@@ -298,4 +298,22 @@ public interface AppCache<T> {
      * @return 删除数量
      */
     Long zRemove(String key, String... value);
+
+
+    /**
+     * list弹出元素
+     * @param key
+     * @param length
+     * @return
+     */
+    List<Object> listPop(String key,int length);
+
+
+    /**
+     * list插入元素
+     * @param key
+     * @param obj
+     * @return
+     */
+    boolean listPush(String key,Object obj);
 }

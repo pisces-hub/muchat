@@ -1,9 +1,6 @@
 package io.pisceshub.muchat.common.core.contant;
 
 
-import java.util.Set;
-import java.util.concurrent.CopyOnWriteArraySet;
-
 public class AppConst {
 
     public static final long ONLINE_TIMEOUT_SECOND = 30;

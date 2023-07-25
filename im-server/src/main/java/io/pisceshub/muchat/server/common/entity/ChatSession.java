@@ -1,10 +1,6 @@
 package io.pisceshub.muchat.server.common.entity;
 
-import io.pisceshub.muchat.common.core.enums.ChatType;
 import lombok.Data;
-
-import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 
 /**
  * @author xiaochangbai

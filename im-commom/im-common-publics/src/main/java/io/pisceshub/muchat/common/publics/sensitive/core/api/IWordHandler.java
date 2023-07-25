@@ -1,7 +1,7 @@
 package io.pisceshub.muchat.common.publics.sensitive.core.api;
 
-import io.pisceshub.muchat.common.publics.sensitive.common.enums.ValidModeEnum;
 import io.pisceshub.muchat.common.publics.sensitive.common.core.WordContext;
+import io.pisceshub.muchat.common.publics.sensitive.common.enums.ValidModeEnum;
 
 import java.util.Collection;
 import java.util.List;

@@ -1,67 +1,49 @@
-package io.pisceshub.muchat.connector.netty.ws;
+package io.pisceshub.muchat.connector.remote.netty.ws;
 
-import io.pisceshub.muchat.common.core.contant.AppConst;
-import io.pisceshub.muchat.common.core.enums.NetProtocolEnum;
-import io.pisceshub.muchat.common.core.utils.MixUtils;
-import io.pisceshub.muchat.common.core.utils.SpringContextHolder;
-import io.pisceshub.muchat.connector.config.AppConfigProperties;
-import io.pisceshub.muchat.connector.listener.event.NodeRegisterEvent;
-import io.pisceshub.muchat.connector.netty.IMChannelHandler;
-import io.pisceshub.muchat.connector.netty.IMServer;
-import io.pisceshub.muchat.connector.netty.factory.NettyEventLoopFactory;
-import io.pisceshub.muchat.connector.netty.ws.endecode.MessageProtocolDecoder;
-import io.pisceshub.muchat.connector.netty.ws.endecode.MessageProtocolEncoder;
-import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.*;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.ChannelPipeline;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import io.netty.handler.stream.ChunkedWriteHandler;
 import io.netty.handler.timeout.IdleStateHandler;
+import io.pisceshub.muchat.common.core.contant.AppConst;
+import io.pisceshub.muchat.common.core.enums.NetProtocolEnum;
+import io.pisceshub.muchat.common.core.utils.SpringContextHolder;
+import io.pisceshub.muchat.connector.config.AppConfigProperties;
+import io.pisceshub.muchat.connector.listener.event.NodeRegisterEvent;
+import io.pisceshub.muchat.connector.remote.netty.AbstractRemoteServer;
+import io.pisceshub.muchat.connector.remote.netty.IMChannelHandler;
+import io.pisceshub.muchat.connector.remote.netty.factory.NettyEventLoopFactory;
+import io.pisceshub.muchat.connector.remote.netty.ws.endecode.MessageProtocolDecoder;
+import io.pisceshub.muchat.connector.remote.netty.ws.endecode.MessageProtocolEncoder;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.TimeUnit;
 
 
 /**
- *  WS服务器,用于连接网页的客户端,协议格式: 直接IMSendInfo的JSON序列化
- *
- * @author Blue
- * @date 2022-11-20
+ * WS服务器
  */
 @Slf4j
 @Component
-public class WebSocketServer implements IMServer {
+public class WebSocketServer extends AbstractRemoteServer {
 
-    @Autowired
-    private AppConfigProperties appConfigProperties;
-
-    private volatile boolean ready = false;
-
-    private  ServerBootstrap bootstrap;
-    private  EventLoopGroup bossGroup;
-    private  EventLoopGroup workGroup;
-
-
-    @Override
-    public boolean enable(){
-        return appConfigProperties.getWs().getEnable();
+    public WebSocketServer(){
+        super();
     }
 
     @Override
-    public boolean isReady(){
-        return ready;
+    protected AppConfigProperties.TcpNode nodeInfo(){
+        return appConfigProperties.getWs();
     }
 
     @Override
     public void start() {
-        bootstrap = new ServerBootstrap();
-        bossGroup = NettyEventLoopFactory.eventLoopGroup(1);
-        workGroup = NettyEventLoopFactory.eventLoopGroup(Math.min(Runtime.getRuntime().availableProcessors() + 1,20));
+        AppConfigProperties.TcpNode nodeInfo = nodeInfo();
         // 设置为主从线程模型
         bootstrap.group(bossGroup, workGroup)
                 // 设置服务端NIO通信类型
@@ -83,18 +65,14 @@ public class WebSocketServer implements IMServer {
                         pipeline.addLast("aggregator", new HttpObjectAggregator(65535));
                         pipeline.addLast("http-chunked", new ChunkedWriteHandler());
                         pipeline.addLast(new WebSocketServerProtocolHandler("/im"));
-                        pipeline.addLast("encode",new MessageProtocolEncoder());
-                        pipeline.addLast("decode",new MessageProtocolDecoder());
+                        pipeline.addLast("encode", new MessageProtocolEncoder());
+                        pipeline.addLast("decode", new MessageProtocolDecoder());
                         pipeline.addLast("handler", new IMChannelHandler());
                     }
                 });
 
         try {
-            Integer port = appConfigProperties.getWs().getPort();
-            if(port==null || port<1){
-                port = MixUtils.findAvailablePort();
-                appConfigProperties.getWs().setPort(port);
-            }
+            Integer port = super.port();
             // 绑定端口，启动select线程，轮询监听channel事件，监听到事件之后就会交给从线程池处理
             Channel channel = bootstrap.bind(port).sync().channel();
             // 就绪标志
@@ -105,22 +83,10 @@ public class WebSocketServer implements IMServer {
                             .port(port)
                             .registerTime(System.currentTimeMillis())
                             .build());
-            log.info("websocket server 初始化完成,端口：{}",port);
+            log.info("websocket server 初始化完成,端口：{}", port);
         } catch (InterruptedException e) {
-            log.error("websocket server 初始化异常",e);
+            log.error("websocket server 初始化异常", e);
         }
-    }
-
-    @Override
-    public void stop() {
-        if(bossGroup != null && !bossGroup.isShuttingDown() && !bossGroup.isShutdown() ) {
-            bossGroup.shutdownGracefully();
-        }
-        if(workGroup != null && !workGroup.isShuttingDown() && !workGroup.isShutdown() ) {
-            workGroup.shutdownGracefully();
-        }
-        this.ready = false;
-        log.error("websocket server 停止");
     }
 
 

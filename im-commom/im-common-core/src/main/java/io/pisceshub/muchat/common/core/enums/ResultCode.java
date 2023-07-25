@@ -1,12 +1,6 @@
 package io.pisceshub.muchat.common.core.enums;
 
-/**
- * 响应码枚举
- *
- * @author Blue
- * @date 2020/10/19
- *
- **/
+
 public enum ResultCode {
     SUCCESS(200,"成功"),
     NO_LOGIN(400,"未登录"),

@@ -1,18 +1,17 @@
 package io.pisceshub.muchat.connector.processor;
 
 import com.alibaba.fastjson.JSONObject;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.util.AttributeKey;
 import io.pisceshub.muchat.common.core.enums.IMCmdType;
 import io.pisceshub.muchat.common.core.model.IMSendInfo;
 import io.pisceshub.muchat.common.core.model.LoginInfo;
 import io.pisceshub.muchat.common.core.utils.SpringContextHolder;
 import io.pisceshub.muchat.connector.contant.ConnectorConst;
 import io.pisceshub.muchat.connector.listener.event.UserOnlineStateEvent;
-import io.pisceshub.muchat.connector.netty.UserChannelCtxMap;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.util.AttributeKey;
+import io.pisceshub.muchat.connector.remote.netty.UserChannelCtxMap;
 import io.pisceshub.muchat.connector.utils.SendMessageUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 

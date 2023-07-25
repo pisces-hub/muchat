@@ -2,7 +2,6 @@ package io.pisceshub.muchat.server.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import io.pisceshub.muchat.server.common.entity.ChatSession;
-import io.pisceshub.muchat.server.common.entity.Friend;
 
 /**
  * @author xiaochangbai

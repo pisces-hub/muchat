@@ -2,15 +2,18 @@ package io.pisceshub.muchat.common.publics.sensitive.core.support.handler;
 
 
 import io.pisceshub.muchat.common.publics.sensitive.common.annotation.ThreadSafe;
-import io.pisceshub.muchat.common.publics.sensitive.common.enums.ValidModeEnum;
 import io.pisceshub.muchat.common.publics.sensitive.common.core.ISensitiveCheck;
 import io.pisceshub.muchat.common.publics.sensitive.common.core.NodeTree;
 import io.pisceshub.muchat.common.publics.sensitive.common.core.SensitiveCheckResult;
 import io.pisceshub.muchat.common.publics.sensitive.common.core.WordContext;
+import io.pisceshub.muchat.common.publics.sensitive.common.enums.ValidModeEnum;
 import io.pisceshub.muchat.common.publics.sensitive.common.utils.CollectionUtil;
 import io.pisceshub.muchat.common.publics.sensitive.common.utils.FileUtils;
 import io.pisceshub.muchat.common.publics.sensitive.common.utils.StringUtil;
-import io.pisceshub.muchat.common.publics.sensitive.core.api.*;
+import io.pisceshub.muchat.common.publics.sensitive.core.api.ISensitiveWordReplace;
+import io.pisceshub.muchat.common.publics.sensitive.core.api.ISensitiveWordReplaceContext;
+import io.pisceshub.muchat.common.publics.sensitive.core.api.IWordHandler;
+import io.pisceshub.muchat.common.publics.sensitive.core.api.IWordResult;
 import io.pisceshub.muchat.common.publics.sensitive.core.support.check.SensitiveCheckUrl;
 import io.pisceshub.muchat.common.publics.sensitive.core.support.replace.SensitiveWordReplaceContext;
 import io.pisceshub.muchat.common.publics.sensitive.core.support.result.WordResult;

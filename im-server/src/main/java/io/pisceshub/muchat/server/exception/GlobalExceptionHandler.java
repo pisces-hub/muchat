@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import java.lang.reflect.UndeclaredThrowableException;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 

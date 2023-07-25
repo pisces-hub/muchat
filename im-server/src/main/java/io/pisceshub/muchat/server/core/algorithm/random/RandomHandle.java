@@ -1,12 +1,10 @@
 package io.pisceshub.muchat.server.core.algorithm.random;
 
 
-
 import io.pisceshub.muchat.common.core.enums.NetProtocolEnum;
 import io.pisceshub.muchat.server.core.NodeContainer;
 import io.pisceshub.muchat.server.core.algorithm.RouteHandle;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 

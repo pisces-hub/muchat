@@ -17,7 +17,6 @@
 
 package io.pisceshub.muchat.common.db;
 
-import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
 import org.springframework.context.annotation.Bean;
 

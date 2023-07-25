@@ -2,8 +2,6 @@ package io.pisceshub.muchat.server.common.vo.user;
 
 import io.pisceshub.muchat.common.core.enums.ChatType;
 import io.pisceshub.muchat.common.core.model.CommonMessageInfo;
-import io.pisceshub.muchat.common.core.model.GroupMessageInfo;
-import io.pisceshub.muchat.common.core.model.PrivateMessageInfo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

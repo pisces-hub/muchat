@@ -4,7 +4,6 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import io.pisceshub.muchat.common.core.enums.ChatType;
 import io.pisceshub.muchat.common.core.enums.ResultCode;
-import io.pisceshub.muchat.common.core.model.CommonMessageInfo;
 import io.pisceshub.muchat.common.core.model.GroupMessageInfo;
 import io.pisceshub.muchat.common.core.model.PrivateMessageInfo;
 import io.pisceshub.muchat.common.core.utils.Result;
@@ -14,6 +13,7 @@ import io.pisceshub.muchat.server.common.entity.Group;
 import io.pisceshub.muchat.server.common.entity.User;
 import io.pisceshub.muchat.server.common.enums.GroupEnum;
 import io.pisceshub.muchat.server.common.enums.UserEnum;
+import io.pisceshub.muchat.server.common.vo.user.ChatSessionAddReq;
 import io.pisceshub.muchat.server.common.vo.user.ChatSessionInfoResp;
 import io.pisceshub.muchat.server.common.vo.user.ChatSessionUpdateReq;
 import io.pisceshub.muchat.server.common.vo.user.UserVO;
@@ -21,14 +21,16 @@ import io.pisceshub.muchat.server.exception.BusinessException;
 import io.pisceshub.muchat.server.exception.NotJoinGroupException;
 import io.pisceshub.muchat.server.service.*;
 import io.pisceshub.muchat.server.service.business.chatsession.ChatSessionSave;
-import io.pisceshub.muchat.server.common.vo.user.ChatSessionAddReq;
 import io.pisceshub.muchat.server.util.BeanUtils;
 import io.pisceshub.muchat.server.util.MessageUtils;
 import io.pisceshub.muchat.server.util.SessionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**

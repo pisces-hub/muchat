@@ -1,10 +1,10 @@
-package io.pisceshub.muchat.connector.netty.ws.endecode;
+package io.pisceshub.muchat.connector.remote.netty.ws.endecode;
 
-import io.pisceshub.muchat.common.core.model.IMSendInfo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageDecoder;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
+import io.pisceshub.muchat.common.core.model.IMSendInfo;
 
 import java.util.List;
 

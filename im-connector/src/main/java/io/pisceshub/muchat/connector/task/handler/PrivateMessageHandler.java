@@ -1,22 +1,26 @@
 package io.pisceshub.muchat.connector.task.handler;
 
+import io.netty.channel.ChannelHandlerContext;
+import io.pisceshub.muchat.common.cache.AppCache;
 import io.pisceshub.muchat.common.core.contant.RedisKey;
 import io.pisceshub.muchat.common.core.enums.IMCmdType;
 import io.pisceshub.muchat.common.core.enums.IMSendCode;
-import io.pisceshub.muchat.common.core.model.*;
-import io.pisceshub.muchat.connector.netty.UserChannelCtxMap;
-import io.netty.channel.ChannelHandlerContext;
+import io.pisceshub.muchat.common.core.model.IMSendInfo;
+import io.pisceshub.muchat.common.core.model.PrivateMessageInfo;
+import io.pisceshub.muchat.common.core.model.SendResult;
+import io.pisceshub.muchat.connector.remote.netty.UserChannelCtxMap;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
 public class PrivateMessageHandler implements MessageHandler<PrivateMessageInfo>  {
 
+
+
     @Autowired
-    private RedisTemplate<String,Object> redisTemplate;
+    private AppCache appCache;
 
     @Override
     public void handler(PrivateMessageInfo messageInfo) {
@@ -46,7 +50,7 @@ public class PrivateMessageHandler implements MessageHandler<PrivateMessageInfo>
                 .messageInfo(messageInfo)
                 .code(code)
                 .build();
-        redisTemplate.opsForList().rightPush(RedisKey.IM_RESULT_PRIVATE_QUEUE,sendResult);
+        appCache.listPush(RedisKey.IM_RESULT_PRIVATE_QUEUE,sendResult);
     }
 
 }

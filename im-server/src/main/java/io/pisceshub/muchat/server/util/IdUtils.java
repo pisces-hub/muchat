@@ -3,8 +3,6 @@ package io.pisceshub.muchat.server.util;
 import cn.hutool.core.lang.Snowflake;
 import io.pisceshub.muchat.common.cache.AppCache;
 import io.pisceshub.muchat.common.core.utils.SpringContextHolder;
-import org.springframework.cache.Cache;
-import org.springframework.data.redis.core.RedisTemplate;
 
 /**
  * @author xiaochangbai

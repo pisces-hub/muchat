@@ -1,11 +1,10 @@
 package io.pisceshub.muchat.sdk.task;
 
-import io.pisceshub.muchat.sdk.listener.MessageListenerMulticaster;
 import io.pisceshub.muchat.common.core.contant.RedisKey;
 import io.pisceshub.muchat.common.core.enums.IMListenerType;
 import io.pisceshub.muchat.common.core.model.SendResult;
+import io.pisceshub.muchat.sdk.listener.MessageListenerMulticaster;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 

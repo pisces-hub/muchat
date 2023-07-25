@@ -1,14 +1,11 @@
 package io.pisceshub.muchat.server.service.impl;
 
-import ch.qos.logback.core.util.ContextUtil;
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.pisceshub.muchat.common.core.enums.ChatType;
-import io.pisceshub.muchat.common.core.model.PageResp;
+import io.pisceshub.muchat.common.core.enums.ResultCode;
 import io.pisceshub.muchat.server.adapter.IpSearchAdapter;
 import io.pisceshub.muchat.server.common.contant.Constant;
 import io.pisceshub.muchat.server.common.contant.RedisKey;
@@ -17,28 +14,26 @@ import io.pisceshub.muchat.server.common.entity.Group;
 import io.pisceshub.muchat.server.common.entity.GroupMember;
 import io.pisceshub.muchat.server.common.entity.User;
 import io.pisceshub.muchat.server.common.enums.GroupEnum;
-import io.pisceshub.muchat.server.common.vo.group.GroupMemberQueryReq;
-import io.pisceshub.muchat.server.common.vo.user.*;
+import io.pisceshub.muchat.server.common.vo.user.ChatSessionUpdateReq;
+import io.pisceshub.muchat.server.common.vo.user.GroupInviteReq;
+import io.pisceshub.muchat.server.common.vo.user.GroupMemberResp;
+import io.pisceshub.muchat.server.common.vo.user.GroupVO;
 import io.pisceshub.muchat.server.exception.BusinessException;
 import io.pisceshub.muchat.server.exception.GlobalException;
 import io.pisceshub.muchat.server.exception.NotJoinGroupException;
 import io.pisceshub.muchat.server.mapper.GroupMapper;
 import io.pisceshub.muchat.server.service.*;
-import io.pisceshub.muchat.server.util.SessionContext;
 import io.pisceshub.muchat.server.util.BeanUtils;
-import io.pisceshub.muchat.common.core.enums.ResultCode;
+import io.pisceshub.muchat.server.util.SessionContext;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 
 @Slf4j

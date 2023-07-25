@@ -1,20 +1,18 @@
-package io.pisceshub.muchat.connector.netty;
+package io.pisceshub.muchat.connector.remote.netty;
 
-import io.pisceshub.muchat.common.core.contant.RedisKey;
-import io.pisceshub.muchat.common.core.enums.IMCmdType;
-import io.pisceshub.muchat.common.core.model.IMSendInfo;
-import io.pisceshub.muchat.connector.contant.ConnectorConst;
-import io.pisceshub.muchat.connector.listener.event.UserOnlineStateEvent;
-import io.pisceshub.muchat.connector.processor.MessageProcessor;
-import io.pisceshub.muchat.connector.processor.ProcessorFactory;
-import io.pisceshub.muchat.common.core.utils.SpringContextHolder;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.util.AttributeKey;
+import io.pisceshub.muchat.common.core.enums.IMCmdType;
+import io.pisceshub.muchat.common.core.model.IMSendInfo;
+import io.pisceshub.muchat.common.core.utils.SpringContextHolder;
+import io.pisceshub.muchat.connector.contant.ConnectorConst;
+import io.pisceshub.muchat.connector.listener.event.UserOnlineStateEvent;
+import io.pisceshub.muchat.connector.processor.MessageProcessor;
+import io.pisceshub.muchat.connector.processor.ProcessorFactory;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.RedisTemplate;
 
 
 /**
@@ -92,7 +90,7 @@ public class IMChannelHandler extends SimpleChannelInboundHandler<IMSendInfo> {
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
         if (evt instanceof IdleStateEvent) {
             IdleState state = ((IdleStateEvent) evt).state();
-            if (state == IdleState.READER_IDLE) {
+            if (state == IdleState.ALL_IDLE) {
                 // 在规定时间内没有收到客户端的上行数据, 主动断开连接
                 AttributeKey<Long> attr = AttributeKey.valueOf(ConnectorConst.USER_ID);
                 Long userId = ctx.channel().attr(attr).get();

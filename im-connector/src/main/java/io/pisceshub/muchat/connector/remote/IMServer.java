@@ -1,12 +1,10 @@
-package io.pisceshub.muchat.connector.netty;
+package io.pisceshub.muchat.connector.remote;
 
 public interface IMServer {
 
     default boolean enable(){
         return false;
     }
-
-    boolean isReady();
 
     void start();
 
