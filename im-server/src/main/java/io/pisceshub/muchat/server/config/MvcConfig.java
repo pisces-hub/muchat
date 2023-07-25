@@ -19,7 +19,7 @@ public class MvcConfig implements WebMvcConfigurer {
 
         registry.addInterceptor(authInterceptor())
                 .addPathPatterns("/**")
-                .excludePathPatterns("/login","/logout","/register","/refreshToken","/anonymousLogin")
+                .excludePathPatterns("/login","/logout","/register","/refreshToken","/connect/**")
                 // swagger
                 .excludePathPatterns("/doc.html")
                 .excludePathPatterns("/swagger-ui.html")
