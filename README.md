@@ -42,7 +42,7 @@ muchat
 
 #### 架构图
 
-![系统架构图](docs/images/architecture.jpeg)
+![系统架构图](docs/images/architecture.png)
 
 ### 开发环境
 
