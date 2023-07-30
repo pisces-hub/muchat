@@ -6,7 +6,6 @@ import io.pisceshub.muchat.server.common.vo.user.FriendVO;
 
 import java.util.List;
 
-
 public interface IFriendService extends IService<Friend> {
 
     Boolean isFriend(Long userId1, Long userId2);

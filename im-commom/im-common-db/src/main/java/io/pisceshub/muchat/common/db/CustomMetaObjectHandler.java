@@ -30,7 +30,7 @@ import java.util.Date;
  * @公众号 马丁玩编程，关注回复：资料，领取后端技术专家成长手册
  */
 public class CustomMetaObjectHandler implements MetaObjectHandler {
-    
+
     /**
      * 数据新增时填充
      *
@@ -40,9 +40,10 @@ public class CustomMetaObjectHandler implements MetaObjectHandler {
     public void insertFill(MetaObject metaObject) {
         this.strictInsertFill(metaObject, "createTime", Date.class, new Date());
         this.strictInsertFill(metaObject, "updateTime", Date.class, new Date());
-//        this.strictInsertFill(metaObject, "delFlag", Integer.class, DelEnum.NORMAL.code());
+        // this.strictInsertFill(metaObject, "delFlag", Integer.class,
+        // DelEnum.NORMAL.code());
     }
-    
+
     /**
      * 数据修改时填充
      *

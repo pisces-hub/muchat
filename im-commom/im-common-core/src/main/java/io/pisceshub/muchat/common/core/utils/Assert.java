@@ -23,7 +23,6 @@ import org.springframework.util.StringUtils;
 import java.util.Collection;
 import java.util.Map;
 
-
 /**
  * @description: 断言工具类
  * @author: xiaochangbai
@@ -69,7 +68,7 @@ public class Assert {
 
     public static void notEmpty(Collection<?> collection) {
         notEmpty(collection,
-                "[Assertion failed] - this collection must not be empty: it must contain at least 1 element");
+            "[Assertion failed] - this collection must not be empty: it must contain at least 1 element");
     }
 
     public static void notEmpty(Map<?, ?> map, String message) {
@@ -111,7 +110,6 @@ public class Assert {
     }
 
     public static void hasText(String text) {
-        hasText(text,
-                "[Assertion failed] - this String argument must have text; it must not be null, empty, or blank");
+        hasText(text, "[Assertion failed] - this String argument must have text; it must not be null, empty, or blank");
     }
 }

@@ -21,6 +21,7 @@ public class SensitiveWordAdapter {
 
     /**
      * 替换敏感词
+     * 
      * @param target
      * @return
      */
@@ -28,12 +29,10 @@ public class SensitiveWordAdapter {
         return swDispatcher.replace(target, '*');
     }
 
-
     @Bean
-    public SWDispatcher sWDispatcher(){
+    public SWDispatcher sWDispatcher() {
         SensitiveWordConfig sensitiveWordConfig = SensitiveWordConfig.defaultConfig();
         return SWDispatcherDefault.newInstance(sensitiveWordConfig);
     }
-
 
 }

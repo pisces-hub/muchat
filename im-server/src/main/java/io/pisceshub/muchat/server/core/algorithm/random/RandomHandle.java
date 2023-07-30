@@ -1,6 +1,5 @@
 package io.pisceshub.muchat.server.core.algorithm.random;
 
-
 import io.pisceshub.muchat.common.core.enums.NetProtocolEnum;
 import io.pisceshub.muchat.server.core.NodeContainer;
 import io.pisceshub.muchat.server.core.algorithm.RouteHandle;
@@ -17,12 +16,11 @@ public class RandomHandle implements RouteHandle {
     public NodeContainer.WNode routeServer(NetProtocolEnum protocolEnum, List<NodeContainer.WNode> values, String key) {
         int size = values.size();
         if (size == 0) {
-            throw new RuntimeException() ;
+            throw new RuntimeException();
         }
         int offset = ThreadLocalRandom.current().nextInt(size);
 
         return values.get(offset);
     }
-
 
 }

@@ -9,30 +9,30 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Slf4j
-public abstract class AbstractPullMessageTask{
+public abstract class AbstractPullMessageTask {
 
-    private ExecutorService executorService = Executors.newFixedThreadPool(1);
+    private ExecutorService        executorService         = Executors.newFixedThreadPool(1);
 
     /**
      * 每次拉取消息的数量
      */
     protected final static Integer ONES_PULL_MESSAGE_COUNT = 200;
 
-
     @PostConstruct
-    public void init(){
+    public void init() {
         executorService.execute(new Runnable() {
+
             @SneakyThrows
             @Override
             public void run() {
-                try{
+                try {
                     pullMessage();
                     Thread.sleep(10);
-                }catch (Exception e){
-                    log.error("任务调度异常",e);
+                } catch (Exception e) {
+                    log.error("任务调度异常", e);
                     Thread.sleep(200);
                 }
-                if(!executorService.isShutdown()){
+                if (!executorService.isShutdown()) {
                     executorService.execute(this);
                 }
             }
@@ -40,8 +40,8 @@ public abstract class AbstractPullMessageTask{
     }
 
     @PreDestroy
-    public void destroy(){
-        log.info("{}线程任务关闭",this.getClass().getSimpleName());
+    public void destroy() {
+        log.info("{}线程任务关闭", this.getClass().getSimpleName());
         executorService.shutdown();
     }
 

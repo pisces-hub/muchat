@@ -8,15 +8,14 @@ import io.pisceshub.muchat.common.publics.sensitive.common.core.WordContext;
 import io.pisceshub.muchat.common.publics.sensitive.common.enums.ValidModeEnum;
 
 /**
- * 敏感词监测实现
- * xiaochangbai
- *
+ * 敏感词监测实现 xiaochangbai
  */
 @ThreadSafe
 public class SensitiveCheckWord implements ISensitiveCheck {
 
     @Override
-    public SensitiveCheckResult sensitiveCheck(String txt, int beginIndex, ValidModeEnum validModeEnum, WordContext wordContext) {
+    public SensitiveCheckResult sensitiveCheck(String txt, int beginIndex, ValidModeEnum validModeEnum,
+                                               WordContext wordContext) {
         NodeTree nowNode = wordContext.getRootNode();
 
         // 记录敏感词的长度
@@ -48,32 +47,31 @@ public class SensitiveCheckWord implements ISensitiveCheck {
 
         return SensitiveCheckResult.of(actualLength, SensitiveCheckWord.class);
     }
+
     /**
      * 获取当前的前缀树
+     * 
      * @param nodeTree 原始的当前node
      * @param context 上下文
      * @param txt 文本信息
      * @param index 下标
      * @return 实际的当前 map
-     *
      */
-    private NodeTree getNowNode(NodeTree nodeTree,
-                          final WordContext context,
-                          final String txt,
-                          final int index) {
+    private NodeTree getNowNode(NodeTree nodeTree, final WordContext context, final String txt, final int index) {
         char c = txt.charAt(index);
-        char mappingChar = context.formatChar(c);;
+        char mappingChar = context.formatChar(c);
+        ;
 
         // 这里做一次重复词的处理
         NodeTree subNode = nodeTree.getSubNode(mappingChar);
         // 启用忽略重复&当前下标不是第一个
-        if(context.isIgnoreRepeat()
-            && index > 0) {
-            char preChar = txt.charAt(index-1);
-            char preMappingChar = context.formatChar(preChar);;
+        if (context.isIgnoreRepeat() && index > 0) {
+            char preChar = txt.charAt(index - 1);
+            char preMappingChar = context.formatChar(preChar);
+            ;
 
             // 返回父节点
-            if(preMappingChar == mappingChar) {
+            if (preMappingChar == mappingChar) {
                 return nodeTree;
             }
         }

@@ -1,6 +1,5 @@
 package io.pisceshub.muchat.server.controller;
 
-
 import io.pisceshub.muchat.common.core.enums.MessageType;
 import io.pisceshub.muchat.common.core.model.PrivateMessageInfo;
 import io.pisceshub.muchat.common.core.utils.Result;
@@ -19,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 public class WebrtcController {
 
     @Autowired
-    private IMClient imClient;
+    private IMClient        imClient;
 
     @Autowired
     private ICEServerConfig iceServerConfig;
@@ -34,13 +33,13 @@ public class WebrtcController {
         message.setRecvId(uid);
         message.setSendId(userId);
         message.setContent(offer);
-        imClient.sendPrivateMessage(uid,message);
+        imClient.sendPrivateMessage(uid, message);
         return ResultUtils.success();
     }
 
     @ApiOperation(httpMethod = "POST", value = "接受视频通话")
     @PostMapping("/accept")
-    public Result accept(@RequestParam Long uid,@RequestBody String answer) {
+    public Result accept(@RequestParam Long uid, @RequestBody String answer) {
         Long userId = SessionContext.getSession().getId();
 
         PrivateMessageInfo message = new PrivateMessageInfo();
@@ -48,10 +47,9 @@ public class WebrtcController {
         message.setRecvId(uid);
         message.setSendId(userId);
         message.setContent(answer);
-        imClient.sendPrivateMessage(uid,message);
+        imClient.sendPrivateMessage(uid, message);
         return ResultUtils.success();
     }
-
 
     @ApiOperation(httpMethod = "POST", value = "拒绝视频通话")
     @PostMapping("/reject")
@@ -61,7 +59,7 @@ public class WebrtcController {
         message.setType(MessageType.RTC_REJECT.code());
         message.setRecvId(uid);
         message.setSendId(userId);
-        imClient.sendPrivateMessage(uid,message);
+        imClient.sendPrivateMessage(uid, message);
         return ResultUtils.success();
     }
 
@@ -73,13 +71,13 @@ public class WebrtcController {
         message.setType(MessageType.RTC_CANCEL.code());
         message.setRecvId(uid);
         message.setSendId(userId);
-        imClient.sendPrivateMessage(uid,message);
+        imClient.sendPrivateMessage(uid, message);
         return ResultUtils.success();
     }
 
     @ApiOperation(httpMethod = "POST", value = "呼叫失败")
     @PostMapping("/failed")
-    public Result failed(@RequestParam Long uid,@RequestParam String reason) {
+    public Result failed(@RequestParam Long uid, @RequestParam String reason) {
         Long userId = SessionContext.getSession().getId();
 
         PrivateMessageInfo message = new PrivateMessageInfo();
@@ -87,7 +85,7 @@ public class WebrtcController {
         message.setRecvId(uid);
         message.setSendId(userId);
         message.setContent(reason);
-        imClient.sendPrivateMessage(uid,message);
+        imClient.sendPrivateMessage(uid, message);
         return ResultUtils.success();
     }
 
@@ -100,21 +98,20 @@ public class WebrtcController {
         message.setType(MessageType.RTC_HANDUP.code());
         message.setRecvId(uid);
         message.setSendId(userId);
-        imClient.sendPrivateMessage(uid,message);
+        imClient.sendPrivateMessage(uid, message);
         return ResultUtils.success();
     }
 
-
     @PostMapping("/candidate")
     @ApiOperation(httpMethod = "POST", value = "同步candidate")
-    public Result candidate(@RequestParam Long uid,@RequestBody String candidate ) {
+    public Result candidate(@RequestParam Long uid, @RequestBody String candidate) {
         Long userId = SessionContext.getSession().getId();
         PrivateMessageInfo message = new PrivateMessageInfo();
         message.setType(MessageType.RTC_CANDIDATE.code());
         message.setRecvId(uid);
         message.setSendId(userId);
         message.setContent(candidate);
-        imClient.sendPrivateMessage(uid,message);
+        imClient.sendPrivateMessage(uid, message);
         return ResultUtils.success();
     }
 

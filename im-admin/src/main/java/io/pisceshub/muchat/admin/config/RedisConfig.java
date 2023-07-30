@@ -27,7 +27,6 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 import javax.annotation.Resource;
 import java.time.Duration;
 
-
 @EnableCaching
 @Configuration
 public class RedisConfig extends CachingConfigurerSupport {
@@ -52,7 +51,7 @@ public class RedisConfig extends CachingConfigurerSupport {
     }
 
     @Bean
-    public Jackson2JsonRedisSerializer jackson2JsonRedisSerializer(){
+    public Jackson2JsonRedisSerializer jackson2JsonRedisSerializer() {
         Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
         ObjectMapper om = new ObjectMapper();
         om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
@@ -63,7 +62,6 @@ public class RedisConfig extends CachingConfigurerSupport {
         jackson2JsonRedisSerializer.setObjectMapper(om);
         return jackson2JsonRedisSerializer;
     }
-
 
     @Bean
     @Override
@@ -82,11 +80,11 @@ public class RedisConfig extends CachingConfigurerSupport {
     @Override
     public CacheManager cacheManager() {
         // 设置redis缓存管理器
-        RedisCacheConfiguration cacheConfiguration =
-                RedisCacheConfiguration.defaultCacheConfig()
-                        .disableCachingNullValues()
-                        .entryTtl(Duration.ofMinutes(10))
-                        .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(jackson2JsonRedisSerializer()));
+        RedisCacheConfiguration cacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
+            .disableCachingNullValues()
+            .entryTtl(Duration.ofMinutes(10))
+            .serializeValuesWith(
+                RedisSerializationContext.SerializationPair.fromSerializer(jackson2JsonRedisSerializer()));
         return RedisCacheManager.builder(factory).cacheDefaults(cacheConfiguration).build();
     }
 }

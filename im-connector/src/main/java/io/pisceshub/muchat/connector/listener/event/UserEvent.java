@@ -19,32 +19,29 @@ public class UserEvent {
 
     private ChannelHandlerContext ctx;
 
-    private Long userId;
+    private Long                  userId;
 
-    private Event event;
+    private Event                 event;
 
-
-
-    public static UserEvent buildOnlineEvent(Long userId, ChannelHandlerContext ctx){
+    public static UserEvent buildOnlineEvent(Long userId, ChannelHandlerContext ctx) {
         return UserEvent.builder().ctx(ctx).userId(userId).event(Event.ONLINE).build();
     }
 
-    public static UserEvent buildOfflineEvent(Long userId, ChannelHandlerContext ctx){
+    public static UserEvent buildOfflineEvent(Long userId, ChannelHandlerContext ctx) {
         return UserEvent.builder().ctx(ctx).userId(userId).event(Event.OFFLINE).build();
     }
 
-    public static enum Event{
+    public static enum Event {
 
-        /**
-         * 上线
-         */
-        ONLINE,
+                              /**
+                               * 上线
+                               */
+                              ONLINE,
 
-        /**
-         * 下线
-         */
-        OFFLINE
-        ;
+                              /**
+                               * 下线
+                               */
+                              OFFLINE;
 
     }
 }

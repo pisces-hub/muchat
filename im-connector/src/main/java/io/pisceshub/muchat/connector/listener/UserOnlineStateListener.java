@@ -24,27 +24,24 @@ import javax.annotation.Resource;
 @Slf4j
 public class UserOnlineStateListener {
 
-
     @Resource
     private AppCache appCache;
-
 
     @SneakyThrows
     @EventListener(classes = UserEvent.class)
     public void onApplicationEvent(UserEvent event) {
 
-        if(UserEvent.Event.ONLINE.equals(event.getEvent())){
-            String key = RedisKey.IM_USER_SERVER_ID+event.getUserId();
-            appCache.put(key,IMServerGroup.serverId);
+        if (UserEvent.Event.ONLINE.equals(event.getEvent())) {
+            String key = RedisKey.IM_USER_SERVER_ID + event.getUserId();
+            appCache.put(key, IMServerGroup.serverId);
             // 响应ws
-            SendMessageUtils.send(event.getCtx(), IMSendInfo.create(IMCmdType.LOGIN,"登录成功"));
-        }else if(UserEvent.Event.OFFLINE.equals(event.getEvent())){
+            SendMessageUtils.send(event.getCtx(), IMSendInfo.create(IMCmdType.LOGIN, "登录成功"));
+        } else if (UserEvent.Event.OFFLINE.equals(event.getEvent())) {
             // 用户下线
             String key = RedisKey.IM_USER_SERVER_ID + event.getUserId();
             appCache.remove(key);
         }
 
     }
-
 
 }

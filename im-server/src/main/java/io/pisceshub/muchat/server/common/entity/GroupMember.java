@@ -25,53 +25,49 @@ public class GroupMember extends Model<GroupMember> {
      * id
      */
     @TableId(value = "id", type = IdType.AUTO)
-    private Long id;
+    private Long              id;
 
     /**
      * 群id
      */
     @TableField("group_id")
-    private Long groupId;
+    private Long              groupId;
 
     /**
      * 用户id
      */
     @TableField("user_id")
-    private Long userId;
+    private Long              userId;
 
     /**
-     *  群内显示名称
+     * 群内显示名称
      */
     @TableField("alias_name")
-    private String aliasName;
+    private String            aliasName;
 
     /**
-     *  头像
+     * 头像
      */
     @TableField("head_image")
-    private String headImage;
-
-
+    private String            headImage;
 
     /**
      * 备注
      */
     @TableField("remark")
-    private String remark;
+    private String            remark;
 
     /**
      * 是否已离开群聊
      */
     @TableField("quit")
-    private Boolean quit;
-
+    private Boolean           quit;
 
     /**
      * 创建时间
      */
     @TableField("created_time")
-    private Date createdTime;
-
+    private Date              createdTime;
 
     @Override
     protected Serializable pkVal() {

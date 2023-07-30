@@ -9,12 +9,12 @@ import lombok.Data;
 @Data
 public class ChatSession {
 
-    private Long id;
+    private Long   id;
 
     /**
      * 对方id
      */
-    private Long targetId;
+    private Long   targetId;
 
     /**
      * 聊天类型
@@ -24,13 +24,12 @@ public class ChatSession {
     /**
      * 归属用户id
      */
-    private Long ownId;
+    private Long   ownId;
 
-
-    private Long updateTime;
+    private Long   updateTime;
 
     /**
      * 是否置顶
      */
-    private Long topFlag;
+    private Long   topFlag;
 }

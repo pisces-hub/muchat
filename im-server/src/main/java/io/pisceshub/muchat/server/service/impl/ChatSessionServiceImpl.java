@@ -41,36 +41,35 @@ import java.util.stream.Collectors;
 public class ChatSessionServiceImpl implements IChatSessionService {
 
     @Autowired
-    private ChatSessionSave chatSessionSave;
+    private ChatSessionSave        chatSessionSave;
 
     @Autowired
-    private IUserService iUserService;
+    private IUserService           iUserService;
 
     @Autowired
-    private IGroupService iGroupService;
+    private IGroupService          iGroupService;
 
     @Autowired
-    private IGroupMessageService iGroupMessageService;
+    private IGroupMessageService   iGroupMessageService;
 
     @Autowired
     private IPrivateMessageService iPrivateMessageService;
 
     @Autowired
-    private IGroupMemberService iGroupMemberService;
+    private IGroupMemberService    iGroupMemberService;
 
     @Override
-    public boolean save(Long userId,ChatSessionAddReq vo) {
+    public boolean save(Long userId, ChatSessionAddReq vo) {
 
-        //todo 校验对于id和类型的合法性
+        // todo 校验对于id和类型的合法性
         ChatSessionInfoDto dto = new ChatSessionInfoDto();
-        BeanUtils.copyProperties(vo,dto);
-        return chatSessionSave.add(userId,dto);
+        BeanUtils.copyProperties(vo, dto);
+        return chatSessionSave.add(userId, dto);
     }
 
-
-    private Result<Set<ChatSessionInfoResp>> annoySessionList(Long userId){
+    private Result<Set<ChatSessionInfoResp>> annoySessionList(Long userId) {
         List<Group> groupList = iGroupService.findByGroupType(GroupEnum.GroupType.Anonymous.getCode());
-        Set<ChatSessionInfoResp> list = groupList.stream().map(e->{
+        Set<ChatSessionInfoResp> list = groupList.stream().map(e -> {
             ChatSessionInfoResp chatSessionInfoResp = new ChatSessionInfoResp();
             chatSessionInfoResp.setChatType(ChatType.GROUP);
             chatSessionInfoResp.setTargetId(e.getId());
@@ -81,31 +80,31 @@ public class ChatSessionServiceImpl implements IChatSessionService {
             chatSessionInfoResp.setLastSendTime(e.getCreatedTime().getTime());
             return chatSessionInfoResp;
         }).collect(Collectors.toSet());
-        if(CollUtil.isEmpty(list)){
+        if (CollUtil.isEmpty(list)) {
             return ResultUtils.success(Collections.emptySet());
         }
 
         User user = null;
-        for(ChatSessionInfoResp resp:list){
-            if(!iGroupMemberService.memberExsit(userId,resp.getTargetId())){
-                //加入群聊
-                if(user==null){
+        for (ChatSessionInfoResp resp : list) {
+            if (!iGroupMemberService.memberExsit(userId, resp.getTargetId())) {
+                // 加入群聊
+                if (user == null) {
                     user = iUserService.getById(userId);
-                    if(user==null){
+                    if (user == null) {
                         throw new BusinessException(ResultCode.INVALID_TOKEN);
                     }
                 }
-                iGroupMemberService.joinGroup(resp.getTargetId(),resp.getName(),user);
-            }else{
-                //已经加入过，查询历史消息
-                List<GroupMessageInfo> historyMessage = iGroupMessageService.findHistoryMessage(resp.getTargetId(), null);
-                if(CollUtil.isNotEmpty(historyMessage)){
+                iGroupMemberService.joinGroup(resp.getTargetId(), resp.getName(), user);
+            } else {
+                // 已经加入过，查询历史消息
+                List<GroupMessageInfo> historyMessage = iGroupMessageService.findHistoryMessage(resp.getTargetId(),
+                    null);
+                if (CollUtil.isNotEmpty(historyMessage)) {
                     resp.setLastSendTime(historyMessage.get(0).getSendTime().getTime());
                     resp.setLastContent(historyMessage.get(0).getContent());
                     resp.setMessages(historyMessage);
                 }
             }
-
 
         }
         return ResultUtils.success(list);
@@ -115,17 +114,17 @@ public class ChatSessionServiceImpl implements IChatSessionService {
     public Result<Set<ChatSessionInfoResp>> list() {
         SessionContext.UserSessionInfo session = SessionContext.getSession();
         Set<ChatSessionInfoDto> list = null;
-        if(UserEnum.AccountType.Anonymous.getCode().equals(session.getAccountType())){
+        if (UserEnum.AccountType.Anonymous.getCode().equals(session.getAccountType())) {
             return this.annoySessionList(session.getId());
-        }else{
+        } else {
             list = chatSessionSave.list(SessionContext.getUserId());
         }
-        if(CollUtil.isEmpty(list)){
+        if (CollUtil.isEmpty(list)) {
             return ResultUtils.success(Collections.emptySet());
         }
         Set<ChatSessionInfoResp> result = new HashSet<>(list.size());
         Long userId = SessionContext.getUserId();
-        for(ChatSessionInfoDto dto:list){
+        for (ChatSessionInfoDto dto : list) {
             ChatType chatType = dto.getChatType();
             Long targetId = dto.getTargetId();
             Long lastSendTime = dto.getCreateTime();
@@ -133,53 +132,55 @@ public class ChatSessionServiceImpl implements IChatSessionService {
             List message = Collections.emptyList();
             String name = null;
             String headImage = null;
-            switch (chatType){
+            switch (chatType) {
                 case GROUP:
                     try {
-                        //查询群信息
+                        // 查询群信息
                         Group group = iGroupService.findBaseInfoById(targetId);
-                        if(group==null){
+                        if (group == null) {
                             continue;
                         }
                         name = group.getName();
                         headImage = group.getHeadImage();
-                        //查询消息
+                        // 查询消息
                         List<GroupMessageInfo> historyMessage = iGroupMessageService.findHistoryMessage(targetId, null);
-                        if(CollUtil.isNotEmpty(historyMessage)){
+                        if (CollUtil.isNotEmpty(historyMessage)) {
                             GroupMessageInfo messageInfo = historyMessage.get(0);
                             lastSendTime = messageInfo.getSendTime().getTime();
-                            lastContent = MessageUtils.converMessageContent(messageInfo.getType(),messageInfo.getContent());
+                            lastContent = MessageUtils.converMessageContent(messageInfo.getType(),
+                                messageInfo.getContent());
                             message = historyMessage;
                         }
-                    }catch (NotJoinGroupException e){
+                    } catch (NotJoinGroupException e) {
                         continue;
                     }
                     break;
                 case PRIVATE:
-                    UserVO userVO = iUserService.findByUserIdAndFriendId(targetId,userId);
-                    if (userVO==null){
+                    UserVO userVO = iUserService.findByUserIdAndFriendId(targetId, userId);
+                    if (userVO == null) {
                         continue;
                     }
                     name = userVO.getNickName();
                     headImage = userVO.getHeadImage();
-                    //查询消息
+                    // 查询消息
                     List<PrivateMessageInfo> historyMessage = iPrivateMessageService.findHistoryMessage(targetId, null);
-                    if(CollUtil.isNotEmpty(historyMessage)){
+                    if (CollUtil.isNotEmpty(historyMessage)) {
                         PrivateMessageInfo messageInfo = historyMessage.get(0);
                         lastSendTime = messageInfo.getSendTime().getTime();
-                        lastContent = MessageUtils.converMessageContent(messageInfo.getType(),messageInfo.getContent());
+                        lastContent = MessageUtils.converMessageContent(messageInfo.getType(),
+                            messageInfo.getContent());
                         message = historyMessage;
                     }
             }
             ChatSessionInfoResp.ChatSessionInfoRespBuilder builder = ChatSessionInfoResp.builder()
-                    .chatType(chatType)
-                    .messages(message)
-                    .targetId(targetId)
-                    .unReadCount(0L)
-                    .name(name)
-                    .headImage(headImage)
-                    .lastContent(lastContent)
-                    .lastSendTime(lastSendTime);
+                .chatType(chatType)
+                .messages(message)
+                .targetId(targetId)
+                .unReadCount(0L)
+                .name(name)
+                .headImage(headImage)
+                .lastContent(lastContent)
+                .lastSendTime(lastSendTime);
             result.add(builder.build());
         }
 
@@ -188,8 +189,8 @@ public class ChatSessionServiceImpl implements IChatSessionService {
 
     @Override
     public boolean del(ChatSessionUpdateReq vo) {
-        Long userId = ObjectUtil.defaultIfNull(vo.getUserId(),SessionContext.getUserId());
-        return chatSessionSave.del(userId,BeanUtils.copyProperties(vo,ChatSessionInfoDto.class));
+        Long userId = ObjectUtil.defaultIfNull(vo.getUserId(), SessionContext.getUserId());
+        return chatSessionSave.del(userId, BeanUtils.copyProperties(vo, ChatSessionInfoDto.class));
     }
 
 }

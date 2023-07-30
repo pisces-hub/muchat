@@ -27,6 +27,7 @@ public class MybatisPlusAutoConfiguration {
 
     /**
      * 分页插件
+     * 
      * @return
      */
     @Bean
@@ -34,7 +35,7 @@ public class MybatisPlusAutoConfiguration {
         PaginationInterceptor paginationInterceptor = new PaginationInterceptor();
         return paginationInterceptor;
     }
-    
+
     /**
      * 元数据填充
      */
@@ -42,5 +43,5 @@ public class MybatisPlusAutoConfiguration {
     public CustomMetaObjectHandler myMetaObjectHandler() {
         return new CustomMetaObjectHandler();
     }
-    
+
 }

@@ -13,25 +13,21 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * 上下文
- * xiaochangbai
- *
+ * 上下文 xiaochangbai
  */
-public class SensitiveWordConfig extends WordContext{
-
+public class SensitiveWordConfig extends WordContext {
 
     /**
      * 敏感词源
      */
-    private List<IWordDeny> wordDenys;
+    private List<IWordDeny>  wordDenys;
 
     /**
      * 白名单源
      */
     private List<IWordAllow> wordAllows;
 
-
-    public SensitiveWordConfig() {
+    public SensitiveWordConfig(){
         this.setIgnoreRepeat(false);
         this.setSensitiveCheckNumLen(20);
         this.addSensitiveChecks(Instances.singleton(SensitiveCheckWord.class));
@@ -39,8 +35,8 @@ public class SensitiveWordConfig extends WordContext{
 
     /**
      * 新建一个对象实例
+     * 
      * @return 对象实例
-     *
      */
     public static SensitiveWordConfig defaultConfig() {
         SensitiveWordConfig sensitiveWordConfig = new SensitiveWordConfig();
@@ -49,33 +45,32 @@ public class SensitiveWordConfig extends WordContext{
         return sensitiveWordConfig;
     }
 
-    public void addWordAllows(IWordAllow iWordAllow){
-        if(wordAllows==null){
+    public void addWordAllows(IWordAllow iWordAllow) {
+        if (wordAllows == null) {
             wordAllows = new ArrayList<>(8);
         }
         wordAllows.add(iWordAllow);
     }
 
-    public void addWordDenys(IWordDeny iWordDeny){
-        if(wordDenys==null){
+    public void addWordDenys(IWordDeny iWordDeny) {
+        if (wordDenys == null) {
             wordDenys = new ArrayList<>(8);
         }
         wordDenys.add(iWordDeny);
     }
 
-    public List<IWordDeny> findWordDenys(){
-        if(this.wordDenys==null){
+    public List<IWordDeny> findWordDenys() {
+        if (this.wordDenys == null) {
             return Collections.emptyList();
         }
         return this.wordDenys;
     }
 
-    public List<IWordAllow> findWordAllows(){
-        if(this.wordAllows==null){
+    public List<IWordAllow> findWordAllows() {
+        if (this.wordAllows == null) {
             return Collections.emptyList();
         }
         return this.wordAllows;
     }
-
 
 }

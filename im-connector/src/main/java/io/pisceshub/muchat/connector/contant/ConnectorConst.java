@@ -7,7 +7,6 @@ package io.pisceshub.muchat.connector.contant;
  */
 public interface ConnectorConst {
 
-
     /**
      * 心跳次数
      */
@@ -16,7 +15,6 @@ public interface ConnectorConst {
     /**
      * 用户id
      */
-    String USER_ID = "user_id";
-
+    String USER_ID         = "user_id";
 
 }

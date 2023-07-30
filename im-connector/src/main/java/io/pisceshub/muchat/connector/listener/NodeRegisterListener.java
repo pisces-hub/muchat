@@ -31,7 +31,7 @@ public class NodeRegisterListener {
     private AppConfigProperties appConfigProperties;
 
     @Autowired
-    private CuratorFramework client;
+    private CuratorFramework    client;
 
     @SneakyThrows
     @EventListener(classes = NodeRegisterEvent.class)
@@ -40,21 +40,20 @@ public class NodeRegisterListener {
         NetProtocolEnum protocolEnum = event.getNetProtocolEnum();
         Integer port = event.getPort();
 
-        String protocolPath = appConfigProperties.getZk().getPath()+"/"+protocolEnum;
+        String protocolPath = appConfigProperties.getZk().getPath() + "/" + protocolEnum;
         checkZkPath(protocolPath);
 
-
-        String nodePath = protocolPath+"/"+buildNodeInfo(port);
+        String nodePath = protocolPath + "/" + buildNodeInfo(port);
         delPath(nodePath);
-        client.create().withMode(CreateMode.EPHEMERAL).forPath(nodePath,MixUtils.LongToBytes(event.getRegisterTime()));
-        log.info("zk注册完毕,nodePath:{}",nodePath);
+        client.create().withMode(CreateMode.EPHEMERAL).forPath(nodePath, MixUtils.LongToBytes(event.getRegisterTime()));
+        log.info("zk注册完毕,nodePath:{}", nodePath);
 
-        Runtime.getRuntime().addShutdownHook(new Thread(()->{
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {
                 client.delete().forPath(nodePath);
-                log.info("删除节点成功,{}",nodePath);
+                log.info("删除节点成功,{}", nodePath);
             } catch (Exception e) {
-                log.info("删除节点移除,",e);
+                log.info("删除节点移除,", e);
                 throw new RuntimeException(e);
             }
         }));
@@ -63,41 +62,42 @@ public class NodeRegisterListener {
 
     /**
      * 删除path
+     * 
      * @param nodePath
      * @throws Exception
      */
     private void delPath(String nodePath) throws Exception {
         Stat stat = client.checkExists().forPath(nodePath);
-        if(stat!=null){
+        if (stat != null) {
             client.delete().forPath(nodePath);
         }
     }
 
     /**
      * 检查路径是否存在，不存在就创建
+     * 
      * @param zkPath
      * @throws Exception
      */
     private void checkZkPath(String zkPath) throws Exception {
         String[] paths = zkPath.split("/");
         String parentPath = "";
-        for (String p:paths){
-            if(StrUtil.isBlank(p)){
+        for (String p : paths) {
+            if (StrUtil.isBlank(p)) {
                 continue;
             }
-            parentPath+="/"+p;
-            if(client.checkExists().forPath(parentPath)==null){
+            parentPath += "/" + p;
+            if (client.checkExists().forPath(parentPath) == null) {
                 client.create().forPath(parentPath);
             }
         }
     }
 
-
-    private String buildNodeInfo(Integer port){
+    private String buildNodeInfo(Integer port) {
         String ip = appConfigProperties.getIp();
-        if(StrUtil.isBlank(ip)){
+        if (StrUtil.isBlank(ip)) {
             ip = MixUtils.getInet4Address();
         }
-        return ip+":"+port;
+        return ip + ":" + port;
     }
 }

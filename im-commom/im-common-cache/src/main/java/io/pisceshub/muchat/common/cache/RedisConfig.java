@@ -17,13 +17,11 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 /**
  * 自定义redis配置
- *
  */
 
 @Slf4j
 @Configuration
 public class RedisConfig {
-
 
     @Bean
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
@@ -42,7 +40,7 @@ public class RedisConfig {
     }
 
     @Bean
-    public Jackson2JsonRedisSerializer jackson2JsonRedisSerializer(){
+    public Jackson2JsonRedisSerializer jackson2JsonRedisSerializer() {
         Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
         ObjectMapper om = new ObjectMapper();
         om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
@@ -54,13 +52,9 @@ public class RedisConfig {
         return jackson2JsonRedisSerializer;
     }
 
-
-
     @Bean
-    public AppCache cache(RedisTemplate redisTemplate){
+    public AppCache cache(RedisTemplate redisTemplate) {
         return new RedisCacheImpl(redisTemplate);
     }
-
-
 
 }

@@ -22,10 +22,10 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public abstract class AbstractRemoteServer implements IMServer {
 
-    protected ServerBootstrap bootstrap;
-    protected EventLoopGroup bossGroup;
-    protected EventLoopGroup workGroup;
-    protected volatile boolean ready = false;
+    protected ServerBootstrap     bootstrap;
+    protected EventLoopGroup      bossGroup;
+    protected EventLoopGroup      workGroup;
+    protected volatile boolean    ready = false;
 
     @Autowired
     protected AppConfigProperties appConfigProperties;
@@ -36,7 +36,6 @@ public abstract class AbstractRemoteServer implements IMServer {
         workGroup = NettyEventLoopFactory.eventLoopGroup(Math.min(Runtime.getRuntime().availableProcessors() + 1, 32));
     }
 
-
     @Override
     public boolean enable() {
         AppConfigProperties.TcpNode tcpNode = nodeInfo();
@@ -45,13 +44,12 @@ public abstract class AbstractRemoteServer implements IMServer {
 
     protected abstract AppConfigProperties.TcpNode nodeInfo();
 
-
-    protected void addPipeline(ChannelPipeline pipeline){
+    protected void addPipeline(ChannelPipeline pipeline) {
         pipeline.addLast(new IdleStateHandler(0, 0, AppConst.ONLINE_TIMEOUT_SECOND, TimeUnit.SECONDS));
         pipeline.addLast(new IMChannelHandler());
     }
 
-    protected Integer port(){
+    protected Integer port() {
         AppConfigProperties.TcpNode tcpNode = nodeInfo();
         Integer port = tcpNode.getPort();
         if (port == null || port < 1) {
@@ -60,7 +58,6 @@ public abstract class AbstractRemoteServer implements IMServer {
         }
         return port;
     }
-
 
     @Override
     public void stop() {

@@ -1,6 +1,5 @@
 package io.pisceshub.muchat.server.service.impl;
 
-
 import cn.hutool.core.bean.BeanUtil;
 import io.pisceshub.muchat.common.core.enums.NetProtocolEnum;
 import io.pisceshub.muchat.server.common.vo.connector.NodeInfoResp;
@@ -24,14 +23,14 @@ import java.util.stream.Collectors;
 public class ConnectionServiceImpl implements ConnectionService {
 
     @Autowired
-    private RouteHandle routeHandle;
+    private RouteHandle   routeHandle;
 
     @Autowired
     private NodeContainer nodeContainer;
 
     @Override
     public List<NodeInfoResp> nodeList() {
-        return nodeContainer.list(null).stream().map(e->{
+        return nodeContainer.list(null).stream().map(e -> {
             NodeInfoResp nodeInfoResp = BeanUtil.copyProperties(e, NodeInfoResp.class);
             nodeInfoResp.setProtocol(e.getProtocolEnum().name());
             return nodeInfoResp;
@@ -40,12 +39,12 @@ public class ConnectionServiceImpl implements ConnectionService {
 
     @Override
     public NodeInfoResp node(NetProtocolEnum netProtocolEnum, Long identify) {
-        if(identify==null){
+        if (identify == null) {
             identify = Long.valueOf(IpUtil.getIntIp());
         }
         List<NodeContainer.WNode> nodes = nodeContainer.list(netProtocolEnum);
-        NodeContainer.WNode wNode = routeHandle.routeServer(netProtocolEnum,nodes,String.valueOf(identify));
-        if(wNode==null){
+        NodeContainer.WNode wNode = routeHandle.routeServer(netProtocolEnum, nodes, String.valueOf(identify));
+        if (wNode == null) {
             return null;
         }
         NodeInfoResp resp = new NodeInfoResp();

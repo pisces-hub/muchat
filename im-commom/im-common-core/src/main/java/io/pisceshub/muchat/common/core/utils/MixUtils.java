@@ -18,13 +18,13 @@ public class MixUtils {
 
     private final static Set<Integer> USE_PORT = new HashSet<>(10);
 
-    public static Integer findAvailablePort(){
-        for(int i = 0;i<=1000;i++){
-            Integer port = AppConst.RANDOM_MIN_PORT+i;
-            if(USE_PORT.contains(port)){
+    public static Integer findAvailablePort() {
+        for (int i = 0; i <= 1000; i++) {
+            Integer port = AppConst.RANDOM_MIN_PORT + i;
+            if (USE_PORT.contains(port)) {
                 continue;
             }
-            try(ServerSocket serverSocket = new ServerSocket(port)) {
+            try (ServerSocket serverSocket = new ServerSocket(port)) {
                 USE_PORT.add(port);
                 return port;
             } catch (IOException e) {
@@ -32,7 +32,6 @@ public class MixUtils {
         }
         throw new RuntimeException("没有可用的端口");
     }
-
 
     public static String getInet4Address() {
         Enumeration<NetworkInterface> nis;
@@ -44,7 +43,7 @@ public class MixUtils {
                 Enumeration<InetAddress> ias = ni.getInetAddresses();
                 for (; ias.hasMoreElements();) {
                     InetAddress ia = ias.nextElement();
-                    //ia instanceof Inet6Address && !ia.equals("")
+                    // ia instanceof Inet6Address && !ia.equals("")
                     if (ia instanceof Inet4Address && !ia.getHostAddress().equals("127.0.0.1")) {
                         ip = ia.getHostAddress();
                     }
@@ -57,16 +56,15 @@ public class MixUtils {
     }
 
     public static String random(String[] arrays) {
-        if(arrays==null || arrays.length<1){
+        if (arrays == null || arrays.length < 1) {
             return null;
         }
         int index = new Random().nextInt(arrays.length);
-        if(index<0 || index>=arrays.length){
+        if (index < 0 || index >= arrays.length) {
             index = 0;
         }
         return arrays[index];
     }
-
 
     public static byte[] LongToBytes(long values) {
         byte[] buffer = new byte[8];
@@ -78,9 +76,10 @@ public class MixUtils {
     }
 
     public static long BytesToLong(byte[] buffer) {
-        long  values = 0;
+        long values = 0;
         for (int i = 0; i < 8; i++) {
-            values <<= 8; values|= (buffer[i] & 0xff);
+            values <<= 8;
+            values |= (buffer[i] & 0xff);
         }
         return values;
     }

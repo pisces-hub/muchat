@@ -8,9 +8,7 @@ import io.pisceshub.muchat.server.common.vo.message.MessageSendResp;
 
 import java.util.List;
 
-
 public interface IGroupMessageService extends IService<GroupMessage> {
-
 
     MessageSendResp sendMessage(GroupMessageSendReq vo);
 

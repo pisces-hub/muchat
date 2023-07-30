@@ -25,52 +25,52 @@ public class Group extends Model<Group> {
      * id
      */
     @TableId(value = "id", type = IdType.AUTO)
-    private Long id;
+    private Long              id;
 
     /**
      * 群名字
      */
     @TableField("name")
-    private String name;
+    private String            name;
 
     /**
      * 群主id
      */
     @TableField("owner_id")
-    private Long ownerId;
+    private Long              ownerId;
 
     /**
      * 头像
      */
     @TableField("head_image")
-    private String headImage;
+    private String            headImage;
 
     /**
      * 头像缩略图
      */
     @TableField("head_image_thumb")
-    private String headImageThumb;
+    private String            headImageThumb;
 
     /**
      * 群公告
      */
     @TableField("notice")
-    private String notice;
+    private String            notice;
 
     /**
      * 是否已删除
      */
     @TableField("deleted")
-    private Boolean deleted;
+    private Boolean           deleted;
 
     /**
      * 创建时间
      */
     @TableField("created_time")
-    private Date createdTime;
+    private Date              createdTime;
 
     @TableField("group_type")
-    private Integer groupType;
+    private Integer           groupType;
 
     @Override
     protected Serializable pkVal() {

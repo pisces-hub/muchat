@@ -21,9 +21,9 @@ public class ZookeeperConfig {
     private AppConfigProperties appConfigProperties;
 
     @Bean(destroyMethod = "close")
-    public CuratorFramework curatorFramework(){
+    public CuratorFramework curatorFramework() {
         CuratorFramework client = CuratorFrameworkFactory.newClient(appConfigProperties.getZk().getAddress(),
-                new RetryNTimes(10, 5000));
+            new RetryNTimes(10, 5000));
         client.start();
         log.info("zookeeper 服务启动完成!");
         return client;

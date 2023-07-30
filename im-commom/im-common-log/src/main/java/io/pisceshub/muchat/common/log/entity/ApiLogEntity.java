@@ -9,14 +9,14 @@ import lombok.Data;
 @Data
 public class ApiLogEntity {
 
-    private String apiModule;
+    private String   apiModule;
 
-    private String apiName;
+    private String   apiName;
 
-    private String beginTime;
+    private String   beginTime;
 
     private Object[] inputParams;
 
-    private Object outputParams;
+    private Object   outputParams;
 
 }

@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class GroupMessageInfo extends CommonMessageInfo{
+public class GroupMessageInfo extends CommonMessageInfo {
 
     /*
      * 群聊id

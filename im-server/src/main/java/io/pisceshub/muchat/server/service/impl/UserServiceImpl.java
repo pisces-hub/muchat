@@ -44,35 +44,33 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
 @Slf4j
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
 
     @Autowired
-    RedisTemplate<String,Object> redisTemplate;
+    RedisTemplate<String, Object> redisTemplate;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private PasswordEncoder       passwordEncoder;
 
     @Autowired
-    private IGroupMemberService groupMemberService;
+    private IGroupMemberService   groupMemberService;
 
     @Autowired
-    private IFriendService friendService;
-
-
-    @Autowired
-    private IGroupService iGroupService;
+    private IFriendService        friendService;
 
     @Autowired
-    private IGroupMemberService iGroupMemberService;
+    private IGroupService         iGroupService;
 
     @Autowired
-    private IpSearchAdapter ipSearchAdapter;
+    private IGroupMemberService   iGroupMemberService;
 
     @Autowired
-    private AppCache appCache;
+    private IpSearchAdapter       ipSearchAdapter;
+
+    @Autowired
+    private AppCache              appCache;
 
     /**
      * 用户登录
@@ -84,13 +82,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public LoginResp login(LoginReq dto) {
         User user = findUserByName(dto.getUserName());
-        if(null == user){
-            throw new GlobalException(ResultCode.PROGRAM_ERROR,"用户不存在");
+        if (null == user) {
+            throw new GlobalException(ResultCode.PROGRAM_ERROR, "用户不存在");
         }
-        if(UserEnum.AccountType.Anonymous.equals(user.getAccountType())){
-            throw new GlobalException(ResultCode.PROGRAM_ERROR,"用户不存在");
+        if (UserEnum.AccountType.Anonymous.equals(user.getAccountType())) {
+            throw new GlobalException(ResultCode.PROGRAM_ERROR, "用户不存在");
         }
-        if(!passwordEncoder.matches(dto.getPassword(),user.getPassword())){
+        if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
             throw new GlobalException(ResultCode.PASSWOR_ERROR);
         }
         user.setLastLoginIp(IpUtil.getIpAddr(SessionContext.getRequest()));
@@ -99,11 +97,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         return buildLoginResp(user);
     }
 
-    public LoginResp buildLoginResp(User user){
+    public LoginResp buildLoginResp(User user) {
         SessionContext.UserSessionInfo session = BeanUtils.copyProperties(user, SessionContext.UserSessionInfo.class);
         String strJson = JSON.toJSONString(session);
-        String accessToken = JwtUtil.sign(user.getId(),strJson, AppConst.ACCESS_TOKEN_EXPIRE, AppConst.ACCESS_TOKEN_SECRET);
-        String refreshToken = JwtUtil.sign(user.getId(),strJson, AppConst.REFRESH_TOKEN_EXPIRE, AppConst.REFRESH_TOKEN_SECRET);
+        String accessToken = JwtUtil
+            .sign(user.getId(), strJson, AppConst.ACCESS_TOKEN_EXPIRE, AppConst.ACCESS_TOKEN_SECRET);
+        String refreshToken = JwtUtil
+            .sign(user.getId(), strJson, AppConst.REFRESH_TOKEN_EXPIRE, AppConst.REFRESH_TOKEN_SECRET);
         LoginResp vo = new LoginResp();
         vo.setAccessToken(accessToken);
         vo.setAccessTokenExpiresIn(AppConst.ACCESS_TOKEN_EXPIRE);
@@ -120,20 +120,22 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
      */
     @Override
     public LoginResp refreshToken(String refreshToken) {
-        try{
-            //验证 token
+        try {
+            // 验证 token
             JwtUtil.checkSign(refreshToken, AppConst.REFRESH_TOKEN_SECRET);
             String strJson = JwtUtil.getInfo(refreshToken);
             Long userId = JwtUtil.getUserId(refreshToken);
-            String accessToken = JwtUtil.sign(userId,strJson, AppConst.ACCESS_TOKEN_EXPIRE,AppConst.ACCESS_TOKEN_SECRET);
-            String newRefreshToken = JwtUtil.sign(userId,strJson, AppConst.REFRESH_TOKEN_EXPIRE, AppConst.REFRESH_TOKEN_SECRET);
-            LoginResp vo =new LoginResp();
+            String accessToken = JwtUtil
+                .sign(userId, strJson, AppConst.ACCESS_TOKEN_EXPIRE, AppConst.ACCESS_TOKEN_SECRET);
+            String newRefreshToken = JwtUtil
+                .sign(userId, strJson, AppConst.REFRESH_TOKEN_EXPIRE, AppConst.REFRESH_TOKEN_SECRET);
+            LoginResp vo = new LoginResp();
             vo.setAccessToken(accessToken);
             vo.setAccessTokenExpiresIn(AppConst.ACCESS_TOKEN_EXPIRE);
             vo.setRefreshToken(newRefreshToken);
             vo.setRefreshTokenExpiresIn(AppConst.REFRESH_TOKEN_EXPIRE);
             return vo;
-        }catch (JWTVerificationException e) {
+        } catch (JWTVerificationException e) {
             throw new GlobalException("refreshToken已失效");
         }
     }
@@ -149,26 +151,26 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         String userName = dto.getUserName();
         validUserName(userName);
         User user = findUserByName(userName);
-        if(null != user){
-            throw  new GlobalException(ResultCode.USERNAME_ALREADY_REGISTER);
+        if (null != user) {
+            throw new GlobalException(ResultCode.USERNAME_ALREADY_REGISTER);
         }
-        user = BeanUtils.copyProperties(dto,User.class);
+        user = BeanUtils.copyProperties(dto, User.class);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setSignature("我就是我，不一样的烟火");
         this.save(user);
-        log.info("注册用户，用户id:{},用户名:{},昵称:{}",user.getId(),dto.getUserName(),dto.getNickName());
+        log.info("注册用户，用户id:{},用户名:{},昵称:{}", user.getId(), dto.getUserName(), dto.getNickName());
     }
 
-    private void validUserName(String userName){
-        if(StrUtil.isBlank(userName)){
+    private void validUserName(String userName) {
+        if (StrUtil.isBlank(userName)) {
             throw new BusinessException("用户名不能为空");
         }
         userName = userName.trim();
-        if(userName.indexOf("匿名")==0){
+        if (userName.indexOf("匿名") == 0) {
             throw new BusinessException("用户名不可用");
         }
-        for(UserEnum.RegisterRromEnum e: UserEnum.RegisterRromEnum.values()){
-            if(userName.indexOf(e.getMsg())==0){
+        for (UserEnum.RegisterRromEnum e : UserEnum.RegisterRromEnum.values()) {
+            if (userName.indexOf(e.getMsg()) == 0) {
                 throw new BusinessException("用户名不可用");
             }
         }
@@ -183,7 +185,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public User findUserByName(String username) {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.lambda().eq(User::getUserName,username);
+        queryWrapper.lambda().eq(User::getUserName, username);
         return this.getOne(queryWrapper);
     }
 
@@ -197,28 +199,28 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public void update(UserVO vo) {
         SessionContext.UserSessionInfo session = SessionContext.getSession();
-        if(!session.getId().equals(vo.getId()) ){
-            throw  new GlobalException(ResultCode.PROGRAM_ERROR,"不允许修改其他用户的信息!");
+        if (!session.getId().equals(vo.getId())) {
+            throw new GlobalException(ResultCode.PROGRAM_ERROR, "不允许修改其他用户的信息!");
         }
         User user = this.getById(vo.getId());
-        if(null == user){
-            throw  new GlobalException(ResultCode.PROGRAM_ERROR,"用户不存在");
+        if (null == user) {
+            throw new GlobalException(ResultCode.PROGRAM_ERROR, "用户不存在");
         }
         // 更新好友昵称和头像
-        if(!user.getNickName().equals(vo.getNickName()) || !user.getHeadImageThumb().equals(vo.getHeadImageThumb())){
+        if (!user.getNickName().equals(vo.getNickName()) || !user.getHeadImageThumb().equals(vo.getHeadImageThumb())) {
             QueryWrapper<Friend> queryWrapper = new QueryWrapper<>();
-            queryWrapper.lambda().eq(Friend::getFriendId,session.getId());
+            queryWrapper.lambda().eq(Friend::getFriendId, session.getId());
             List<Friend> friends = friendService.list(queryWrapper);
-            for(Friend friend: friends){
+            for (Friend friend : friends) {
                 friend.setFriendNickName(vo.getNickName());
                 friend.setFriendHeadImage(vo.getHeadImageThumb());
             }
             friendService.updateBatchById(friends);
         }
         // 更新群聊中的头像
-        if(!user.getHeadImageThumb().equals(vo.getHeadImageThumb())){
+        if (!user.getHeadImageThumb().equals(vo.getHeadImageThumb())) {
             List<GroupMember> members = groupMemberService.findByUserId(session.getId());
-            for(GroupMember member:members){
+            for (GroupMember member : members) {
                 member.setHeadImage(vo.getHeadImageThumb());
             }
             groupMemberService.updateBatchById(members);
@@ -230,9 +232,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         user.setHeadImage(vo.getHeadImage());
         user.setHeadImageThumb(vo.getHeadImageThumb());
         this.updateById(user);
-        log.info("用户信息更新，用户:{}}",user.toString());
+        log.info("用户信息更新，用户:{}}", user.toString());
     }
-
 
     /**
      * 根据用户昵称查询用户，最多返回20条数据
@@ -244,18 +245,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public List<UserVO> findUserByNickName(String nickname) {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda()
-                .eq(User::getAccountType,UserEnum.AccountType.Plain.getCode())
-                .like(User::getNickName,nickname)
-                .last("limit 20");
+            .eq(User::getAccountType, UserEnum.AccountType.Plain.getCode())
+            .like(User::getNickName, nickname)
+            .last("limit 20");
         List<User> users = this.list(queryWrapper);
-        List<UserVO> vos = users.stream().map(u-> {
-            UserVO vo = BeanUtils.copyProperties(u,UserVO.class);
+        List<UserVO> vos = users.stream().map(u -> {
+            UserVO vo = BeanUtils.copyProperties(u, UserVO.class);
             vo.setOnline(isOnline(u.getId()));
             return vo;
         }).collect(Collectors.toList());
         return vos;
     }
-
 
     /**
      * 判断用户是否在线，返回在线的用户id列表
@@ -267,8 +267,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public List<Long> checkOnline(String userIds) {
         String[] idArr = userIds.split(",");
         List<Long> onlineIds = new LinkedList<>();
-        for(String userId:idArr){
-           if(isOnline(Long.parseLong(userId))){
+        for (String userId : idArr) {
+            if (isOnline(Long.parseLong(userId))) {
                 onlineIds.add(Long.parseLong(userId));
             }
         }
@@ -277,23 +277,23 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     public UserVO findByUserIdAndFriendId(Long userId, Long friendId) {
-        if(!friendService.isFriend(userId,friendId)){
+        if (!friendService.isFriend(userId, friendId)) {
             return null;
         }
         User user = getById(userId);
-        if(user==null){
+        if (user == null) {
             return null;
         }
-        return BeanUtils.copyProperties(user,UserVO.class);
+        return BeanUtils.copyProperties(user, UserVO.class);
     }
 
     @Override
     public LoginResp oauthLogin(String type, AuthUser authUser) {
         UserEnum.RegisterRromEnum registerRromEnum = UserEnum.RegisterRromEnum.findByMsg(type);
-        String userName = type+"@"+authUser.getUsername();
+        String userName = type + "@" + authUser.getUsername();
         User user = findUserByName(userName);
         Date date = new Date();
-        if(null == user){
+        if (null == user) {
             user = new User();
             user.setUserName(userName);
             user.setRegisterFrom(registerRromEnum.getCode());
@@ -309,8 +309,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         user.setLastLoginIp(IpUtil.getIpAddr(SessionContext.getRequest()));
         this.saveOrUpdate(user);
 
-        //生成登录信息
-        log.info("oauthLogin，用户:{}",user);
+        // 生成登录信息
+        log.info("oauthLogin，用户:{}", user);
         return buildLoginResp(user);
     }
 
@@ -318,12 +318,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public LoginResp anonymousLogin(AnonymousLoginReq req) {
         User user = lambdaQuery().eq(User::getAnonymouId, req.getAnonymouId()).one();
         boolean newUserFlag = false;
-        if(user==null){
-            //注册
+        if (user == null) {
+            // 注册
             user = new User();
             user.setAnonymouId(req.getAnonymouId());
             String generatorId = IdUtils.generatorId();
-            String name = "匿名-"+ appCache.incr(CachePrefix.ANONYMOUS_USER_NICK_NAME.name());
+            String name = "匿名-" + appCache.incr(CachePrefix.ANONYMOUS_USER_NICK_NAME.name());
             user.setUserName(generatorId);
             user.setNickName(name);
             user.setAccountType(UserEnum.AccountType.Anonymous.getCode());
@@ -338,8 +338,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         user.setLastLoginIp(IpUtil.getIpAddr(SessionContext.getRequest()));
         this.saveOrUpdate(user);
 
-        if(newUserFlag){
-            //初始化逻辑
+        if (newUserFlag) {
+            // 初始化逻辑
             this.anonyUserInit(user);
         }
         return buildLoginResp(user);
@@ -348,27 +348,26 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public UserVO findByIde(long id) {
         User user = this.getById(id);
-        UserVO userVO = BeanUtils.copyProperties(user,UserVO.class);
+        UserVO userVO = BeanUtils.copyProperties(user, UserVO.class);
         userVO.setIpAddress(ipSearchAdapter.search(user.getLastLoginIp()));
         return userVO;
     }
 
     private void anonyUserInit(User user) {
-        //查询出所有匿名群聊
+        // 查询出所有匿名群聊
         List<Group> groupList = iGroupService.findByGroupType(GroupEnum.GroupType.Anonymous.getCode());
-        if(CollUtil.isEmpty(groupList)){
+        if (CollUtil.isEmpty(groupList)) {
             return;
         }
-        for(Group g:groupList){
-            iGroupMemberService.joinGroup(g.getId(),g.getName(),user);
+        for (Group g : groupList) {
+            iGroupMemberService.joinGroup(g.getId(), g.getName(), user);
         }
 
     }
 
-
-    public boolean isOnline(Long userId){
+    public boolean isOnline(Long userId) {
         String key = RedisKey.IM_USER_SERVER_ID + userId;
         Integer serverId = (Integer) redisTemplate.opsForValue().get(key);
-        return serverId!=null && serverId>=0;
+        return serverId != null && serverId >= 0;
     }
 }

@@ -1,6 +1,5 @@
 package io.pisceshub.muchat.common.publics.sensitive.common.utils;
 
-
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -16,11 +15,12 @@ public class FileUtils {
 
     /**
      * 压缩zip
+     * 
      * @param filePath
      * @return
      * @throws Exception
      */
-    public static String compressFileByZIP(String filePath,String outPath) throws Exception {
+    public static String compressFileByZIP(String filePath, String outPath) throws Exception {
         File file = new File(filePath);
         String outputFIleName = file.getName() + ".zip";
         ArrayList<File> fileList = new ArrayList<>();
@@ -30,8 +30,8 @@ public class FileUtils {
             fileList.add(file);
         }
         FileInputStream fileInputStream = null;
-        if(outPath==null){
-            outPath = file.getParentFile().getPath()+File.separator+outputFIleName;
+        if (outPath == null) {
+            outPath = file.getParentFile().getPath() + File.separator + outputFIleName;
         }
         CheckedOutputStream checkedOutputStream = new CheckedOutputStream(new FileOutputStream(outPath), new Adler32());
         ZipOutputStream zipOutputStream = new ZipOutputStream(checkedOutputStream);
@@ -60,16 +60,17 @@ public class FileUtils {
 
     /**
      * 读出每一行的内容
+     * 
      * @return
      */
     public static List<String> readAllLines(InputStream io) {
-        if(io==null){
+        if (io == null) {
             return Collections.emptyList();
         }
         BufferedReader e = new BufferedReader(new InputStreamReader(io, StandardCharsets.UTF_8));
         try {
             List<String> lines = new ArrayList();
-            while(true) {
+            while (true) {
                 String entry;
                 do {
                     if (!e.ready()) {
@@ -77,14 +78,14 @@ public class FileUtils {
                     }
 
                     entry = e.readLine();
-                } while(StringUtil.isEmpty(entry));
+                } while (StringUtil.isEmpty(entry));
 
                 lines.add(entry);
             }
         } catch (IOException var6) {
             throw new RuntimeException(var6);
-        }finally {
-            if(e!=null){
+        } finally {
+            if (e != null) {
                 try {
                     e.close();
                 } catch (IOException ex) {
@@ -94,22 +95,23 @@ public class FileUtils {
         }
     }
 
-
     /**
      * 从压缩文件中读取每一行内容
+     * 
      * @return
      */
     public static List<String> readAllLinesForZip(InputStream inputStream) {
-        if(inputStream==null){
+        if (inputStream == null) {
             return Collections.emptyList();
         }
         ZipInputStream zipInputStream = new ZipInputStream(new CheckedInputStream(inputStream, new Adler32()));
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(zipInputStream, StandardCharsets.UTF_8));
+        BufferedReader bufferedReader = new BufferedReader(
+            new InputStreamReader(zipInputStream, StandardCharsets.UTF_8));
         try {
             ZipEntry nextEntry = zipInputStream.getNextEntry();
-            if(nextEntry!=null){
+            if (nextEntry != null) {
                 List<String> datas = new ArrayList<>();
-                while(true) {
+                while (true) {
                     String entry;
                     do {
                         if (!bufferedReader.ready()) {
@@ -117,27 +119,29 @@ public class FileUtils {
                         }
                         entry = bufferedReader.readLine();
                         datas.add(entry);
-                    } while(StringUtil.isEmpty(entry));
+                    } while (StringUtil.isEmpty(entry));
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             try {
                 bufferedReader.close();
                 zipInputStream.close();
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
         }
         return Collections.emptyList();
     }
+
     public static boolean isImage(String string) {
         if (StringUtil.isEmpty(string)) {
             return false;
         } else {
-            return string.endsWith(".png") || string.endsWith(".jpeg") || string.endsWith(".jpg") || string.endsWith(".gif");
+            return string.endsWith(".png") || string.endsWith(".jpeg") || string.endsWith(".jpg")
+                   || string.endsWith(".gif");
         }
     }
 }

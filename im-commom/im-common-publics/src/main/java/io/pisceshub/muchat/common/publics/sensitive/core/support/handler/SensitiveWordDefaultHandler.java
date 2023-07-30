@@ -1,6 +1,5 @@
 package io.pisceshub.muchat.common.publics.sensitive.core.support.handler;
 
-
 import io.pisceshub.muchat.common.publics.sensitive.common.annotation.ThreadSafe;
 import io.pisceshub.muchat.common.publics.sensitive.common.core.ISensitiveCheck;
 import io.pisceshub.muchat.common.publics.sensitive.common.core.NodeTree;
@@ -24,10 +23,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * 敏感词处理器
- *
- * xiaochangbai
- *
+ * 敏感词处理器 xiaochangbai
  */
 @Slf4j
 @ThreadSafe
@@ -62,17 +58,14 @@ public class SensitiveWordDefaultHandler implements IWordHandler {
             }
         }
         wordContext.setRootNode(rootNode);
-        log.info("敏感词初始化完成，共{}个词,加载耗时:{}/s",collection.size(),(System.currentTimeMillis()-startTime)/1000.0);
+        log.info("敏感词初始化完成，共{}个词,加载耗时:{}/s", collection.size(), (System.currentTimeMillis() - startTime) / 1000.0);
     }
 
     /**
-     * 是否包含
-     * （1）直接遍历所有
-     * （2）如果遇到，则直接返回 true
+     * 是否包含 （1）直接遍历所有 （2）如果遇到，则直接返回 true
      *
      * @param string 字符串
      * @return 是否包含
-     *
      */
     @Override
     public boolean contains(String string) {
@@ -81,7 +74,7 @@ public class SensitiveWordDefaultHandler implements IWordHandler {
         }
 
         for (int i = 0; i < string.length(); i++) {
-            SensitiveCheckResult checkResult = sensitiveCheck(string, i, ValidModeEnum.FAIL_FAST,wordContext);
+            SensitiveCheckResult checkResult = sensitiveCheck(string, i, ValidModeEnum.FAIL_FAST, wordContext);
             // 快速返回
             if (checkResult.index() > 0) {
                 return true;
@@ -91,13 +84,10 @@ public class SensitiveWordDefaultHandler implements IWordHandler {
     }
 
     /**
-     * 返回所有对应的敏感词
-     * （1）结果是有序的
-     * （2）为了保留所有的下标，结果从 v0.1.0 之后不再去重。
+     * 返回所有对应的敏感词 （1）结果是有序的 （2）为了保留所有的下标，结果从 v0.1.0 之后不再去重。
      *
      * @param string 原始字符串
      * @return 结果
-     *
      */
     @Override
     public List<IWordResult> findAll(String string) {
@@ -117,7 +107,7 @@ public class SensitiveWordDefaultHandler implements IWordHandler {
 
     @Override
     public String replace(String target, final ISensitiveWordReplace replace) {
-        if(StringUtil.isEmpty(target)) {
+        if (StringUtil.isEmpty(target)) {
             return target;
         }
 
@@ -127,20 +117,19 @@ public class SensitiveWordDefaultHandler implements IWordHandler {
     /**
      * 获取敏感词列表
      *
-     * @param text     文本
+     * @param text 文本
      * @param modeEnum 模式
      * @return 结果列表
-     *
      */
     private List<IWordResult> getSensitiveWords(final String text, final ValidModeEnum modeEnum) {
-        //1. 是否存在敏感词，如果比存在，直接返回空列表
+        // 1. 是否存在敏感词，如果比存在，直接返回空列表
         if (StringUtil.isEmpty(text)) {
             return new ArrayList<>();
         }
 
         List<IWordResult> resultList = new ArrayList<>();
         for (int i = 0; i < text.length(); i++) {
-            SensitiveCheckResult checkResult = sensitiveCheck(text, i, ValidModeEnum.FAIL_OVER,wordContext);
+            SensitiveCheckResult checkResult = sensitiveCheck(text, i, ValidModeEnum.FAIL_OVER, wordContext);
             // 命中
             int wordLength = checkResult.index();
             if (wordLength > 0) {
@@ -149,9 +138,9 @@ public class SensitiveWordDefaultHandler implements IWordHandler {
 
                 // 添加去重
                 WordResult wordResult = WordResult.newInstance()
-                        .startIndex(i)
-                        .endIndex(i+wordLength)
-                        .word(sensitiveWord);
+                    .startIndex(i)
+                    .endIndex(i + wordLength)
+                    .word(sensitiveWord);
                 resultList.add(wordResult);
 
                 // 快速返回
@@ -171,14 +160,13 @@ public class SensitiveWordDefaultHandler implements IWordHandler {
 
     /**
      * 直接替换敏感词，返回替换后的结果
-     * @param target           文本信息
+     * 
+     * @param target 文本信息
      * @param replace 替换策略
      * @return 脱敏后的字符串
-     *
      */
-    private String replaceSensitiveWord(final String target,
-                                        final ISensitiveWordReplace replace) {
-        if(StringUtil.isEmpty(target)) {
+    private String replaceSensitiveWord(final String target, final ISensitiveWordReplace replace) {
+        if (StringUtil.isEmpty(target)) {
             return target;
         }
         // 用于结果构建
@@ -187,30 +175,29 @@ public class SensitiveWordDefaultHandler implements IWordHandler {
         for (int i = 0; i < target.length(); i++) {
             char currentChar = target.charAt(i);
             // 内层直接从 i 开始往后遍历，这个算法的，获取第一个匹配的单词
-            SensitiveCheckResult checkResult = sensitiveCheck(target, i, ValidModeEnum.FAIL_OVER,wordContext);
+            SensitiveCheckResult checkResult = sensitiveCheck(target, i, ValidModeEnum.FAIL_OVER, wordContext);
 
             // 敏感词
             int wordLength = checkResult.index();
-            if(wordLength > 0) {
+            if (wordLength > 0) {
                 // 是否执行替换
                 Class checkClass = checkResult.checkClass();
-                String string = target.substring(i, i+wordLength);
-                if(SensitiveCheckUrl.class.equals(checkClass)
-                    && FileUtils.isImage(string)) {
+                String string = target.substring(i, i + wordLength);
+                if (SensitiveCheckUrl.class.equals(checkClass) && FileUtils.isImage(string)) {
                     // 直接使用原始内容，避免 markdown 图片转换失败
                     resultBuilder.append(string);
                 } else {
                     // 创建上下文
                     ISensitiveWordReplaceContext replaceContext = SensitiveWordReplaceContext.newInstance()
-                            .sensitiveWord(string)
-                            .wordLength(wordLength);
+                        .sensitiveWord(string)
+                        .wordLength(wordLength);
                     String replaceStr = replace.replace(replaceContext);
 
                     resultBuilder.append(replaceStr);
                 }
 
                 // 直接跳过敏感词的长度
-                i += wordLength-1;
+                i += wordLength - 1;
             } else {
                 // 普通词
                 resultBuilder.append(currentChar);
@@ -223,15 +210,14 @@ public class SensitiveWordDefaultHandler implements IWordHandler {
     public SensitiveCheckResult sensitiveCheck(String txt, int beginIndex, ValidModeEnum validModeEnum,
                                                WordContext wordContext) {
 
-        for(ISensitiveCheck sensitiveCheck : wordContext.getSensitiveChecks()) {
-            SensitiveCheckResult result = sensitiveCheck.sensitiveCheck(txt, beginIndex, validModeEnum,wordContext);
-            if(result.index() > 0) {
+        for (ISensitiveCheck sensitiveCheck : wordContext.getSensitiveChecks()) {
+            SensitiveCheckResult result = sensitiveCheck.sensitiveCheck(txt, beginIndex, validModeEnum, wordContext);
+            if (result.index() > 0) {
                 return result;
             }
         }
-        return SensitiveCheckResult.of(0,null);
+        return SensitiveCheckResult.of(0, null);
 
     }
-
 
 }

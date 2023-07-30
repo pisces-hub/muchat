@@ -1,273 +1,270 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" th:href="@{/resources/imgs/icon.svg}" />
-    <meta name="description" content="你懂的">
-    <meta name="author" content="urok">
-    <link rel="stylesheet" th:href="@{/resources/layui/css/layui.css}" media="all" />
-    <script th:src="@{/resources/js/jquery.js}"></script>
-    <title>主页</title>
-    <style>
-        html,body{
-            height: 100%;
-            width: 100%;
-            padding: 0px;
-            margin:0px;
-        }
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" th:href="@{/resources/imgs/icon.svg}"/>
+  <meta name="description" content="你懂的">
+  <meta name="author" content="urok">
+  <link rel="stylesheet" th:href="@{/resources/layui/css/layui.css}" media="all"/>
+  <script th:src="@{/resources/js/jquery.js}"></script>
+  <title>主页</title>
+  <style>
+    html, body {
+      height: 100%;
+      width: 100%;
+      padding: 0px;
+      margin: 0px;
+    }
 
-        body{
-            background-color: rgba(100,100,10,0.3);
-        }
+    body {
+      background-color: rgba(100, 100, 10, 0.3);
+    }
 
-        iframe{
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            border: none;
-        }
-    </style>
+    iframe {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      border: none;
+    }
+  </style>
 </head>
 <body>
 
-    <div id="defaultContext" class="wrapper-page" style="margin-top: 16%">
-        <div class="m-t-30">
-            <div class="text-center">
-                <h1 id="tipMsg" style="text-align: center;color:red;font-size: 130px;"></h1>
-            </div>
-        </div>
+<div id="defaultContext" class="wrapper-page" style="margin-top: 16%">
+  <div class="m-t-30">
+    <div class="text-center">
+      <h1 id="tipMsg" style="text-align: center;color:red;font-size: 130px;"></h1>
     </div>
+  </div>
+</div>
 
-    <div id="notServer" class="wrapper-page" style="margin-top: 16%;display: none;">
-        <div class="m-t-30">
-            <div class="text-center">
-                <h1 style="text-align: center;color:red;font-size: 50px;">当前无可用的服务，请稍后再试</h1>
-                <div style="margin-top: 50px;text-align: center;">
-                    <div style="width: 30%;display: inline-block;">
-                        <button id="retryButton" type="button" class="layui-btn layui-btn-fluid layui-btn-normal">
-                            <span class="countDownTime showTime"></span>
-                            <span class="countDownTime">秒后</span>
-                            点击重试
-                        </button>
-                    </div>
-                </div>
-
-            </div>
+<div id="notServer" class="wrapper-page" style="margin-top: 16%;display: none;">
+  <div class="m-t-30">
+    <div class="text-center">
+      <h1 style="text-align: center;color:red;font-size: 50px;">当前无可用的服务，请稍后再试</h1>
+      <div style="margin-top: 50px;text-align: center;">
+        <div style="width: 30%;display: inline-block;">
+          <button id="retryButton" type="button" class="layui-btn layui-btn-fluid layui-btn-normal">
+            <span class="countDownTime showTime"></span>
+            <span class="countDownTime">秒后</span>
+            点击重试
+          </button>
         </div>
-    </div>
+      </div>
 
-    <iframe id="myContext" src=""></iframe>
+    </div>
+  </div>
+</div>
+
+<iframe id="myContext" src=""></iframe>
 
 </body>
 <script th:src="@{/resources/layui/layui.all.js}"></script>
 <script th:inline="javascript">
 
-    //向服务器发送的消息对象
-    var mess = {
-        code:null, //1: 请求获取ue4服务地址,2: 发送鼠标和键盘的操作次数，3：发送断开连接请求,4、拒绝断开连接
-        wsSessionId: null  //ws服务的会话id,当code=1时需要传的参数
+  //向服务器发送的消息对象
+  var mess = {
+    code: null, //1: 请求获取ue4服务地址,2: 发送鼠标和键盘的操作次数，3：发送断开连接请求,4、拒绝断开连接
+    wsSessionId: null  //ws服务的会话id,当code=1时需要传的参数
+  }
+  //全局socket
+  var communic_socket = null;
+  //拒绝断开连接默认等待时间（多久没有点击取消断开按钮，将自动断开连接）
+  var defaultWaitTime = 10;  //10/s
+  //开启socket事件
+  connectionServer();
+  //layui加载组件（加载中，组件对象）
+  var onloadIndex = null;
+
+  /**
+   * websocket事件处理
+   */
+  function connectionServer() {
+
+    var serverIp = [[${serverIp}]];
+    var serverPort = [[${serverPort}]];
+
+    console.log("服务器信息：" + serverIp + ":" + serverPort);
+
+    communic_socket = new WebSocket("ws://" + serverIp + ":" + serverPort + "/main_connection");
+
+    //打开事件
+    communic_socket.onopen = function () {
+      console.log("连接打开");
+      //发送连接请求
+      mess.code = 1;
+      communic_socket.send(JSON.stringify(mess));
+    };
+    //接收消息
+    communic_socket.onmessage = function (msg) {
+      //console.log(msg);
+      messageHandler(msg.data);
+
+    };
+    //关闭事件
+    communic_socket.onclose = function () {
+      console.log("Socket 已关闭");
+    };
+    //发生了错误事件
+    communic_socket.onerror = function () {
+      showErrorMsg("服务端连接异常，请刷新重试");
+      console.log("服务端连接异常，错误代码：" + communic_socket.readyState);
     }
-    //全局socket
-    var communic_socket = null;
-    //拒绝断开连接默认等待时间（多久没有点击取消断开按钮，将自动断开连接）
-    var defaultWaitTime = 10;  //10/s
-    //开启socket事件
-    connectionServer();
-    //layui加载组件（加载中，组件对象）
-    var onloadIndex = null;
+  }
 
+  /**
+   * 消息处理器
+   * @param data
+   */
+  function messageHandler(data) {
+    try {
+      var result = JSON.parse(data);
+      console.log(result);
+      switch (result.code) {
+        case 603:
+          layer.close(onloadIndex);
+          mess.wsSessionId = result.data.wsSessionId;
+          $("#myContext").attr("src", result.data.url + "?wsSessionId=" + result.data.wsSessionId);
+          $("#myContext").css('display', 'block');
+          $("#defaultContext").css('display', 'none');
+          $("#notServer").css('display', 'none');
+          window.wsSessionId = result.data.wsSessionId;
+          break;
+        case 602:
+          //弹出提示框，询问用户是否断开连接
+          confirmUnConnection();
+          break;
+        case 500:
+          showErrorMsg(result.msg);
+          break;
+        case 604:
+          //显示加载中动画
+          $("#myContext").css('display', 'none');
+          onloadIndex = layer.load(3, {content: '加载中',});
+          break;
+        case 605:
+          //没有可用的服务
+          noServicesAvailable();
+          break;
+        default:
+          alert("异常");
+      }
 
-    /**
-     * websocket事件处理
-     */
-    function connectionServer(){
-
-        var serverIp = [[${serverIp}]];
-        var serverPort = [[${serverPort}]];
-
-        console.log("服务器信息："+serverIp+":"+serverPort);
-
-        communic_socket = new WebSocket("ws://"+serverIp+":"+serverPort+"/main_connection");
-
-        //打开事件
-        communic_socket.onopen = function() {
-            console.log("连接打开");
-            //发送连接请求
-            mess.code=1;
-            communic_socket.send(JSON.stringify(mess));
-        };
-        //接收消息
-        communic_socket.onmessage = function(msg) {
-            //console.log(msg);
-            messageHandler(msg.data);
-
-        };
-        //关闭事件
-        communic_socket.onclose = function() {
-            console.log("Socket 已关闭");
-        };
-        //发生了错误事件
-        communic_socket.onerror = function() {
-            showErrorMsg("服务端连接异常，请刷新重试");
-            console.log("服务端连接异常，错误代码：" + communic_socket.readyState);
-        }
+    } catch (err) {
+      console.log(err);
     }
+  }
 
+  /**
+   * 没有可用服务时展示错误信息和重试按钮
+   */
+  function noServicesAvailable() {
+    layer.close(onloadIndex);
+    $("#tipMsg").css('display', 'block');
+    $("#myContext").css('display', 'none');
+    $("#defaultContext").css('display', 'none');
+    $("#notServer").css('display', 'block');
+  }
 
-    /**
-     * 消息处理器
-     * @param data
-     */
-    function messageHandler(data) {
-        try{
-            var result = JSON.parse(data);
-            console.log(result);
-            switch (result.code){
-                case 603:
-                    layer.close(onloadIndex);
-                    mess.wsSessionId=result.data.wsSessionId;
-                    $("#myContext").attr("src",result.data.url+"?wsSessionId="+result.data.wsSessionId);
-                    $("#myContext").css('display','block');
-                    $("#defaultContext").css('display','none');
-                    $("#notServer").css('display','none');
-                    window.wsSessionId = result.data.wsSessionId;
-                    break;
-                case 602:
-                    //弹出提示框，询问用户是否断开连接
-                    confirmUnConnection();break;
-                case 500:
-                    showErrorMsg(result.msg);
-                    break;
-                case 604:
-                    //显示加载中动画
-                    $("#myContext").css('display','none');
-                    onloadIndex = layer.load(3, {content:'加载中',});
-                    break;
-                case 605:
-                    //没有可用的服务
-                    noServicesAvailable();break;
-                default:
-                    alert("异常");
-            }
-
-        }catch (err){
-            console.log(err);
-        }
-    }
-
-    /**
-     * 没有可用服务时展示错误信息和重试按钮
-     */
-    function noServicesAvailable(){
-        layer.close(onloadIndex);
-        $("#tipMsg").css('display','block');
-        $("#myContext").css('display','none');
-        $("#defaultContext").css('display','none');
-        $("#notServer").css('display','block');
-    }
-
-
-    /**
-     * 弹框提示用户是否要主动断开连接给其他用户使用
-     */
-    function confirmUnConnection(){
-        let dshiqIndex = null;  //定时器对象
-        let msgIndex = layer.confirm('当前服务繁忙，是否同意断开连接？（'+defaultWaitTime+'秒后将自动断开)', {
-            btn: ['同意', '不同意，我想继续使用下去'], //可以无限个按钮
-            cancel: function(){
-                //右上角关闭回调
-                //取消定时器
-                clearTimeout(dshiqIndex);
-                //给服务器发送拒绝断开连接的请求
-                mess.code=4;
-                communic_socket.send(JSON.stringify(mess));
-            }
-        }, function(index, layero){
-            //按钮【按钮一】的回调
-            layer.close(index);
-            //取消定时器
-            clearTimeout(dshiqIndex);
-            signOut();
-            return;
-        }, function(index){
-            //按钮【按钮二】的回调
+  /**
+   * 弹框提示用户是否要主动断开连接给其他用户使用
+   */
+  function confirmUnConnection() {
+    let dshiqIndex = null;  //定时器对象
+    let msgIndex = layer.confirm(
+        '当前服务繁忙，是否同意断开连接？（' + defaultWaitTime + '秒后将自动断开)', {
+          btn: ['同意', '不同意，我想继续使用下去'], //可以无限个按钮
+          cancel: function () {
+            //右上角关闭回调
             //取消定时器
             clearTimeout(dshiqIndex);
             //给服务器发送拒绝断开连接的请求
-            mess.code=4;
+            mess.code = 4;
             communic_socket.send(JSON.stringify(mess));
+          }
+        }, function (index, layero) {
+          //按钮【按钮一】的回调
+          layer.close(index);
+          //取消定时器
+          clearTimeout(dshiqIndex);
+          signOut();
+          return;
+        }, function (index) {
+          //按钮【按钮二】的回调
+          //取消定时器
+          clearTimeout(dshiqIndex);
+          //给服务器发送拒绝断开连接的请求
+          mess.code = 4;
+          communic_socket.send(JSON.stringify(mess));
         });
 
-        //用户没有点击取消，十秒后自动将断开连接
-        dshiqIndex = setTimeout(function (){
-            layer.close(msgIndex);
-            console.log("用户没有任何操作，五秒后自动退出");
-            signOut();
-        },defaultWaitTime*1000);
-    }
+    //用户没有点击取消，十秒后自动将断开连接
+    dshiqIndex = setTimeout(function () {
+      layer.close(msgIndex);
+      console.log("用户没有任何操作，五秒后自动退出");
+      signOut();
+    }, defaultWaitTime * 1000);
+  }
 
+  /**
+   * 断开连接
+   */
+  function signOut() {
+    //一：断开与ue4的websocket连接
+    mess.code = 3;
+    communic_socket.send(JSON.stringify(mess));
+    //改变页面
+    $("#myContext").attr("src", "home.html");
+    communic_socket.close();
+    console.log("断开连接成功");
+  }
 
-    /**
-     * 断开连接
-     */
-    function signOut(){
-        //一：断开与ue4的websocket连接
-        mess.code=3;
-        communic_socket.send(JSON.stringify(mess));
-        //改变页面
-        $("#myContext").attr("src","home.html");
-        communic_socket.close();
-        console.log("断开连接成功");
-    }
+  /**
+   * 在当前页面显示错误信息
+   */
+  function showErrorMsg(msg) {
+    $("#tipMsg").css('display', 'block');
+    $("#tipMsg").text(msg);
+    $("#myContext").css('display', 'none');
+    $("#notServer").css('display', 'none');
+  }
 
+  ///////////////////////////////////////////////////////////////////////////////
+  /**
+   *  倒计时部分控制代码
+   * @type {number}
+   */
+  var defaultCountDownTime = 30; //倒计时长度：默认30秒
+  var countDownTime = defaultCountDownTime;
+  countDown();
 
-    /**
-     * 在当前页面显示错误信息
-     */
-    function showErrorMsg(msg){
-        $("#tipMsg").css('display','block');
-        $("#tipMsg").text(msg);
-        $("#myContext").css('display','none');
-        $("#notServer").css('display','none');
-    }
+  //倒计时
+  function countDown() {
+    //按钮禁用
+    $("#retryButton").attr("disabled", "true");
+    $("#retryButton").addClass("layui-btn-disabled");
 
+    $(".showTime").text(countDownTime);
+    var index = setInterval(() => {
+      if (countDownTime > 0) {
+        $(".showTime").text(--countDownTime);
+      } else {
+        $("#retryButton").removeClass("layui-btn-disabled");
+        $(".countDownTime").css("display", "none");
+        countDownTime = defaultCountDownTime;
+        $("#retryButton").removeAttr("disabled");
+        clearInterval(index);
+        return;
+      }
+    }, 1000);
+  }
 
-
-    ///////////////////////////////////////////////////////////////////////////////
-    /**
-     *  倒计时部分控制代码
-     * @type {number}
-     */
-    var defaultCountDownTime = 30; //倒计时长度：默认30秒
-    var countDownTime = defaultCountDownTime;
-    countDown();
-    //倒计时
-    function countDown(){
-        //按钮禁用
-        $("#retryButton").attr("disabled","true");
-        $("#retryButton").addClass("layui-btn-disabled");
-
-        $(".showTime").text(countDownTime);
-        var index = setInterval(()=>{
-            if(countDownTime>0){
-                $(".showTime").text(--countDownTime);
-            }else{
-                $("#retryButton").removeClass("layui-btn-disabled");
-                $(".countDownTime").css("display","none");
-                countDownTime=defaultCountDownTime;
-                $("#retryButton").removeAttr("disabled");
-                clearInterval(index);
-                return ;
-            }
-        },1000);
-    }
-    $("#retryButton").click(function (){
-        location.reload();
-    });
-    ///////////////////////////////////////////////////////////////////////////////
-
+  $("#retryButton").click(function () {
+    location.reload();
+  });
+  ///////////////////////////////////////////////////////////////////////////////
 
 
 </script>

@@ -3,10 +3,7 @@ package io.pisceshub.muchat.common.publics.sensitive.core.support.replace;
 import io.pisceshub.muchat.common.publics.sensitive.core.api.ISensitiveWordReplaceContext;
 
 /**
- * 敏感词替换上下文
- *
- * xiaochangbai
- *
+ * 敏感词替换上下文 xiaochangbai
  */
 public class SensitiveWordReplaceContext implements ISensitiveWordReplaceContext {
 
@@ -16,15 +13,13 @@ public class SensitiveWordReplaceContext implements ISensitiveWordReplaceContext
 
     /**
      * 敏感词
-     *
      */
     private String sensitiveWord;
 
     /**
      * 单词长度
-     *
      */
-    private int wordLength;
+    private int    wordLength;
 
     @Override
     public String sensitiveWord() {
@@ -48,10 +43,8 @@ public class SensitiveWordReplaceContext implements ISensitiveWordReplaceContext
 
     @Override
     public String toString() {
-        return "SensitiveWordReplaceContext{" +
-                "sensitiveWord='" + sensitiveWord + '\'' +
-                ", wordLength=" + wordLength +
-                '}';
+        return "SensitiveWordReplaceContext{" + "sensitiveWord='" + sensitiveWord + '\'' + ", wordLength=" + wordLength
+               + '}';
     }
 
 }

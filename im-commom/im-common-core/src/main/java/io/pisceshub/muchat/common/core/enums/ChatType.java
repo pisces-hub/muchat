@@ -11,9 +11,9 @@ import java.io.Serializable;
 @Getter
 public enum ChatType implements Serializable {
 
-    PRIVATE,
+                                              PRIVATE,
 
-    GROUP
+                                              GROUP
 
     ;
 

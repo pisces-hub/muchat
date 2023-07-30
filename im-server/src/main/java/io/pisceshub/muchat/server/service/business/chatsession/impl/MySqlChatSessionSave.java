@@ -25,19 +25,18 @@ public class MySqlChatSessionSave implements ChatSessionSave {
 
     private final static Long MAX_SIZE = 100L;
 
-
     @Autowired
     private ChatSessionMapper chatSessionMapper;
 
     @Override
-    public boolean add(Long userId,ChatSessionInfoDto dto) {
+    public boolean add(Long userId, ChatSessionInfoDto dto) {
         boolean isNew = false;
         LambdaQueryWrapper<ChatSession> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(ChatSession::getOwnId,userId);
-        queryWrapper.eq(ChatSession::getChatType,dto.getChatType().toString());
-        queryWrapper.eq(ChatSession::getTargetId,dto.getTargetId());
+        queryWrapper.eq(ChatSession::getOwnId, userId);
+        queryWrapper.eq(ChatSession::getChatType, dto.getChatType().toString());
+        queryWrapper.eq(ChatSession::getTargetId, dto.getTargetId());
         ChatSession chatSession = chatSessionMapper.selectOne(queryWrapper);
-        if(chatSession==null){
+        if (chatSession == null) {
             chatSession = new ChatSession();
             chatSession.setChatType(dto.getChatType().toString());
             chatSession.setOwnId(userId);
@@ -46,18 +45,19 @@ public class MySqlChatSessionSave implements ChatSessionSave {
         }
         chatSession.setUpdateTime(System.currentTimeMillis());
 
-        return isNew?chatSessionMapper.insert(chatSession)>0:chatSessionMapper.updateById(chatSession)>0;
+        return isNew ? chatSessionMapper.insert(chatSession) > 0 : chatSessionMapper.updateById(chatSession) > 0;
     }
+
     @Override
     public Set<ChatSessionInfoDto> list(Long userId) {
         LambdaQueryWrapper<ChatSession> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(ChatSession::getOwnId,userId);
+        queryWrapper.eq(ChatSession::getOwnId, userId);
         queryWrapper.orderByDesc(ChatSession::getUpdateTime);
         List<ChatSession> chatSessions = chatSessionMapper.selectList(queryWrapper);
-        if(CollUtil.isEmpty(chatSessions)){
+        if (CollUtil.isEmpty(chatSessions)) {
             return Collections.emptySet();
         }
-        return chatSessions.stream().map(e->{
+        return chatSessions.stream().map(e -> {
             ChatSessionInfoDto dto = new ChatSessionInfoDto();
             dto.setCreateTime(e.getUpdateTime());
             dto.setChatType(ChatType.valueOf(e.getChatType()));
@@ -67,11 +67,11 @@ public class MySqlChatSessionSave implements ChatSessionSave {
     }
 
     @Override
-    public boolean del(Long userId,ChatSessionInfoDto dto) {
+    public boolean del(Long userId, ChatSessionInfoDto dto) {
         LambdaUpdateWrapper<ChatSession> wrapper = new LambdaUpdateWrapper<>();
-        wrapper.eq(ChatSession::getOwnId,userId);
-        wrapper.eq(ChatSession::getChatType,dto.getChatType().toString());
-        wrapper.eq(ChatSession::getTargetId,dto.getTargetId());
+        wrapper.eq(ChatSession::getOwnId, userId);
+        wrapper.eq(ChatSession::getChatType, dto.getChatType().toString());
+        wrapper.eq(ChatSession::getTargetId, dto.getTargetId());
         chatSessionMapper.delete(wrapper);
         return true;
     }

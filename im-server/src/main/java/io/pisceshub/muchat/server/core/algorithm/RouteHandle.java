@@ -12,9 +12,10 @@ public interface RouteHandle {
 
     /**
      * 在一批服务器里进行路由
+     * 
      * @param values
      * @param key
      * @return
      */
-    NodeContainer.WNode routeServer(NetProtocolEnum protocolEnum, List<NodeContainer.WNode> values, String key) ;
+    NodeContainer.WNode routeServer(NetProtocolEnum protocolEnum, List<NodeContainer.WNode> values, String key);
 }

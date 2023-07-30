@@ -5,9 +5,7 @@ import io.pisceshub.muchat.common.publics.sensitive.common.core.ICharFormat;
 import io.pisceshub.muchat.common.publics.sensitive.common.utils.NumUtils;
 
 /**
- * 忽略数字的样式
- * xiaochangbai
- *
+ * 忽略数字的样式 xiaochangbai
  */
 @ThreadSafe
 public class IgnoreNumStyleCharFormat implements ICharFormat {

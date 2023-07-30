@@ -21,53 +21,45 @@ import java.util.Objects;
 @NoArgsConstructor
 public class ChatSessionInfoResp implements Serializable {
 
-
     /**
      * 对方的id：好友id或群id
      */
-    private Long targetId;
-
+    private Long                              targetId;
 
     /**
      * 聊天类型
      */
-    private ChatType chatType;
+    private ChatType                          chatType;
 
     /**
      * 好友昵称或群名称
      */
-    private String name;
-
+    private String                            name;
 
     /**
      * 头像
      */
-    private String headImage;
-
+    private String                            headImage;
 
     /**
      * 未读消息数量
      */
-    private Long unReadCount;
-
+    private Long                              unReadCount;
 
     /**
      * 最后发送时间
      */
-    private Long lastSendTime;
+    private Long                              lastSendTime;
 
     /**
      * 最后发送内容
      */
-    private String lastContent;
-
-
+    private String                            lastContent;
 
     /**
      * 消息列表
      */
     private List<? extends CommonMessageInfo> messages;
-
 
     @Override
     public boolean equals(Object o) {

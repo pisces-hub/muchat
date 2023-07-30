@@ -1,6 +1,5 @@
 package io.pisceshub.muchat.server.config;
 
-
 import com.github.xiaoymin.knife4j.spring.annotations.EnableKnife4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -33,27 +32,20 @@ public class SwaggerConfig {
     @SuppressWarnings("all")
     public Docket createRestApi() {
 
-        return new Docket(DocumentationType.SWAGGER_2)
-                .enable(enabled)
-                .apiInfo(apiInfo())
-                .select() //.paths(Predicates.not(PathSelectors.regex("/error.*")))
-                .build()
-                .securitySchemes(securitySchemes())
-                .securityContexts(securityContexts());
+        return new Docket(DocumentationType.SWAGGER_2).enable(enabled)
+            .apiInfo(apiInfo())
+            .select() // .paths(Predicates.not(PathSelectors.regex("/error.*")))
+            .build()
+            .securitySchemes(securitySchemes())
+            .securityContexts(securityContexts());
     }
 
-
-
     private ApiInfo apiInfo() {
-        return new ApiInfoBuilder()
-                .title("幕聊api文档")
-                .description("web")
-                .version("1.0")
-                .build();
+        return new ApiInfoBuilder().title("幕聊api文档").description("web").version("1.0").build();
     }
 
     private List<ApiKey> securitySchemes() {
-        //设置请求头信息
+        // 设置请求头信息
         List<ApiKey> result = new ArrayList<ApiKey>();
         ApiKey apiKey = new ApiKey("accessToken", "accessToken", "header");
         result.add(apiKey);
@@ -61,14 +53,12 @@ public class SwaggerConfig {
     }
 
     private List<SecurityContext> securityContexts() {
-        //设置需要登录认证的路径
-        return newArrayList(
-                SecurityContext.builder()
-                        .securityReferences(defaultAuth())
-//                        .forPaths(PathSelectors.regex("^(?!auth).*$"))
-                        .forPaths(PathSelectors.any())
-                        .build()
-        );
+        // 设置需要登录认证的路径
+        return newArrayList(SecurityContext.builder()
+            .securityReferences(defaultAuth())
+            // .forPaths(PathSelectors.regex("^(?!auth).*$"))
+            .forPaths(PathSelectors.any())
+            .build());
     }
 
     private List<SecurityReference> defaultAuth() {
@@ -81,4 +71,3 @@ public class SwaggerConfig {
     }
 
 }
-

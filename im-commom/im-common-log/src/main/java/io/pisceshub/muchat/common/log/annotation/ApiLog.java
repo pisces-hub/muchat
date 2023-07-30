@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
  * @author xiaochangbai
  * @date 2023-07-01 10:42
  */
-@Target({ElementType.TYPE, ElementType.METHOD})
+@Target({ ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ApiLog {
 
@@ -25,7 +25,8 @@ public @interface ApiLog {
 
     /**
      * 是否持久化
+     * 
      * @return
      */
-    boolean isPersistence() default  false;
+    boolean isPersistence() default false;
 }

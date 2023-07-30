@@ -11,7 +11,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class ImAdminApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(ImAdminApplication.class,args);
+        SpringApplication.run(ImAdminApplication.class, args);
     }
 
 }

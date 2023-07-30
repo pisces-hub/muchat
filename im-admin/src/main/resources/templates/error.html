@@ -1,25 +1,25 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <title>error</title>
-    <link rel="icon" th:href="@{/resources/imgs/icon.svg}" />
-    <style>
-        li{
-            margin-top: 15px;
-        }
-    </style>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <title>error</title>
+  <link rel="icon" th:href="@{/resources/imgs/icon.svg}"/>
+  <style>
+    li {
+      margin-top: 15px;
+    }
+  </style>
 </head>
 <body>
 
 <div class="wrapper-page" style="margin-top: 6%;text-align: center;color: #ff0000;">
 
-    <h3>服务异常，请联系管理人</h3>
-    <h3 th:text="${error_msg}"></h3>
+  <h3>服务异常，请联系管理人</h3>
+  <h3 th:text="${error_msg}"></h3>
 
 </div>
 

@@ -22,5 +22,3 @@ public class IMRecvInfo<T> {
      */
     private T data;
 }
-
-

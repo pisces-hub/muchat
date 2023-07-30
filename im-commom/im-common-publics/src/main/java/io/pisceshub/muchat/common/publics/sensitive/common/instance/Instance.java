@@ -4,6 +4,7 @@ package io.pisceshub.muchat.common.publics.sensitive.common.instance;
  * @author xiaochangbai
  */
 public interface Instance {
+
     <T> T singleton(Class<T> var1, String var2);
 
     <T> T singleton(Class<T> var1);
@@ -14,4 +15,3 @@ public interface Instance {
 
     <T> T threadSafe(Class<T> var1);
 }
-

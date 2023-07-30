@@ -1,89 +1,92 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <title>介绍手册</title>
-    <link rel="icon" th:href="@{/resources/imgs/icon.svg}" />
-    <style>
-        li{
-            margin-top: 15px;
-        }
-    </style>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <title>介绍手册</title>
+  <link rel="icon" th:href="@{/resources/imgs/icon.svg}"/>
+  <style>
+    li {
+      margin-top: 15px;
+    }
+  </style>
 </head>
 <body>
 
 <div class="wrapper-page" style="margin-top: 2%">
 
-    <div class="m-t-30">
-        <div style="background-color: rgba(100,100,100,0.2);padding: 30px;">
-            <h2 style="background-color: greenyellow;padding: 8px;">http服务</h2>
-            <div class="text-center">
-                <ul>
-                    <li>
-                        <b>查看服务信息：</b>
-                        <a th:href="'http://'+${serverIp}+':'+${serverPort}+'/info'"
-                           th:text="'http://'+${serverIp}+':'+${serverPort}+'/info'"
-                           target="_blank">
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
+  <div class="m-t-30">
+    <div style="background-color: rgba(100,100,100,0.2);padding: 30px;">
+      <h2 style="background-color: greenyellow;padding: 8px;">http服务</h2>
+      <div class="text-center">
+        <ul>
+          <li>
+            <b>查看服务信息：</b>
+            <a th:href="'http://'+${serverIp}+':'+${serverPort}+'/info'"
+               th:text="'http://'+${serverIp}+':'+${serverPort}+'/info'"
+               target="_blank">
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
 
-        <div style="background-color: rgba(100,200,10,0.2);padding: 30px;margin-top: 20px;">
-            <h2 style="background-color: greenyellow;padding: 8px;">websocket服务</h2>
-            <div class="text-center">
-                <ul>
-                    <li>
-                        <b>服务端注册地址(ue4+pxelStreaming)：</b>
-                        <a href="javascript:void(0)">
-                            <span th:text="'ws://'+${serverIp}+':'+${serverPort}+'/manyserver_connection'">
+    <div style="background-color: rgba(100,200,10,0.2);padding: 30px;margin-top: 20px;">
+      <h2 style="background-color: greenyellow;padding: 8px;">websocket服务</h2>
+      <div class="text-center">
+        <ul>
+          <li>
+            <b>服务端注册地址(ue4+pxelStreaming)：</b>
+            <a href="javascript:void(0)">
+                            <span
+                                th:text="'ws://'+${serverIp}+':'+${serverPort}+'/manyserver_connection'">
                             </span>
-                        </a>
-                        <br/><br/>
-                        <b>参数：</b>
-                        <ul>
-                            <li>type：服务端类型。1：ue4，2：pxelStreaming。</li>
-                            <li>num: pxelStreaming与ue4绑定参数。ue4与pxelStreaming保持一致即可。</li>
-                            <li>urlInfo（pxelStreaming需要，ue4不需要）: 页面地址。格式：端口号+子路径地址。</li>
-                        </ul>
-                        <br/>
-                        <b>示例：</b>
-                        <ul>
-                            <li>ue4注册：
-                                <span th:text="'ws://'+${serverIp}+':'+${serverPort}+'/manyserver_connection?type=1&num=1'">
+            </a>
+            <br/><br/>
+            <b>参数：</b>
+            <ul>
+              <li>type：服务端类型。1：ue4，2：pxelStreaming。</li>
+              <li>num: pxelStreaming与ue4绑定参数。ue4与pxelStreaming保持一致即可。</li>
+              <li>urlInfo（pxelStreaming需要，ue4不需要）: 页面地址。格式：端口号+子路径地址。</li>
+            </ul>
+            <br/>
+            <b>示例：</b>
+            <ul>
+              <li>ue4注册：
+                <span
+                    th:text="'ws://'+${serverIp}+':'+${serverPort}+'/manyserver_connection?type=1&num=1'">
                                 </span>
-                            </li>
-                            <li>pxelStreaming注册：
-                                <span th:text="'ws://'+${serverIp}+':'+${serverPort}
+              </li>
+              <li>pxelStreaming注册：
+                <span th:text="'ws://'+${serverIp}+':'+${serverPort}
                                 +'/manyserver_connection?type=2&num=1&urlInfo=8088/test.html'">
                                 </span>
-                            </li>
-                        </ul>
-                    </li>
-                    <br/><br/>
-                    <li>
-                        <b>客户端连接地址：</b>
-                        <a href="javascript:void(0)">
-                            <span th:text="'ws://'+${serverIp}+':'+${serverPort}+'/manyclient_connection'">
+              </li>
+            </ul>
+          </li>
+          <br/><br/>
+          <li>
+            <b>客户端连接地址：</b>
+            <a href="javascript:void(0)">
+                            <span
+                                th:text="'ws://'+${serverIp}+':'+${serverPort}+'/manyclient_connection'">
                             </span>
-                        </a>
-                        <br/><br/>
-                        <b>参数：</b>
-                        <ul>
-                            <li>wsSessionId：会话id。通过此参数来找到服务端对应的ws连接。</li>
-                        </ul>
+            </a>
+            <br/><br/>
+            <b>参数：</b>
+            <ul>
+              <li>wsSessionId：会话id。通过此参数来找到服务端对应的ws连接。</li>
+            </ul>
 
-                    </li>
-                </ul>
-            </div>
-        </div>
-
+          </li>
+        </ul>
+      </div>
     </div>
+
+  </div>
 
 </div>
 

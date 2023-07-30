@@ -27,45 +27,44 @@ public class GroupMessage extends Model<GroupMessage> {
      * id
      */
     @TableId(value = "id", type = IdType.AUTO)
-    private Long id;
+    private Long              id;
 
     /**
      * 群id
      */
     @TableField("group_id")
-    private Long groupId;
+    private Long              groupId;
 
     /**
      * 发送用户id
      */
     @TableField("send_id")
-    private Long sendId;
+    private Long              sendId;
 
     /**
      * 发送内容
      */
     @TableField("content")
-    private String content;
+    private String            content;
 
     /**
      * 消息类型 0:文字 1:图片 2:文件
      */
     @TableField("type")
-    private Integer type;
+    private Integer           type;
 
     /**
      * 状态
      */
     @TableField("status")
-    private Integer status;
+    private Integer           status;
 
     /**
      * 发送时间
      */
     @TableField("send_time")
     @JsonSerialize(using = DateToLongSerializer.class)
-    private Date sendTime;
-
+    private Date              sendTime;
 
     @Override
     protected Serializable pkVal() {

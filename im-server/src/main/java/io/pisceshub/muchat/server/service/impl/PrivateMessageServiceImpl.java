@@ -34,19 +34,19 @@ import java.util.stream.Collectors;
 public class PrivateMessageServiceImpl extends ServiceImpl<PrivateMessageMapper, PrivateMessage> implements IPrivateMessageService {
 
     @Autowired
-    private IFriendService friendService;
+    private IFriendService                friendService;
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
     @Autowired
-    private IMClient imClient;
+    private IMClient                      imClient;
 
     /**
      * 默认一次查询多少条消息
      */
-    private final static Integer defaultQueryMessageCount = 15;
+    private final static Integer          defaultQueryMessageCount = 15;
 
     @Autowired
-    private SensitiveWordAdapter sensitiveWordAdapter;
+    private SensitiveWordAdapter          sensitiveWordAdapter;
 
     /**
      * 发送私聊消息
@@ -62,7 +62,7 @@ public class PrivateMessageServiceImpl extends ServiceImpl<PrivateMessageMapper,
             throw new GlobalException(ResultCode.PROGRAM_ERROR, "您已不是对方好友，无法发送消息");
         }
         String replaced = sensitiveWordAdapter.replace(vo.getContent());
-        if(replaced.matches("^\\*+$")){
+        if (replaced.matches("^\\*+$")) {
             throw new GlobalException("不允许发送该消息内容");
         }
         vo.setContent(replaced);
@@ -75,11 +75,10 @@ public class PrivateMessageServiceImpl extends ServiceImpl<PrivateMessageMapper,
         this.save(msg);
         // 推送消息
         PrivateMessageInfo msgInfo = BeanUtils.copyProperties(msg, PrivateMessageInfo.class);
-        imClient.sendPrivateMessage(vo.getRecvId(),msgInfo);
+        imClient.sendPrivateMessage(vo.getRecvId(), msgInfo);
         log.info("发送私聊消息，发送id:{},接收id:{}，内容:{}", userId, vo.getRecvId(), vo.getContent());
         return MessageSendResp.builder().id(msg.getId()).content(msg.getContent()).build();
     }
-
 
     /**
      * 撤回消息
@@ -107,34 +106,31 @@ public class PrivateMessageServiceImpl extends ServiceImpl<PrivateMessageMapper,
         msgInfo.setType(MessageType.TIP.code());
         msgInfo.setSendTime(new Date());
         msgInfo.setContent("对方撤回了一条消息");
-        imClient.sendPrivateMessage(msgInfo.getRecvId(),msgInfo);
+        imClient.sendPrivateMessage(msgInfo.getRecvId(), msgInfo);
         log.info("撤回私聊消息，发送id:{},接收id:{}，内容:{}", msg.getSendId(), msg.getRecvId(), msg.getContent());
     }
-
 
     /**
      * 拉取历史聊天记录
      *
      * @param friendId 好友id
-     * @param lastMessageId     最后一条消息id
+     * @param lastMessageId 最后一条消息id
      * @return 聊天记录列表
      */
     @Override
     public List<PrivateMessageInfo> findHistoryMessage(Long friendId, Long lastMessageId) {
         Long userId = SessionContext.getSession().getId();
         LambdaQueryWrapper<PrivateMessage> wrapper = new LambdaQueryWrapper<>();
-        wrapper.and(wrap -> wrap.and(
-                wp -> wp.eq(PrivateMessage::getSendId, userId)
-                        .eq(PrivateMessage::getRecvId, friendId))
-                .or(wp -> wp.eq(PrivateMessage::getRecvId, userId)
-                        .eq(PrivateMessage::getSendId, friendId)))
-                .ne(PrivateMessage::getStatus, MessageStatus.RECALL.code());
+        wrapper
+            .and(
+                wrap -> wrap.and(wp -> wp.eq(PrivateMessage::getSendId, userId).eq(PrivateMessage::getRecvId, friendId))
+                    .or(wp -> wp.eq(PrivateMessage::getRecvId, userId).eq(PrivateMessage::getSendId, friendId)))
+            .ne(PrivateMessage::getStatus, MessageStatus.RECALL.code());
 
-        if(lastMessageId!=null){
-            wrapper.lt(PrivateMessage::getId,lastMessageId);
+        if (lastMessageId != null) {
+            wrapper.lt(PrivateMessage::getId, lastMessageId);
         }
-        wrapper.orderByDesc(PrivateMessage::getId)
-                .last("limit " +defaultQueryMessageCount);
+        wrapper.orderByDesc(PrivateMessage::getId).last("limit " + defaultQueryMessageCount);
 
         List<PrivateMessage> messages = this.list(wrapper);
         List<PrivateMessageInfo> messageInfos = messages.stream().map(m -> {
@@ -162,8 +158,7 @@ public class PrivateMessageServiceImpl extends ServiceImpl<PrivateMessageMapper,
         }
         // 获取当前用户所有未读消息
         QueryWrapper<PrivateMessage> queryWrapper = new QueryWrapper<>();
-        queryWrapper.lambda().eq(PrivateMessage::getRecvId, userId)
-                .eq(PrivateMessage::getStatus, MessageStatus.UNREAD);
+        queryWrapper.lambda().eq(PrivateMessage::getRecvId, userId).eq(PrivateMessage::getStatus, MessageStatus.UNREAD);
         List<PrivateMessage> messages = this.list(queryWrapper);
         // 上传至redis，等待推送
         if (!messages.isEmpty()) {
@@ -173,7 +168,7 @@ public class PrivateMessageServiceImpl extends ServiceImpl<PrivateMessageMapper,
             }).collect(Collectors.toList());
             // 推送消息
             PrivateMessageInfo[] infoArr = messageInfos.toArray(new PrivateMessageInfo[messageInfos.size()]);
-            imClient.sendPrivateMessage(userId,infoArr);
+            imClient.sendPrivateMessage(userId, infoArr);
             log.info("拉取未读私聊消息，用户id:{},数量:{}", userId, infoArr.length);
         }
     }

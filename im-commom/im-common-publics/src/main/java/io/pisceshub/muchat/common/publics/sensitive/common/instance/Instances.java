@@ -4,7 +4,8 @@ package io.pisceshub.muchat.common.publics.sensitive.common.instance;
  * @author xiaochangbai
  */
 public final class Instances {
-    private Instances() {
+
+    private Instances(){
     }
 
     public static <T> T singleton(Class<T> tClass) {

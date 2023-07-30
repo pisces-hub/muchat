@@ -32,14 +32,11 @@ import java.util.Optional;
 
 public class ApiLogAspect {
 
-
-
-
     /**
      * 打印类或方法上的
      */
-    @Around("@within(io.pisceshub.muchat.common.log.annotation.ApiLog) " +
-            "|| @annotation(io.pisceshub.muchat.common.log.annotation.ApiLog)")
+    @Around("@within(io.pisceshub.muchat.common.log.annotation.ApiLog) "
+            + "|| @annotation(io.pisceshub.muchat.common.log.annotation.ApiLog)")
     public Object printMLog(ProceedingJoinPoint joinPoint) throws Throwable {
         long startTime = SystemClock.now();
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
@@ -49,10 +46,11 @@ public class ApiLogAspect {
         try {
             result = joinPoint.proceed();
         } finally {
-            Method targetMethod = joinPoint.getTarget().getClass().getDeclaredMethod(methodSignature.getName(),
-                    methodSignature.getMethod().getParameterTypes());
+            Method targetMethod = joinPoint.getTarget()
+                .getClass()
+                .getDeclaredMethod(methodSignature.getName(), methodSignature.getMethod().getParameterTypes());
             ApiLog logAnnotation = Optional.ofNullable(targetMethod.getAnnotation(ApiLog.class))
-                    .orElse(joinPoint.getTarget().getClass().getAnnotation(ApiLog.class));
+                .orElse(joinPoint.getTarget().getClass().getAnnotation(ApiLog.class));
             if (logAnnotation != null) {
                 ApiLogEntity logPrint = new ApiLogEntity();
                 logPrint.setBeginTime(beginTime);
@@ -62,16 +60,22 @@ public class ApiLogAspect {
                 if (logAnnotation.output()) {
                     logPrint.setOutputParams(result);
                 }
-                TPair<String,String> pair = buildApiInfo(joinPoint);
+                TPair<String, String> pair = buildApiInfo(joinPoint);
                 String methodType = "", requestURI = "";
                 try {
-                    ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+                    ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder
+                        .getRequestAttributes();
                     methodType = servletRequestAttributes.getRequest().getMethod();
                     requestURI = servletRequestAttributes.getRequest().getRequestURI();
                 } catch (Exception ignored) {
                 }
-                log.info("[{}:{}]-[{}] {}, executeTime: {}ms, info: {}",pair.getLeft(),pair.getRight(), methodType,
-                        requestURI, SystemClock.now() - startTime, JSONObject.toJSONString(logPrint));
+                log.info("[{}:{}]-[{}] {}, executeTime: {}ms, info: {}",
+                    pair.getLeft(),
+                    pair.getRight(),
+                    methodType,
+                    requestURI,
+                    SystemClock.now() - startTime,
+                    JSONObject.toJSONString(logPrint));
             }
         }
         return result;
@@ -81,19 +85,20 @@ public class ApiLogAspect {
         String moduleName = null;
         String apiName = null;
         Api apiAnnotation = joinPoint.getTarget().getClass().getAnnotation(Api.class);
-        if(apiAnnotation!=null && apiAnnotation.tags()!=null){
+        if (apiAnnotation != null && apiAnnotation.tags() != null) {
             String[] tags = apiAnnotation.tags();
-            moduleName = tags.length>0?tags[0]:Arrays.toString(tags);
+            moduleName = tags.length > 0 ? tags[0] : Arrays.toString(tags);
         }
 
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
-        Method targetMethod = joinPoint.getTarget().getClass().getDeclaredMethod(methodSignature.getName(),
-                methodSignature.getMethod().getParameterTypes());
+        Method targetMethod = joinPoint.getTarget()
+            .getClass()
+            .getDeclaredMethod(methodSignature.getName(), methodSignature.getMethod().getParameterTypes());
         ApiOperation apiOperation = targetMethod.getAnnotation(ApiOperation.class);
-        if(apiOperation!=null){
+        if (apiOperation != null) {
             apiName = apiOperation.value();
         }
-        return new TPair<>(moduleName,apiName);
+        return new TPair<>(moduleName, apiName);
     }
 
     private Object[] buildInput(ProceedingJoinPoint joinPoint) {
@@ -113,6 +118,5 @@ public class ApiLogAspect {
         }
         return printArgs;
     }
-
 
 }

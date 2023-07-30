@@ -25,11 +25,11 @@ public class NodeRegisterEvent {
     /**
      * 端口
      */
-    private Integer port;
+    private Integer         port;
 
     /**
      * 注册时间
      */
-    private Long registerTime;
+    private Long            registerTime;
 
 }

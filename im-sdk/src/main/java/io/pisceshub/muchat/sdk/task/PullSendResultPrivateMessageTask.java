@@ -15,20 +15,19 @@ import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Component
-public class PullSendResultPrivateMessageTask extends  AbstractPullMessageTask{
-
-
-    @Autowired
-    private RedisTemplate<String,Object> redisTemplate;
+public class PullSendResultPrivateMessageTask extends AbstractPullMessageTask {
 
     @Autowired
-    private MessageListenerMulticaster listenerMulticaster;
+    private RedisTemplate<String, Object> redisTemplate;
+
+    @Autowired
+    private MessageListenerMulticaster    listenerMulticaster;
 
     @Override
     public void pullMessage() {
         String key = RedisKey.IM_RESULT_PRIVATE_QUEUE;
-        SendResult result =  (SendResult)redisTemplate.opsForList().leftPop(key,10, TimeUnit.SECONDS);
-        if(result != null) {
+        SendResult result = (SendResult) redisTemplate.opsForList().leftPop(key, 10, TimeUnit.SECONDS);
+        if (result != null) {
             listenerMulticaster.multicast(IMListenerType.PRIVATE_MESSAGE, result);
         }
     }

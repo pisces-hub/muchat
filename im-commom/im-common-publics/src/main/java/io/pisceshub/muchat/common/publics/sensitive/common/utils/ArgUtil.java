@@ -5,7 +5,7 @@ package io.pisceshub.muchat.common.publics.sensitive.common.utils;
  */
 public class ArgUtil {
 
-    private ArgUtil() {
+    private ArgUtil(){
     }
 
     public static void notNull(Object object, String name) {
@@ -13,7 +13,6 @@ public class ArgUtil {
             throw new IllegalArgumentException(name + " can not be null!");
         }
     }
-
 
     public static void notEmpty(String string, String name) {
         if (StringUtil.isEmpty(string)) {

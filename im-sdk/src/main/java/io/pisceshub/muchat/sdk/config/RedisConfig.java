@@ -14,7 +14,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
-
 @Slf4j
 @Configuration
 public class RedisConfig {
@@ -36,7 +35,7 @@ public class RedisConfig {
 
     @Bean
     @ConditionalOnMissingBean(value = Jackson2JsonRedisSerializer.class)
-    public Jackson2JsonRedisSerializer jackson2JsonRedisSerializer(){
+    public Jackson2JsonRedisSerializer jackson2JsonRedisSerializer() {
         Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(getClass());
         ObjectMapper om = new ObjectMapper();
         om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);

@@ -4,15 +4,14 @@ import io.pisceshub.muchat.common.publics.sensitive.core.api.IWordResult;
 
 /**
  * xiaochangbai
- *
  */
 public class WordResult implements IWordResult {
 
     private String word;
 
-    private int startIndex;
+    private int    startIndex;
 
-    private int endIndex;
+    private int    endIndex;
 
     public static WordResult newInstance() {
         return new WordResult();
@@ -50,11 +49,7 @@ public class WordResult implements IWordResult {
 
     @Override
     public String toString() {
-        return "WordResult{" +
-                "word='" + word + '\'' +
-                ", startIndex=" + startIndex +
-                ", endIndex=" + endIndex +
-                '}';
+        return "WordResult{" + "word='" + word + '\'' + ", startIndex=" + startIndex + ", endIndex=" + endIndex + '}';
     }
 
 }

@@ -25,38 +25,37 @@ public class Friend extends Model<Friend> {
      * id
      */
     @TableId(value = "id", type = IdType.AUTO)
-    private Long id;
+    private Long              id;
 
     /**
      * 用户id
      */
     @TableField("user_id")
-    private Long userId;
+    private Long              userId;
 
     /**
      * 好友id
      */
     @TableField("friend_id")
-    private Long friendId;
+    private Long              friendId;
 
     /**
      * 用户昵称
      */
     @TableField("friend_nick_name")
-    private String friendNickName;
+    private String            friendNickName;
 
     /**
      * 用户头像
      */
     @TableField("friend_head_image")
-    private String friendHeadImage;
+    private String            friendHeadImage;
 
     /**
      * 创建时间
      */
     @TableField("created_time")
-    private Date createdTime;
-
+    private Date              createdTime;
 
     @Override
     protected Serializable pkVal() {

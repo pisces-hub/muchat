@@ -19,9 +19,9 @@ public class DateToLongSerializer extends JsonSerializer<Date> {
     }
 
     @Override
-    public void serializeWithType(Date value, JsonGenerator gen, SerializerProvider serializers, TypeSerializer typeSer) throws IOException {
-        WritableTypeId typeIdDef = typeSer.writeTypePrefix(gen,
-                typeSer.typeId(value, JsonToken.VALUE_STRING));
+    public void serializeWithType(Date value, JsonGenerator gen, SerializerProvider serializers,
+                                  TypeSerializer typeSer) throws IOException {
+        WritableTypeId typeIdDef = typeSer.writeTypePrefix(gen, typeSer.typeId(value, JsonToken.VALUE_STRING));
         serialize(value, gen, serializers);
         typeSer.writeTypeSuffix(gen, typeIdDef);
     }

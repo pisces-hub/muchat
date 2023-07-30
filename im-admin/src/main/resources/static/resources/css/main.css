@@ -1,14 +1,16 @@
-#msg{
-    width: 40%;
+#msg {
+  width: 40%;
 }
-#btnSend,#btnClose{
-    height: 50px;
-    width: 150px;
-    background-color: blue;
-    color: white;
-    border: none;
+
+#btnSend, #btnClose {
+  height: 50px;
+  width: 150px;
+  background-color: blue;
+  color: white;
+  border: none;
 }
-#btnClose{
-    background-color: red;
-    margin-left: 100px;
+
+#btnClose {
+  background-color: red;
+  margin-left: 100px;
 }

@@ -2,7 +2,7 @@ package io.pisceshub.muchat.connector.remote;
 
 public interface IMServer {
 
-    default boolean enable(){
+    default boolean enable() {
         return false;
     }
 

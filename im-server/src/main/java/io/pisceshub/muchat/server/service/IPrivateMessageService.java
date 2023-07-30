@@ -8,7 +8,6 @@ import io.pisceshub.muchat.server.common.vo.message.PrivateMessageSendReq;
 
 import java.util.List;
 
-
 public interface IPrivateMessageService extends IService<PrivateMessage> {
 
     MessageSendResp sendMessage(PrivateMessageSendReq vo);

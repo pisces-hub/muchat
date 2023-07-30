@@ -5,9 +5,7 @@ import io.pisceshub.muchat.common.publics.sensitive.core.api.IWordResult;
 import io.pisceshub.muchat.common.publics.sensitive.core.api.IWordResultHandler;
 
 /**
- * 不做任何处理
- * xiaochangbai
- *
+ * 不做任何处理 xiaochangbai
  */
 @ThreadSafe
 public class WordResultHandlerRaw implements IWordResultHandler<IWordResult> {

@@ -15,21 +15,21 @@ public class AppConfigInfo {
 
     public final static String PRE = "app";
 
-    private ZkNode zk;
+    private ZkNode             zk;
 
-    private Oauth2 auth2;
+    private Oauth2             auth2;
 
     @Data
-    public static class Oauth2{
+    public static class Oauth2 {
 
         private Oauth2Node gitee;
 
         private Oauth2Node github;
 
-        private String loginRedirectUri;
+        private String     loginRedirectUri;
 
         @Data
-        public static class Oauth2Node{
+        public static class Oauth2Node {
 
             private String clientId;
 
@@ -41,7 +41,7 @@ public class AppConfigInfo {
     }
 
     @Data
-    public static class ZkNode{
+    public static class ZkNode {
 
         private String path;
 

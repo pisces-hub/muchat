@@ -11,14 +11,12 @@ import io.pisceshub.muchat.common.core.model.IMSendInfo;
  */
 public final class SendMessageUtils {
 
-
-
-    public static boolean sendError(ChannelHandlerContext ctx,String errorInfo){
-        return send(ctx,IMSendInfo.builder().cmd(IMCmdType.ERROR.code()).data(errorInfo).build());
+    public static boolean sendError(ChannelHandlerContext ctx, String errorInfo) {
+        return send(ctx, IMSendInfo.builder().cmd(IMCmdType.ERROR.code()).data(errorInfo).build());
     }
 
-    public static boolean send(ChannelHandlerContext ctx, IMSendInfo msg){
-        if(ctx==null || msg==null || !ctx.channel().isOpen()){
+    public static boolean send(ChannelHandlerContext ctx, IMSendInfo msg) {
+        if (ctx == null || msg == null || !ctx.channel().isOpen()) {
             return false;
         }
         ctx.channel().writeAndFlush(msg);

@@ -16,20 +16,19 @@ public class AppConfigProperties {
 
     public final static String PRE = "app";
 
-
     /**
      * 公网ip
      */
-    private String ip;
+    private String             ip;
 
-    private TcpNode ws;
+    private TcpNode            ws;
 
-    private TcpNode tcp;
+    private TcpNode            tcp;
 
-    private ZkNode zk;
+    private ZkNode             zk;
 
     @Data
-    public static class TcpNode{
+    public static class TcpNode {
 
         private Boolean enable;
 
@@ -41,7 +40,7 @@ public class AppConfigProperties {
     }
 
     @Data
-    public static class ZkNode{
+    public static class ZkNode {
 
         private String path;
 

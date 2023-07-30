@@ -1,81 +1,83 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="icon" th:href="@{/resources/imgs/icon.svg}" />
-	<meta name="description" content="Java websocket middleware service">
-	<meta name="author" content="xchb">
-	<script th:src="@{/resources/js/jquery.js}"></script>
-	<script th:src="@{/resources/js/bootstrap.min.js}"></script>
-	<link th:href="@{/resources/css/bootstrap.min.css}" rel="stylesheet">
-	<link th:href="@{/resources/css/main.css}" rel="stylesheet">
-	<title>服务配置</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" th:href="@{/resources/imgs/icon.svg}"/>
+  <meta name="description" content="Java websocket middleware service">
+  <meta name="author" content="xchb">
+  <script th:src="@{/resources/js/jquery.js}"></script>
+  <script th:src="@{/resources/js/bootstrap.min.js}"></script>
+  <link th:href="@{/resources/css/bootstrap.min.css}" rel="stylesheet">
+  <link th:href="@{/resources/css/main.css}" rel="stylesheet">
+  <title>服务配置</title>
 
-	<style>
-		.redColor{
-			background-color: red;
-			cursor: pointer;
-		}
-		.greenColor{
-			background-color: greenyellow;
-			cursor: pointer;
-		}
-		td{
-			cursor: pointer;
-		}
-	</style>
+  <style>
+    .redColor {
+      background-color: red;
+      cursor: pointer;
+    }
+
+    .greenColor {
+      background-color: greenyellow;
+      cursor: pointer;
+    }
+
+    td {
+      cursor: pointer;
+    }
+  </style>
 
 </head>
 <body>
 
 
 <div class="wrapper-page" style="margin-top: 3%;text-align: center;">
-	<div style="width: 60%;">
-		<table class="table table-condensed">
-			<tr>
-				<td class="active">重启服务地址：</td>
-				<td class="active">
-					<input type="text" style="width: 600px;"
-						   th:value="${restartUrl}"
-						   class="form-control" id="restartUrl" placeholder="重启服务地址" />
-				</td>
-				<td class="active">
-					<button type="submit" onclick="modify('restartUrl')" class="btn btn-danger">修改</button>
-				</td>
-<!--				<td class="active">-->
-<!--					<button type="submit" onclick="restart()" class="btn btn-danger">保存</button>-->
-<!--				</td>-->
-			</tr>
-		</table>
-	</div>
+  <div style="width: 60%;">
+    <table class="table table-condensed">
+      <tr>
+        <td class="active">重启服务地址：</td>
+        <td class="active">
+          <input type="text" style="width: 600px;"
+                 th:value="${restartUrl}"
+                 class="form-control" id="restartUrl" placeholder="重启服务地址"/>
+        </td>
+        <td class="active">
+          <button type="submit" onclick="modify('restartUrl')" class="btn btn-danger">修改</button>
+        </td>
+        <!--				<td class="active">-->
+        <!--					<button type="submit" onclick="restart()" class="btn btn-danger">保存</button>-->
+        <!--				</td>-->
+      </tr>
+    </table>
+  </div>
 </div>
 
 </body>
 
 <script>
 
-	function modify(key) {
-		var value = $("#"+key).val();
-		console.log(key+" "+value);
-		$.post({
-			url:'/conf/update?',
-			data:{
-				"key":key,
-				"value":value
-			},
-			success:function (e) {
-				console.log(e);
-				if(e.code!=200){
-					alert("修改失败");
-					return;
-				}
-				alert("修改成功");
-				window.location.reload();
-			}
-		})
-	}
+  function modify(key) {
+    var value = $("#" + key).val();
+    console.log(key + " " + value);
+    $.post({
+      url: '/conf/update?',
+      data: {
+        "key": key,
+        "value": value
+      },
+      success: function (e) {
+        console.log(e);
+        if (e.code != 200) {
+          alert("修改失败");
+          return;
+        }
+        alert("修改成功");
+        window.location.reload();
+      }
+    })
+  }
 
 </script>
 </html>

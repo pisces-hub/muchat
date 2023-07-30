@@ -4,9 +4,7 @@ import io.pisceshub.muchat.common.publics.sensitive.common.annotation.ThreadSafe
 import io.pisceshub.muchat.common.publics.sensitive.common.core.ICharFormat;
 
 /**
- * 忽略大小写
- * xiaochangbai
- *
+ * 忽略大小写 xiaochangbai
  */
 @ThreadSafe
 

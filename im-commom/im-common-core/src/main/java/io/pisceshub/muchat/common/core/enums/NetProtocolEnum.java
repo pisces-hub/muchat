@@ -7,8 +7,6 @@ package io.pisceshub.muchat.common.core.enums;
  */
 public enum NetProtocolEnum {
 
-    WS,
-    TCP
-    ;
+                             WS, TCP;
 
 }

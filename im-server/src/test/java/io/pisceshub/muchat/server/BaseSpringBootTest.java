@@ -7,6 +7,6 @@ import org.springframework.boot.test.context.SpringBootTest;
  * @author: xiaochangbai
  * @date: 2023/7/18 18:21
  */
-@SpringBootTest(classes =ImServerApplication.class   )
+@SpringBootTest(classes = ImServerApplication.class)
 public abstract class BaseSpringBootTest {
 }

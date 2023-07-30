@@ -5,10 +5,8 @@ package io.pisceshub.muchat.common.publics.sensitive.common.utils;
  */
 public class CharUtil {
 
-    private CharUtil() {
+    private CharUtil(){
     }
-
-
 
     public static boolean isDigitOrLetter(char c) {
         return Character.isDigit(c) || Character.isLowerCase(c) || Character.isUpperCase(c);
@@ -22,13 +20,11 @@ public class CharUtil {
         return isDigitOrLetter(c) || '-' == c || '.' == c;
     }
 
-
-
     public static String repeat(Character replaceChar, int wordLength) {
-        if (replaceChar!=null && wordLength > 0) {
+        if (replaceChar != null && wordLength > 0) {
             StringBuilder stringBuffer = new StringBuilder();
 
-            for(int i = 0; i < wordLength; ++i) {
+            for (int i = 0; i < wordLength; ++i) {
                 stringBuffer.append(replaceChar);
             }
 
@@ -38,4 +34,3 @@ public class CharUtil {
         }
     }
 }
-

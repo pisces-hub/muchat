@@ -5,18 +5,17 @@ import io.pisceshub.muchat.common.publics.sensitive.core.api.IWordResult;
 import io.pisceshub.muchat.common.publics.sensitive.core.api.IWordResultHandler;
 
 /**
- * 敏感词的结果处理
- * xiaochangbai
- *
+ * 敏感词的结果处理 xiaochangbai
  */
 public final class WordResultHandlers {
 
-    private WordResultHandlers(){}
+    private WordResultHandlers(){
+    }
 
     /**
      * 不做任何处理
+     * 
      * @return 结果
-     *
      */
     public static IWordResultHandler<IWordResult> raw() {
         return Instances.singleton(WordResultHandlerRaw.class);
@@ -24,8 +23,8 @@ public final class WordResultHandlers {
 
     /**
      * 只保留单词
+     * 
      * @return 结果
-     *
      */
     public static IWordResultHandler<String> word() {
         return Instances.singleton(WordResultHandlerWord.class);

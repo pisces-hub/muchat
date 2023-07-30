@@ -20,8 +20,8 @@ public class IMClient {
      * @param recvId 接收用户id
      * @param messageInfo 消息体，将转成json发送到客户端
      */
-    public void sendPrivateMessage(Long recvId, PrivateMessageInfo... messageInfo){
-        imSender.sendPrivateMessage(recvId,messageInfo);
+    public void sendPrivateMessage(Long recvId, PrivateMessageInfo... messageInfo) {
+        imSender.sendPrivateMessage(recvId, messageInfo);
     }
 
     /**
@@ -30,9 +30,8 @@ public class IMClient {
      * @param recvIds 群聊用户id列表
      * @param messageInfo 消息体，将转成json发送到客户端
      */
-    public void sendGroupMessage(List<Long> recvIds, GroupMessageInfo... messageInfo){
-        imSender.sendGroupMessage(recvIds,messageInfo);
+    public void sendGroupMessage(List<Long> recvIds, GroupMessageInfo... messageInfo) {
+        imSender.sendGroupMessage(recvIds, messageInfo);
     }
-
 
 }

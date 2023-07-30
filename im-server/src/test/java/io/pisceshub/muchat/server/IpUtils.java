@@ -39,11 +39,12 @@ public class IpUtils {
             ip = "112.96.226.236";
             long sTime = System.nanoTime();
             String region = searcher.search(ip);
-            String strs =  searcher.search(ip);
+            String strs = searcher.search(ip);
             String[] strings = strs.split("\\|");
             String city = strings[3];
             long cost = TimeUnit.NANOSECONDS.toMicros((long) (System.nanoTime() - sTime));
-            System.out.printf("{region: %s,,city=%s, ioCount: %d, took: %d μs}\n", region,city, searcher.getIOCount(), cost);
+            System.out
+                .printf("{region: %s,,city=%s, ioCount: %d, took: %d μs}\n", region, city, searcher.getIOCount(), cost);
         } catch (Exception e) {
             System.out.printf("failed to search(%s): %s\n", ip, e);
         }

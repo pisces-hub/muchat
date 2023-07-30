@@ -11,7 +11,8 @@ import java.util.List;
 public class MessageProtocolDecoder extends MessageToMessageDecoder<TextWebSocketFrame> {
 
     @Override
-    protected void decode(ChannelHandlerContext channelHandlerContext, TextWebSocketFrame textWebSocketFrame, List<Object> list) throws Exception {
+    protected void decode(ChannelHandlerContext channelHandlerContext, TextWebSocketFrame textWebSocketFrame,
+                          List<Object> list) throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         IMSendInfo sendInfo = objectMapper.readValue(textWebSocketFrame.text(), IMSendInfo.class);
         list.add(sendInfo);

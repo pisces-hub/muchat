@@ -5,9 +5,9 @@ import io.pisceshub.muchat.common.core.utils.SpringContextHolder;
 
 public class ProcessorFactory {
 
-    public static MessageProcessor createProcessor(IMCmdType cmd){
-        MessageProcessor  processor = null;
-        switch (cmd){
+    public static MessageProcessor createProcessor(IMCmdType cmd) {
+        MessageProcessor processor = null;
+        switch (cmd) {
             case LOGIN:
                 processor = SpringContextHolder.getBean(LoginProcessor.class);
                 break;

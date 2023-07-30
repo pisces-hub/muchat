@@ -24,31 +24,28 @@ import java.util.*;
  */
 public class DateTimeUtils extends DateUtils {
 
-    public static final String FULL_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
-    public static final String FULL_DATE_FORMAT_CN = "yyyy年MM月dd日 HH时mm分ss秒";
-    public static final String PART_DATE_FORMAT = "yyyy-MM-dd";
-    public static final String PART_DATE_FORMAT_TWO = "yyyy/MM/dd";
-    public static final String PART_DATE_FORMAT_CN = "yyyy年MM月dd日";
-    public static final String PARTDATEFORMAT = "yyyyMMdd";
-    public static final String YEAR_DATE_FORMAT = "yyyy";
-    public static final String MONTH_DATE_FORMAT = "MM";
-    public static final String DAY_DATE_FORMAT = "dd";
-    public static final String WEEK_DATE_FORMAT = "week";
+    public static final String    FULL_DATE_FORMAT     = "yyyy-MM-dd HH:mm:ss";
+    public static final String    FULL_DATE_FORMAT_CN  = "yyyy年MM月dd日 HH时mm分ss秒";
+    public static final String    PART_DATE_FORMAT     = "yyyy-MM-dd";
+    public static final String    PART_DATE_FORMAT_TWO = "yyyy/MM/dd";
+    public static final String    PART_DATE_FORMAT_CN  = "yyyy年MM月dd日";
+    public static final String    PARTDATEFORMAT       = "yyyyMMdd";
+    public static final String    YEAR_DATE_FORMAT     = "yyyy";
+    public static final String    MONTH_DATE_FORMAT    = "MM";
+    public static final String    DAY_DATE_FORMAT      = "dd";
+    public static final String    WEEK_DATE_FORMAT     = "week";
 
     /**
      * 星座
      */
-    private final static int[] dayArr = new int[]{20, 19, 21, 20, 21, 22, 23,
-            23, 23, 24, 23, 22};
-    private final static String[] constellationArr = new String[]{"摩羯座",
-            "水瓶座", "双鱼座", "白羊座", "金牛座", "双子座", "巨蟹座", "狮子座", "处女座", "天秤座",
-            "天蝎座", "射手座", "摩羯座"};
-
+    private final static int[]    dayArr               = new int[] { 20, 19, 21, 20, 21, 22, 23, 23, 23, 24, 23, 22 };
+    private final static String[] constellationArr     = new String[] { "摩羯座", "水瓶座", "双鱼座", "白羊座", "金牛座", "双子座", "巨蟹座",
+                                                                        "狮子座", "处女座", "天秤座", "天蝎座", "射手座", "摩羯座" };
 
     /**
      * 将日期类型转换为字符串
      *
-     * @param date    日期
+     * @param date 日期
      * @param xFormat 格式
      * @return
      */
@@ -59,20 +56,16 @@ public class DateTimeUtils extends DateUtils {
         return sdf.format(date);
     }
 
-
     /**
      * 比较日期大小
      *
      * @param dateX
      * @param dateY
-     * @return x < y return [-1];
-     * x = y return [0] ;
-     * x > y return [1] ;
+     * @return x < y return [-1]; x = y return [0] ; x > y return [1] ;
      */
     public static int compareDate(Date dateX, Date dateY) {
         return dateX.compareTo(dateY);
     }
-
 
     /**
      * 将日期字符串转换为日期格式类型
@@ -96,7 +89,6 @@ public class DateTimeUtils extends DateUtils {
         }
         return null;
     }
-
 
     /**
      * 判断需要转换类型的日期字符串是否符合格式要求
@@ -127,7 +119,6 @@ public class DateTimeUtils extends DateUtils {
         return !isDate(xDate);
     }
 
-
     /**
      * 获取俩个日期之间相差多少天
      *
@@ -143,7 +134,8 @@ public class DateTimeUtils extends DateUtils {
         long dayX = dateX.getTime();
         long dayY = dateY.getTime();
 
-        return dayX > dayY ? (int) ((dayX - dayY) / (60 * 60 * 1000 * 24)) : (int) ((dayY - dayX) / (60 * 60 * 1000 * 24));
+        return dayX > dayY ? (int) ((dayX - dayY) / (60 * 60 * 1000 * 24)) : (int) ((dayY - dayX)
+                                                                                    / (60 * 60 * 1000 * 24));
     }
 
     /**
@@ -185,8 +177,8 @@ public class DateTimeUtils extends DateUtils {
     /**
      * 获取传值日期之后几天的日期并转换为字符串类型
      *
-     * @param date    需要转换的日期 date 可以为NULL 此条件下则获取当前日期
-     * @param after   天数
+     * @param date 需要转换的日期 date 可以为NULL 此条件下则获取当前日期
+     * @param after 天数
      * @param xFormat 转换字符串类型 (可以为NULL)
      * @return
      */
@@ -202,7 +194,7 @@ public class DateTimeUtils extends DateUtils {
     /**
      * 获取传值日期之前几天的日期并转换为字符串类型
      *
-     * @param date    需要转换的日期 date 可以为NULL 此条件下则获取当前日期
+     * @param date 需要转换的日期 date 可以为NULL 此条件下则获取当前日期
      * @param xFormat 转换字符串类型 (可以为NULL)
      * @return
      */
@@ -215,11 +207,10 @@ public class DateTimeUtils extends DateUtils {
         return getFormatDate(calendar.getTime(), xFormat);
     }
 
-
     /**
      * 获取日期的参数 如：年 , 月 , 日 , 星期几
      *
-     * @param xDate   日期 可以为日期格式,可以是字符串格式; 为NULL或者其他格式时都判定为当前日期
+     * @param xDate 日期 可以为日期格式,可以是字符串格式; 为NULL或者其他格式时都判定为当前日期
      * @param xFormat 年 yyyy 月 MM 日 dd 星期 week ;其他条件下都返回0
      */
     public static int getDateTimeParam(Object xDate, String xFormat) {
@@ -233,23 +224,18 @@ public class DateTimeUtils extends DateUtils {
             date = new Date();
         }
         date = date == null ? new Date() : date;
-        if (StringUtils.isNotEmpty(xFormat)
-                && (xFormat.equals(YEAR_DATE_FORMAT)
-                || xFormat.equals(MONTH_DATE_FORMAT)
-                || xFormat.equals(DAY_DATE_FORMAT))) {
+        if (StringUtils.isNotEmpty(xFormat) && (xFormat.equals(YEAR_DATE_FORMAT) || xFormat.equals(MONTH_DATE_FORMAT)
+                                                || xFormat.equals(DAY_DATE_FORMAT))) {
             return Integer.parseInt(getFormatDate(date, xFormat));
-        } else if (StringUtils.isNotEmpty(xFormat)
-                && (WEEK_DATE_FORMAT.equals(xFormat))) {
+        } else if (StringUtils.isNotEmpty(xFormat) && (WEEK_DATE_FORMAT.equals(xFormat))) {
             Calendar cal = Calendar.getInstance();
             cal.setTime(date);
-            int week = cal.get(Calendar.DAY_OF_WEEK) - 1 == 0 ?
-                    7 : cal.get(Calendar.DAY_OF_WEEK) - 1;
+            int week = cal.get(Calendar.DAY_OF_WEEK) - 1 == 0 ? 7 : cal.get(Calendar.DAY_OF_WEEK) - 1;
             return week;
         } else {
             return 0;
         }
     }
-
 
     /**
      * 日期格式转换为时间戳
@@ -269,7 +255,6 @@ public class DateTimeUtils extends DateUtils {
         }
         return null;
     }
-
 
     /**
      * 获取星期字符串
@@ -398,8 +383,8 @@ public class DateTimeUtils extends DateUtils {
         return c.getTime();
     }
 
-    /* 10位int型的时间戳转换为String(yyyy-MM-dd HH:mm:ss)
-     *
+    /*
+     * 10位int型的时间戳转换为String(yyyy-MM-dd HH:mm:ss)
      * @param time
      * @return
      */
@@ -552,7 +537,6 @@ public class DateTimeUtils extends DateUtils {
         return (new Date(temp1));
     }
 
-
     /**
      * 两个日期相差的分钟数
      *
@@ -622,8 +606,9 @@ public class DateTimeUtils extends DateUtils {
      */
     public static int getMiao(int num) {
         Calendar curDate = Calendar.getInstance();
-        //获取当前时间的第二天早上num点
-        Calendar tommorowDate = new GregorianCalendar(curDate.get(Calendar.YEAR), curDate.get(Calendar.MONTH), curDate.get(Calendar.DATE) + 1, num, 0, 0);
+        // 获取当前时间的第二天早上num点
+        Calendar tommorowDate = new GregorianCalendar(curDate
+            .get(Calendar.YEAR), curDate.get(Calendar.MONTH), curDate.get(Calendar.DATE) + 1, num, 0, 0);
         return (int) (tommorowDate.getTimeInMillis() - curDate.getTimeInMillis()) / 1000;
     }
 
@@ -655,9 +640,9 @@ public class DateTimeUtils extends DateUtils {
      * 天数转换为秒数
      */
     public static int dayConvertSecond(int day) {
-        //一天的秒数
+        // 一天的秒数
         int secondOfDay = 60 * 60 * 24;
-        //计算N天的秒数
+        // 计算N天的秒数
         return day * secondOfDay;
     }
 
@@ -681,7 +666,6 @@ public class DateTimeUtils extends DateUtils {
         }
     }
 
-
     /**
      * Java通过生日计算星座 生日格式必须为 yyyy-MM-dd
      *
@@ -698,8 +682,7 @@ public class DateTimeUtils extends DateUtils {
             month = calendar.get(Calendar.MONTH) + 1;
             day = calendar.get(Calendar.DAY_OF_MONTH);
         }
-        return day < dayArr[month - 1] ? constellationArr[month - 1]
-                : constellationArr[month];
+        return day < dayArr[month - 1] ? constellationArr[month - 1] : constellationArr[month];
     }
 
     /**
@@ -713,8 +696,7 @@ public class DateTimeUtils extends DateUtils {
             return "未知";
         }
         int start = 1900;
-        String[] years = new String[]{"鼠", "牛", "虎", "兔", "龙", "蛇", "马", "羊",
-                "猴", "鸡", "狗", "猪"};
+        String[] years = new String[] { "鼠", "牛", "虎", "兔", "龙", "蛇", "马", "羊", "猴", "鸡", "狗", "猪" };
         return years[(year - start) % years.length];
     }
 
@@ -723,7 +705,7 @@ public class DateTimeUtils extends DateUtils {
      *
      * @param s1 时间比较
      * @param s2
-     * @return boolean  true 大于 false 小于
+     * @return boolean true 大于 false 小于
      */
     public static boolean compareVehicle(String s1, String s2) {
         boolean flag = true;
@@ -754,7 +736,7 @@ public class DateTimeUtils extends DateUtils {
         calendarEnd.set(Calendar.HOUR_OF_DAY, 23);
         calendarEnd.set(Calendar.MINUTE, 59);
         calendarEnd.set(Calendar.SECOND, 59);
-        //防止mysql自动加一秒,毫秒设为0
+        // 防止mysql自动加一秒,毫秒设为0
         calendarEnd.set(Calendar.MILLISECOND, 0);
 
         return dateDefaultFormat(calendarEnd.getTime());
@@ -803,7 +785,7 @@ public class DateTimeUtils extends DateUtils {
         hour = (diff / (60 * 60 * 1000) - day * 24);
         min = ((diff / (60 * 1000)) - day * 24 * 60 - hour * 60);
         sec = (diff / 1000 - day * 24 * 60 * 60 - hour * 60 * 60 - min * 60);
-        long[] times = {day, hour, min, sec};
+        long[] times = { day, hour, min, sec };
         return times;
     }
 
@@ -815,14 +797,14 @@ public class DateTimeUtils extends DateUtils {
      * @return
      */
     public static Date getLastDateBySecond(Date date, Integer second) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//24小时制
-        //SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");//12小时制
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");// 24小时制
+        // SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");//12小时制
         if (date == null) {
             return null;
         }
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
-        cal.add(Calendar.SECOND, second);//24小时制
+        cal.add(Calendar.SECOND, second);// 24小时制
         date = cal.getTime();
         cal = null;
         return date;
@@ -866,7 +848,7 @@ public class DateTimeUtils extends DateUtils {
      * @return int 1、昨天 2、近7天 3、近15天 4、近30天
      */
     public static Integer getTimeScope(Date dateBefore, Date dateAfter) {
-        int daysDifferent = compareDays(dateBefore, dateAfter);//1、昨天 2、近7天 3、近15天 4、近30天
+        int daysDifferent = compareDays(dateBefore, dateAfter);// 1、昨天 2、近7天 3、近15天 4、近30天
         if (daysDifferent == 1) {
             return 1;
         } else if (daysDifferent >= 2 && daysDifferent <= 7) {
@@ -928,8 +910,7 @@ public class DateTimeUtils extends DateUtils {
     }
 
     /*
-     * 功能描述: <br>
-     * 获取时间与当前时间相差分钟数
+     * 功能描述: <br> 获取时间与当前时间相差分钟数
      * @param: time
      * @Return: int
      * @Author: 97342
@@ -946,8 +927,7 @@ public class DateTimeUtils extends DateUtils {
     }
 
     /*
-     * 功能描述: <br>
-     * 时间戳转LocalDateTime
+     * 功能描述: <br> 时间戳转LocalDateTime
      * @param: time
      * @Return: java.time.LocalDateTime
      * @Author: 97342
@@ -1107,18 +1087,17 @@ public class DateTimeUtils extends DateUtils {
     }
 
     /**
-     *
      * @param startDay 开始日期
      * @param endDay 结束日期
      * @return 返回包含开始结束日期的集合
      */
-    public static List<LocalDate> getDays(LocalDate startDay, LocalDate endDay){
+    public static List<LocalDate> getDays(LocalDate startDay, LocalDate endDay) {
         List<LocalDate> days = new ArrayList<>();
-        LocalDate start= ObjectUtil.clone(startDay);
-        LocalDate end= ObjectUtil.clone(endDay);
+        LocalDate start = ObjectUtil.clone(startDay);
+        LocalDate end = ObjectUtil.clone(endDay);
         days.add(start);
-        while (start.isBefore(end)){
-            start=start.plusDays(1L);
+        while (start.isBefore(end)) {
+            start = start.plusDays(1L);
             days.add(start);
         }
         Collections.reverse(days);

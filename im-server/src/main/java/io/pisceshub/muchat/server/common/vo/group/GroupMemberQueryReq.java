@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
 public class GroupMemberQueryReq extends PageReq {
 
     @NotNull(message = "群聊id不能为空")
-    private Long groupId;
+    private Long   groupId;
 
     private String search;
 }

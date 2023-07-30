@@ -7,25 +7,22 @@ import io.pisceshub.muchat.common.publics.sensitive.common.core.WordContext;
 import io.pisceshub.muchat.common.publics.sensitive.common.enums.ValidModeEnum;
 
 /**
- * 敏感词监测实现
- *
- * 这里可以提供一个公共的父类。
- * xiaochangbai
- *
+ * 敏感词监测实现 这里可以提供一个公共的父类。 xiaochangbai
  */
 @ThreadSafe
 public class SensitiveCheckNum implements ISensitiveCheck {
 
     @Override
-    public SensitiveCheckResult sensitiveCheck(String txt, int beginIndex,
-                                               ValidModeEnum validModeEnum, WordContext wordContext) {
+    public SensitiveCheckResult sensitiveCheck(String txt, int beginIndex, ValidModeEnum validModeEnum,
+                                               WordContext wordContext) {
         // 记录敏感词的长度
         int lengthCount = 0;
         int actualLength = 0;
 
         for (int i = beginIndex; i < txt.length(); i++) {
             char c = txt.charAt(i);
-            char charKey = wordContext.formatChar(c);;
+            char charKey = wordContext.formatChar(c);
+            ;
 
             // 如果是数字
             // 满足进入的条件
@@ -33,7 +30,7 @@ public class SensitiveCheckNum implements ISensitiveCheck {
                 lengthCount++;
 
                 // 满足结束的条件
-                if (lengthCount>=wordContext.getSensitiveCheckNumLen()) {
+                if (lengthCount >= wordContext.getSensitiveCheckNumLen()) {
                     // 只在匹配到结束的时候才记录长度，避免不完全匹配导致的问题。
                     actualLength = lengthCount;
 
@@ -50,6 +47,5 @@ public class SensitiveCheckNum implements ISensitiveCheck {
 
         return SensitiveCheckResult.of(actualLength, SensitiveCheckNum.class);
     }
-
 
 }

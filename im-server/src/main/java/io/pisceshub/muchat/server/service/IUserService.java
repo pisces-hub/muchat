@@ -7,7 +7,6 @@ import me.zhyd.oauth.model.AuthUser;
 
 import java.util.List;
 
-
 public interface IUserService extends IService<User> {
 
     LoginResp login(LoginReq dto);
@@ -34,6 +33,7 @@ public interface IUserService extends IService<User> {
 
     /**
      * 判断用户是否在线
+     * 
      * @param userId
      * @return
      */

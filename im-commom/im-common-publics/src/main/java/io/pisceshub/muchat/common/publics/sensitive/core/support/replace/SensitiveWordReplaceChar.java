@@ -6,16 +6,14 @@ import io.pisceshub.muchat.common.publics.sensitive.core.api.ISensitiveWordRepla
 import io.pisceshub.muchat.common.publics.sensitive.core.api.ISensitiveWordReplaceContext;
 
 /**
- * 指定字符的替换策略
- * xiaochangbai
- *
+ * 指定字符的替换策略 xiaochangbai
  */
 @ThreadSafe
 public class SensitiveWordReplaceChar implements ISensitiveWordReplace {
 
     private final char replaceChar;
 
-    public SensitiveWordReplaceChar(char replaceChar) {
+    public SensitiveWordReplaceChar(char replaceChar){
         this.replaceChar = replaceChar;
     }
 

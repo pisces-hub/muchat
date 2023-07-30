@@ -35,27 +35,25 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
-
 @Slf4j
 @CacheConfig(cacheNames = RedisKey.IM_CACHE_GROUP)
 @Service
 public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements IGroupService {
 
     @Autowired
-    private IUserService userService;
+    private IUserService        userService;
 
     @Autowired
     private IGroupMemberService groupMemberService;
 
     @Autowired
-    private IFriendService friendsService;
+    private IFriendService      friendsService;
 
     @Autowired
-    private IpSearchAdapter ipSearchAdapter;
+    private IpSearchAdapter     ipSearchAdapter;
 
     @Autowired
     private IChatSessionService iChatSessionService;
-
 
     /**
      * 创建新群聊
@@ -90,7 +88,6 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
         return vo;
     }
 
-
     /**
      * 修改群聊信息
      *
@@ -120,7 +117,6 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
         return vo;
     }
 
-
     /**
      * 删除群聊
      *
@@ -143,7 +139,6 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
         log.info("删除群聊，群聊id:{},群聊名称:{}", group.getId(), group.getName());
     }
 
-
     /**
      * 退出群聊
      *
@@ -160,19 +155,15 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
         // 删除群聊成员
         groupMemberService.removeByGroupAndUserId(groupId, userId);
 
-        iChatSessionService.del(ChatSessionUpdateReq.builder()
-                .chatType(ChatType.GROUP)
-                .targetId(groupId).build()
-        );
+        iChatSessionService.del(ChatSessionUpdateReq.builder().chatType(ChatType.GROUP).targetId(groupId).build());
         log.info("退出群聊，群聊id:{},群聊名称:{},用户id:{}", group.getId(), group.getName(), userId);
     }
-
 
     /**
      * 将用户踢出群聊
      *
      * @param groupId 群聊id
-     * @param userId  用户id
+     * @param userId 用户id
      * @return
      */
     @Override
@@ -187,27 +178,24 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
         }
         // 删除群聊成员
         groupMemberService.removeByGroupAndUserId(groupId, userId);
-        iChatSessionService.del(ChatSessionUpdateReq.builder()
-                .chatType(ChatType.GROUP)
-                        .userId(userId)
-                .targetId(groupId).build());
+        iChatSessionService
+            .del(ChatSessionUpdateReq.builder().chatType(ChatType.GROUP).userId(userId).targetId(groupId).build());
         log.info("踢出群聊，群聊id:{},群聊名称:{},用户id:{}", group.getId(), group.getName(), userId);
     }
 
     @Override
-    public Group findBaseInfoById(Long groupId){
+    public Group findBaseInfoById(Long groupId) {
         LambdaQueryWrapper<Group> groupLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        groupLambdaQueryWrapper.eq(Group::getDeleted,false);
-        groupLambdaQueryWrapper.eq(Group::getId,groupId);
+        groupLambdaQueryWrapper.eq(Group::getDeleted, false);
+        groupLambdaQueryWrapper.eq(Group::getId, groupId);
         return this.getOne(groupLambdaQueryWrapper);
     }
-
 
     @Override
     public GroupVO findById(Long groupId) {
         SessionContext.UserSessionInfo session = SessionContext.getSession();
         Group group = this.findBaseInfoById(groupId);
-        if(group==null){
+        if (group == null) {
             throw new BusinessException("群聊信息不存在");
         }
         GroupMember member = groupMemberService.findByGroupAndUserId(groupId, session.getId());
@@ -215,17 +203,16 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
             throw new NotJoinGroupException(ResultCode.PROGRAM_ERROR, "您未加入群聊");
         }
         GroupVO vo = BeanUtils.copyProperties(group, GroupVO.class);
-        if(GroupEnum.GroupType.Anonymous.getCode().equals(group.getGroupType())){
+        if (GroupEnum.GroupType.Anonymous.getCode().equals(group.getGroupType())) {
             vo.setAliasName(member.getAliasName());
             vo.setRemark(group.getName());
-        }else{
+        } else {
             vo.setAliasName(member.getAliasName());
             vo.setRemark(member.getRemark());
         }
         vo.setMemberCount(groupMemberService.findMemberCount(groupId));
         return vo;
     }
-
 
     /**
      * 查询当前用户的所有群聊
@@ -260,7 +247,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
      * 邀请好友进群
      *
      * @return
-     * @Param GroupInviteVO  群id、好友id列表
+     * @Param GroupInviteVO 群id、好友id列表
      **/
     @Override
     public void invite(GroupInviteReq vo) {
@@ -282,24 +269,27 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
         // 找出好友信息
         if (vo.getUserId() != null) {
             List<Friend> friends = friendsService.findFriendByUserId(vo.getUserId());
-            List<Friend> friendsList = vo.getFriendIds().stream().map(id ->
-                    friends.stream().filter(f -> f.getFriendId().equals(id)).findFirst().get()).collect(Collectors.toList());
+            List<Friend> friendsList = vo.getFriendIds()
+                .stream()
+                .map(id -> friends.stream().filter(f -> f.getFriendId().equals(id)).findFirst().get())
+                .collect(Collectors.toList());
             if (friendsList.size() != vo.getFriendIds().size()) {
                 throw new GlobalException(ResultCode.PROGRAM_ERROR, "部分用户不是您的好友，邀请失败");
             }
-            groupMembers = friendsList.stream()
-                    .map(f -> {
-                        Optional<GroupMember> optional = members.stream().filter(m -> m.getUserId() == f.getFriendId()).findFirst();
-                        GroupMember groupMember = optional.isPresent() ? optional.get() : new GroupMember();
-                        groupMember.setGroupId(vo.getGroupId());
-                        groupMember.setUserId(f.getFriendId());
-                        groupMember.setAliasName(f.getFriendNickName());
-                        groupMember.setRemark(group.getName());
-                        groupMember.setHeadImage(f.getFriendHeadImage());
-                        groupMember.setCreatedTime(new Date());
-                        groupMember.setQuit(false);
-                        return groupMember;
-                    }).collect(Collectors.toList());
+            groupMembers = friendsList.stream().map(f -> {
+                Optional<GroupMember> optional = members.stream()
+                    .filter(m -> m.getUserId() == f.getFriendId())
+                    .findFirst();
+                GroupMember groupMember = optional.isPresent() ? optional.get() : new GroupMember();
+                groupMember.setGroupId(vo.getGroupId());
+                groupMember.setUserId(f.getFriendId());
+                groupMember.setAliasName(f.getFriendNickName());
+                groupMember.setRemark(group.getName());
+                groupMember.setHeadImage(f.getFriendHeadImage());
+                groupMember.setCreatedTime(new Date());
+                groupMember.setQuit(false);
+                return groupMember;
+            }).collect(Collectors.toList());
         } else {
             List<User> users = userService.listByIds(vo.getFriendIds());
             List<Long> memberIds = members.stream().map(GroupMember::getUserId).collect(Collectors.toList());
@@ -332,12 +322,11 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
     @Override
     public List<GroupMemberResp> findGroupMembers(Long groupId) {
         GroupVO groupVO = findById(groupId);
-        if(groupVO==null){
+        if (groupVO == null) {
             throw new GlobalException("群聊不存在");
         }
         List<GroupMember> members = groupMemberService.findByGroupId(groupId);
-        Set<Long> memberIds = members.stream()
-                .map(e -> e.getUserId()).collect(Collectors.toSet());
+        Set<Long> memberIds = members.stream().map(e -> e.getUserId()).collect(Collectors.toSet());
         if (CollUtil.isEmpty(members)) {
             return Collections.emptyList();
         }
@@ -345,51 +334,46 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
         if (CollUtil.isEmpty(users)) {
             return Collections.emptyList();
         }
-        Map<Long, User> ipMap = users.stream()
-                .collect(Collectors.toMap(User::getId,
-                        e -> e));
+        Map<Long, User> ipMap = users.stream().collect(Collectors.toMap(User::getId, e -> e));
         users.clear();
-        return members.stream()
-                .filter(e -> ipMap.containsKey(e.getUserId()))
-                .map(m -> {
-                    GroupMemberResp vo = BeanUtils.copyProperties(m, GroupMemberResp.class);
-                    User user = ipMap.get(vo.getUserId());
-                    vo.setIpAddress(ipSearchAdapter.search(user.getLastLoginIp()));
-                    if(GroupEnum.GroupType.Anonymous.getCode().equals(groupVO.getGroupType())){
-                        vo.setAliasName(user.getNickName());
-                        vo.setHeadImage(user.getHeadImage());
-                        vo.setRemark(groupVO.getName());
-                    }
-                    vo.setOnlineState(userService.isOnline(m.getUserId()));
-                    if(m.getUserId().equals(SessionContext.getUserId())){
-                        vo.setOnlineState(true);
-                    }
-                    return vo;
-                }).sorted(new Comparator<GroupMemberResp>() {
-                    @Override
-                    public int compare(GroupMemberResp o1, GroupMemberResp o2) {
-                        //根据在线状态排序
-                        if(o1.getOnlineState() && o2.getOnlineState()){
-                            return 1;
-                        }else if(o1.getOnlineState()){
-                            return -1;
-                        }else if(o2.getOnlineState()){
-                            return 1;
-                        }else {
-                            return -1;
-                        }
-                    }
-                }).collect(Collectors.toList());
+        return members.stream().filter(e -> ipMap.containsKey(e.getUserId())).map(m -> {
+            GroupMemberResp vo = BeanUtils.copyProperties(m, GroupMemberResp.class);
+            User user = ipMap.get(vo.getUserId());
+            vo.setIpAddress(ipSearchAdapter.search(user.getLastLoginIp()));
+            if (GroupEnum.GroupType.Anonymous.getCode().equals(groupVO.getGroupType())) {
+                vo.setAliasName(user.getNickName());
+                vo.setHeadImage(user.getHeadImage());
+                vo.setRemark(groupVO.getName());
+            }
+            vo.setOnlineState(userService.isOnline(m.getUserId()));
+            if (m.getUserId().equals(SessionContext.getUserId())) {
+                vo.setOnlineState(true);
+            }
+            return vo;
+        }).sorted(new Comparator<GroupMemberResp>() {
+
+            @Override
+            public int compare(GroupMemberResp o1, GroupMemberResp o2) {
+                // 根据在线状态排序
+                if (o1.getOnlineState() && o2.getOnlineState()) {
+                    return 1;
+                } else if (o1.getOnlineState()) {
+                    return -1;
+                } else if (o2.getOnlineState()) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            }
+        }).collect(Collectors.toList());
     }
 
     @Override
     public List<Group> findByGroupType(Integer code) {
         return lambdaQuery().eq(Group::getGroupType, code)
-                .eq(Group::getDeleted,false)
-        .orderByAsc(Group::getCreatedTime).list();
+            .eq(Group::getDeleted, false)
+            .orderByAsc(Group::getCreatedTime)
+            .list();
     }
-
-
-
 
 }

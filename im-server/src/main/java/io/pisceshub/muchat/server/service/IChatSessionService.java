@@ -12,7 +12,8 @@ import java.util.Set;
  * @date 2023-06-15 21:45
  */
 public interface IChatSessionService {
-    boolean save(Long userId,ChatSessionAddReq vo);
+
+    boolean save(Long userId, ChatSessionAddReq vo);
 
     Result<Set<ChatSessionInfoResp>> list();
 

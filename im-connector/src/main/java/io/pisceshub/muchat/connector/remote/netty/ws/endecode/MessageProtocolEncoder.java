@@ -11,7 +11,8 @@ import java.util.List;
 public class MessageProtocolEncoder extends MessageToMessageEncoder<IMSendInfo> {
 
     @Override
-    protected void encode(ChannelHandlerContext channelHandlerContext, IMSendInfo sendInfo, List<Object> list) throws Exception {
+    protected void encode(ChannelHandlerContext channelHandlerContext, IMSendInfo sendInfo,
+                          List<Object> list) throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         String text = objectMapper.writeValueAsString(sendInfo);
 

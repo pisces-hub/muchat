@@ -24,7 +24,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.concurrent.TimeUnit;
 
-
 /**
  * WS服务器
  */
@@ -37,7 +36,7 @@ public class WebSocketServer extends AbstractRemoteServer {
     }
 
     @Override
-    protected AppConfigProperties.TcpNode nodeInfo(){
+    protected AppConfigProperties.TcpNode nodeInfo() {
         return appConfigProperties.getWs();
     }
 
@@ -46,29 +45,30 @@ public class WebSocketServer extends AbstractRemoteServer {
         AppConfigProperties.TcpNode nodeInfo = nodeInfo();
         // 设置为主从线程模型
         bootstrap.group(bossGroup, workGroup)
-                // 设置服务端NIO通信类型
-                .channel(NettyEventLoopFactory.serverSocketChannelClass())
-                .option(ChannelOption.SO_BACKLOG, 1024)
-                .option(ChannelOption.SO_REUSEADDR, true)
-                .childOption(ChannelOption.SO_KEEPALIVE, false)
-                // 表示连接保活，相当于心跳机制，默认为7200s
-                .childOption(ChannelOption.TCP_NODELAY, true)
-                // 设置ChannelPipeline，也就是业务职责链，由处理的Handler串联而成，由从线程池处理
-                .childHandler(new ChannelInitializer<Channel>() {
-                    // 添加处理的Handler，通常包括消息编解码、业务处理，也可以是日志、权限、过滤等
-                    @Override
-                    protected void initChannel(Channel ch) throws Exception {
-                        // 获取职责链
-                        ChannelPipeline pipeline = ch.pipeline();
-                        pipeline.addLast("http-codec", new HttpServerCodec());
-                        pipeline.addLast("aggregator", new HttpObjectAggregator(65535));
-                        pipeline.addLast("http-chunked", new ChunkedWriteHandler());
-                        pipeline.addLast(new WebSocketServerProtocolHandler("/im"));
-                        pipeline.addLast("encode", new MessageProtocolEncoder());
-                        pipeline.addLast("decode", new MessageProtocolDecoder());
-                        addPipeline(pipeline);
-                    }
-                });
+            // 设置服务端NIO通信类型
+            .channel(NettyEventLoopFactory.serverSocketChannelClass())
+            .option(ChannelOption.SO_BACKLOG, 1024)
+            .option(ChannelOption.SO_REUSEADDR, true)
+            .childOption(ChannelOption.SO_KEEPALIVE, false)
+            // 表示连接保活，相当于心跳机制，默认为7200s
+            .childOption(ChannelOption.TCP_NODELAY, true)
+            // 设置ChannelPipeline，也就是业务职责链，由处理的Handler串联而成，由从线程池处理
+            .childHandler(new ChannelInitializer<Channel>() {
+
+                // 添加处理的Handler，通常包括消息编解码、业务处理，也可以是日志、权限、过滤等
+                @Override
+                protected void initChannel(Channel ch) throws Exception {
+                    // 获取职责链
+                    ChannelPipeline pipeline = ch.pipeline();
+                    pipeline.addLast("http-codec", new HttpServerCodec());
+                    pipeline.addLast("aggregator", new HttpObjectAggregator(65535));
+                    pipeline.addLast("http-chunked", new ChunkedWriteHandler());
+                    pipeline.addLast(new WebSocketServerProtocolHandler("/im"));
+                    pipeline.addLast("encode", new MessageProtocolEncoder());
+                    pipeline.addLast("decode", new MessageProtocolDecoder());
+                    addPipeline(pipeline);
+                }
+            });
 
         try {
             Integer port = super.port();
@@ -76,17 +76,15 @@ public class WebSocketServer extends AbstractRemoteServer {
             Channel channel = bootstrap.bind(port).sync().channel();
             // 就绪标志
             this.ready = true;
-            SpringContextHolder.sendEvent(
-                    NodeRegisterEvent.builder()
-                            .netProtocolEnum(NetProtocolEnum.WS)
-                            .port(port)
-                            .registerTime(System.currentTimeMillis())
-                            .build());
+            SpringContextHolder.sendEvent(NodeRegisterEvent.builder()
+                .netProtocolEnum(NetProtocolEnum.WS)
+                .port(port)
+                .registerTime(System.currentTimeMillis())
+                .build());
             log.info("websocket server 初始化完成,端口：{}", port);
         } catch (InterruptedException e) {
             log.error("websocket server 初始化异常", e);
         }
     }
-
 
 }

@@ -15,11 +15,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class HeartbeatProcessor implements MessageProcessor {
 
-
     @Override
     public void process(ChannelHandlerContext ctx, Object obj) {
         // 响应ws
-        SendMessageUtils.send(ctx,IMSendInfo.create(IMCmdType.HEART_BEAT));
+        SendMessageUtils.send(ctx, IMSendInfo.create(IMCmdType.HEART_BEAT));
     }
 
 }

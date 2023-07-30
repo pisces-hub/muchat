@@ -6,7 +6,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
-
 @Component
 public class SpringContextHolder implements ApplicationContextAware {
 
@@ -22,9 +21,10 @@ public class SpringContextHolder implements ApplicationContextAware {
         return applicationContext;
     }
 
-    public static void removeBean(String beanName){
+    public static void removeBean(String beanName) {
         assertApplicationContext();
-        BeanDefinitionRegistry beanDefinitionRegistry = (BeanDefinitionRegistry) applicationContext.getAutowireCapableBeanFactory();
+        BeanDefinitionRegistry beanDefinitionRegistry = (BeanDefinitionRegistry) applicationContext
+            .getAutowireCapableBeanFactory();
         beanDefinitionRegistry.getBeanDefinition(beanName);
         beanDefinitionRegistry.removeBeanDefinition(beanName);
     }

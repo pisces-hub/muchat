@@ -40,29 +40,28 @@ import java.util.stream.Collectors;
 @Service
 public class GroupMessageServiceImpl extends ServiceImpl<GroupMessageMapper, GroupMessage> implements IGroupMessageService {
 
+    @Autowired
+    private IGroupService                 groupService;
 
     @Autowired
-    private IGroupService groupService;
-
-    @Autowired
-    private IGroupMemberService groupMemberService;
+    private IGroupMemberService           groupMemberService;
 
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
 
     @Autowired
-    private IMClient imClient;
+    private IMClient                      imClient;
 
     @Autowired
-    private GroupMessageMapper groupMessageMapper;
+    private GroupMessageMapper            groupMessageMapper;
 
     /**
      * 默认一次查询多少条消息
      */
-    private final static Integer defaultQueryMessageCount = 15;
+    private final static Integer          defaultQueryMessageCount = 15;
 
     @Autowired
-    private SensitiveWordAdapter sensitiveWordAdapter;
+    private SensitiveWordAdapter          sensitiveWordAdapter;
 
     /**
      * 发送群聊消息(与mysql所有交换都要进行缓存)
@@ -87,7 +86,7 @@ public class GroupMessageServiceImpl extends ServiceImpl<GroupMessageMapper, Gro
         }
 
         String replaced = sensitiveWordAdapter.replace(vo.getContent());
-        if(replaced.matches("^\\*+$")){
+        if (replaced.matches("^\\*+$")) {
             throw new GlobalException("不允许发送该消息内容");
         }
         vo.setContent(replaced);
@@ -106,7 +105,6 @@ public class GroupMessageServiceImpl extends ServiceImpl<GroupMessageMapper, Gro
 
         return MessageSendResp.builder().id(msg.getId()).content(msg.getContent()).build();
     }
-
 
     /**
      * 撤回消息
@@ -147,7 +145,6 @@ public class GroupMessageServiceImpl extends ServiceImpl<GroupMessageMapper, Gro
         log.info("撤回群聊消息，发送id:{},群聊id:{},内容:{}", userId, msg.getGroupId(), msg.getContent());
     }
 
-
     /**
      * 异步拉取群聊消息，通过websocket异步推送
      *
@@ -164,10 +161,11 @@ public class GroupMessageServiceImpl extends ServiceImpl<GroupMessageMapper, Gro
             String key = RedisKey.IM_GROUP_READED_POSITION + member.getGroupId() + ":" + userId;
             Integer maxReadedId = (Integer) redisTemplate.opsForValue().get(key);
             QueryWrapper<GroupMessage> wrapper = new QueryWrapper();
-            wrapper.lambda().eq(GroupMessage::getGroupId, member.getGroupId())
-                    .gt(GroupMessage::getSendTime, member.getCreatedTime())
-                    .ne(GroupMessage::getSendId, userId)
-                    .ne(GroupMessage::getStatus, MessageStatus.RECALL.code());
+            wrapper.lambda()
+                .eq(GroupMessage::getGroupId, member.getGroupId())
+                .gt(GroupMessage::getSendTime, member.getCreatedTime())
+                .ne(GroupMessage::getSendId, userId)
+                .ne(GroupMessage::getStatus, MessageStatus.RECALL.code());
             if (maxReadedId != null) {
                 wrapper.lambda().gt(GroupMessage::getId, maxReadedId);
             }
@@ -198,11 +196,11 @@ public class GroupMessageServiceImpl extends ServiceImpl<GroupMessageMapper, Gro
     @Override
     public List<GroupMessageInfo> findHistoryMessage(Long groupId, Long lastMessageId) {
         GroupVO groupVO = groupService.findById(groupId);
-        if(groupVO==null){
+        if (groupVO == null) {
             throw new GlobalException("群聊不存在");
         }
         Date beforeDate = null;
-        if(GroupEnum.GroupType.Plain.getCode().equals(groupVO.getGroupType())){
+        if (GroupEnum.GroupType.Plain.getCode().equals(groupVO.getGroupType())) {
             Long userId = SessionContext.getSession().getId();
             // 群聊成员信息
             GroupMember member = groupMemberService.findByGroupAndUserId(groupId, userId);
@@ -212,7 +210,8 @@ public class GroupMessageServiceImpl extends ServiceImpl<GroupMessageMapper, Gro
             // 查询聊天记录，只查询加入群聊时间之后的消息
             beforeDate = member.getCreatedTime();
         }
-        List<GroupMessage> messages = groupMessageMapper.findHistoryMessage(groupId,beforeDate,lastMessageId,defaultQueryMessageCount);
+        List<GroupMessage> messages = groupMessageMapper
+            .findHistoryMessage(groupId, beforeDate, lastMessageId, defaultQueryMessageCount);
         List<GroupMessageInfo> messageInfos = messages.stream().map(m -> {
             GroupMessageInfo groupMessageInfo = BeanUtil.copyProperties(m, GroupMessageInfo.class);
             return groupMessageInfo;

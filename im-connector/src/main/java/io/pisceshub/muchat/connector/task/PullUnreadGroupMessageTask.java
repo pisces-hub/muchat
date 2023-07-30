@@ -15,9 +15,8 @@ import java.util.List;
 @Component
 public class PullUnreadGroupMessageTask extends AbstractPullMessageTask {
 
-
     @Autowired
-    private AppCache appCache;
+    private AppCache            appCache;
 
     @Autowired
     private GroupMessageHandler messageHandler;
@@ -26,8 +25,8 @@ public class PullUnreadGroupMessageTask extends AbstractPullMessageTask {
     public void pullMessage() {
         String key = RedisKey.IM_UNREAD_GROUP_QUEUE + IMServerGroup.serverId;
         List<Object> messageInfos = appCache.listPop(key, ONES_PULL_MESSAGE_COUNT);
-        for(Object o: messageInfos){
-            GroupMessageInfo recvInfo = (GroupMessageInfo)o;
+        for (Object o : messageInfos) {
+            GroupMessageInfo recvInfo = (GroupMessageInfo) o;
             messageHandler.handler(recvInfo);
         }
     }

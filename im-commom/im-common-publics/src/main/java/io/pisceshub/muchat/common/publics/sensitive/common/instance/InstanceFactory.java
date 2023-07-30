@@ -11,10 +11,11 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author xiaochangbai
  */
 public final class InstanceFactory implements Instance {
-    private final Map<String, Object> singletonMap;
+
+    private final Map<String, Object>        singletonMap;
     private ThreadLocal<Map<String, Object>> mapThreadLocal;
 
-    private InstanceFactory() {
+    private InstanceFactory(){
         this.singletonMap = new ConcurrentHashMap();
         this.mapThreadLocal = new ThreadLocal();
     }
@@ -42,12 +43,12 @@ public final class InstanceFactory implements Instance {
 
     public <T> T threadLocal(Class<T> tClass) {
         this.notNull(tClass);
-        Map<String, Object> map = (Map)this.mapThreadLocal.get();
+        Map<String, Object> map = (Map) this.mapThreadLocal.get();
         if (ObjectUtil.isNull(map)) {
             map = new ConcurrentHashMap();
         }
 
-        T instance = (T) this.getSingleton(tClass, (Map)map);
+        T instance = (T) this.getSingleton(tClass, (Map) map);
         this.mapThreadLocal.set(map);
         return instance;
     }
@@ -96,9 +97,10 @@ public final class InstanceFactory implements Instance {
     }
 
     private static class SingletonHolder {
+
         private static final InstanceFactory INSTANCE_FACTORY = new InstanceFactory();
 
-        private SingletonHolder() {
+        private SingletonHolder(){
         }
     }
 }
