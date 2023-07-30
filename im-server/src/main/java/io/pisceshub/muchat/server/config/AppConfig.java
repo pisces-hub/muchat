@@ -33,7 +33,6 @@ public class AppConfig {
             throw new RuntimeException("初始化ip信息失败，文件不存在");
         }
 
-        // 1、从 dbPath 加载整个 xdb 到内存。
         byte[] cBuff;
         try {
             cBuff = FileUtil.readToByte(inputStream);
