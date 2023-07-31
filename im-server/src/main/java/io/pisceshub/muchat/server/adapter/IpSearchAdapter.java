@@ -14,21 +14,21 @@ import org.springframework.stereotype.Component;
 @Component
 public class IpSearchAdapter {
 
-    @Autowired
-    private Searcher searcher;
+  @Autowired
+  private Searcher searcher;
 
-    public String search(String ip) {
-        if (StrUtil.isEmpty(ip)) {
-            return "未知";
-        }
-        try {
-            String strs = searcher.search(ip);
-            String[] strings = strs.split("\\|");
-            return strings[3];
-        } catch (Exception e) {
-            log.error("ip归属地查询异常", e);
-            return null;
-        }
+  public String search(String ip) {
+    if (StrUtil.isEmpty(ip)) {
+      return "未知";
     }
+    try {
+      String strs = searcher.search(ip);
+      String[] strings = strs.split("\\|");
+      return strings[3];
+    } catch (Exception e) {
+      log.error("ip归属地查询异常", e);
+      return null;
+    }
+  }
 
 }

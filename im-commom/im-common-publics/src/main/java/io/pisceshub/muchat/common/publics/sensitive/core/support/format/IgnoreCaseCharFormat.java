@@ -10,9 +10,9 @@ import io.pisceshub.muchat.common.publics.sensitive.common.core.ICharFormat;
 
 public class IgnoreCaseCharFormat implements ICharFormat {
 
-    @Override
-    public char format(char original) {
-        return Character.toLowerCase(original);
-    }
+  @Override
+  public char format(char original) {
+    return Character.toLowerCase(original);
+  }
 
 }

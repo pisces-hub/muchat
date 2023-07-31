@@ -19,59 +19,59 @@ import java.util.Date;
 @TableName("im_group_member")
 public class GroupMember extends Model<GroupMember> {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    /**
-     * id
-     */
-    @TableId(value = "id", type = IdType.AUTO)
-    private Long              id;
+  /**
+   * id
+   */
+  @TableId(value = "id", type = IdType.AUTO)
+  private Long id;
 
-    /**
-     * 群id
-     */
-    @TableField("group_id")
-    private Long              groupId;
+  /**
+   * 群id
+   */
+  @TableField("group_id")
+  private Long groupId;
 
-    /**
-     * 用户id
-     */
-    @TableField("user_id")
-    private Long              userId;
+  /**
+   * 用户id
+   */
+  @TableField("user_id")
+  private Long userId;
 
-    /**
-     * 群内显示名称
-     */
-    @TableField("alias_name")
-    private String            aliasName;
+  /**
+   * 群内显示名称
+   */
+  @TableField("alias_name")
+  private String aliasName;
 
-    /**
-     * 头像
-     */
-    @TableField("head_image")
-    private String            headImage;
+  /**
+   * 头像
+   */
+  @TableField("head_image")
+  private String headImage;
 
-    /**
-     * 备注
-     */
-    @TableField("remark")
-    private String            remark;
+  /**
+   * 备注
+   */
+  @TableField("remark")
+  private String remark;
 
-    /**
-     * 是否已离开群聊
-     */
-    @TableField("quit")
-    private Boolean           quit;
+  /**
+   * 是否已离开群聊
+   */
+  @TableField("quit")
+  private Boolean quit;
 
-    /**
-     * 创建时间
-     */
-    @TableField("created_time")
-    private Date              createdTime;
+  /**
+   * 创建时间
+   */
+  @TableField("created_time")
+  private Date createdTime;
 
-    @Override
-    protected Serializable pkVal() {
-        return this.id;
-    }
+  @Override
+  protected Serializable pkVal() {
+    return this.id;
+  }
 
 }

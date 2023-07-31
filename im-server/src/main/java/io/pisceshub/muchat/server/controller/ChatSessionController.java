@@ -25,44 +25,45 @@ import java.util.Set;
 @RequestMapping("/chatSession")
 public class ChatSessionController {
 
-    @Autowired
-    private IChatSessionService iChatSessionService;
+  @Autowired
+  private IChatSessionService iChatSessionService;
 
-    /**
-     * 保存聊天会话
-     * 
-     * @param vo
-     * @return
-     */
-    @ApiLog
-    @AnonymousUserCheck
-    @PostMapping("/save")
-    public Result<String> save(@RequestBody @Valid ChatSessionAddReq vo) {
-        return iChatSessionService.save(SessionContext.getUserId(), vo) ? ResultUtils.success() : ResultUtils.error();
-    }
+  /**
+   * 保存聊天会话
+   *
+   * @param vo
+   * @return
+   */
+  @ApiLog
+  @AnonymousUserCheck
+  @PostMapping("/save")
+  public Result<String> save(@RequestBody @Valid ChatSessionAddReq vo) {
+    return iChatSessionService.save(SessionContext.getUserId(), vo) ? ResultUtils.success()
+        : ResultUtils.error();
+  }
 
-    /**
-     * 查询聊天会话
-     * 
-     * @return
-     */
-    @ApiLog
-    @GetMapping("/list")
-    public Result<Set<ChatSessionInfoResp>> pages() {
-        return iChatSessionService.list();
-    }
+  /**
+   * 查询聊天会话
+   *
+   * @return
+   */
+  @ApiLog
+  @GetMapping("/list")
+  public Result<Set<ChatSessionInfoResp>> pages() {
+    return iChatSessionService.list();
+  }
 
-    /**
-     * 删除聊天会话
-     * 
-     * @param vo
-     * @return
-     */
-    @ApiLog
-    @AnonymousUserCheck
-    @DeleteMapping("/del")
-    public Result<String> del(@RequestBody @Valid ChatSessionUpdateReq vo) {
-        vo.setUserId(null);
-        return iChatSessionService.del(vo) ? ResultUtils.success() : ResultUtils.error();
-    }
+  /**
+   * 删除聊天会话
+   *
+   * @param vo
+   * @return
+   */
+  @ApiLog
+  @AnonymousUserCheck
+  @DeleteMapping("/del")
+  public Result<String> del(@RequestBody @Valid ChatSessionUpdateReq vo) {
+    vo.setUserId(null);
+    return iChatSessionService.del(vo) ? ResultUtils.success() : ResultUtils.error();
+  }
 }

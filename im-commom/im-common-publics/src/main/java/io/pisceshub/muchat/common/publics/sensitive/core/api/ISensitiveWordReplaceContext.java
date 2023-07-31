@@ -5,18 +5,18 @@ package io.pisceshub.muchat.common.publics.sensitive.core.api;
  */
 public interface ISensitiveWordReplaceContext {
 
-    /**
-     * 敏感词
-     * 
-     * @return 敏感词
-     */
-    String sensitiveWord();
+  /**
+   * 敏感词
+   *
+   * @return 敏感词
+   */
+  String sensitiveWord();
 
-    /**
-     * 单词长度
-     * 
-     * @return 单词长度
-     */
-    int wordLength();
+  /**
+   * 单词长度
+   *
+   * @return 单词长度
+   */
+  int wordLength();
 
 }

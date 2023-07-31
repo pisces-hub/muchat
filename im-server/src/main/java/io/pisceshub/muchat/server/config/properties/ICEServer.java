@@ -5,10 +5,10 @@ import lombok.Data;
 @Data
 public class ICEServer {
 
-    private String urls;
+  private String urls;
 
-    private String username;
+  private String username;
 
-    private String credential;
+  private String credential;
 
 }

@@ -13,6 +13,6 @@ import java.util.List;
 @ConfigurationProperties(prefix = "webrtc")
 public class ICEServerConfig {
 
-    private List<ICEServer> iceServers = new ArrayList<>();
+  private List<ICEServer> iceServers = new ArrayList<>();
 
 }

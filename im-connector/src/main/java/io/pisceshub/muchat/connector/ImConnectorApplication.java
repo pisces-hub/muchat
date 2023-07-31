@@ -10,8 +10,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 public class ImConnectorApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(ImConnectorApplication.class, args);
-    }
+  public static void main(String[] args) {
+    SpringApplication.run(ImConnectorApplication.class, args);
+  }
 
 }

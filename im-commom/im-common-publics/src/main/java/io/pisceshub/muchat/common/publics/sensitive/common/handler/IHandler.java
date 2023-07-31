@@ -5,5 +5,5 @@ package io.pisceshub.muchat.common.publics.sensitive.common.handler;
  */
 public interface IHandler<T, R> {
 
-    R handle(T var1);
+  R handle(T var1);
 }

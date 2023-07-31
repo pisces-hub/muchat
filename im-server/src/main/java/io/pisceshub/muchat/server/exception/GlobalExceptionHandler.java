@@ -24,71 +24,71 @@ import java.util.List;
 @Slf4j
 public class GlobalExceptionHandler {
 
-    /**
-     * 数据解析错误
-     **/
-    @ExceptionHandler(value = HttpMessageNotReadableException.class)
-    public Result handleMessageNotReadableException(HttpMessageNotReadableException e) {
-        log.error("全局异常捕获:msg:{}", e.getMessage());
-        Throwable t = e.getCause();
-        if (t instanceof JSONException) {
-            t = t.getCause();
-            if (t instanceof DateTimeParseException) {
-                return ResultUtils.error(ResultCode.PROGRAM_ERROR, "日期格式不正确");
-            }
-            return ResultUtils.error(ResultCode.PROGRAM_ERROR, "数据格式不正确");
-        }
-        return ResultUtils.error(ResultCode.PROGRAM_ERROR);
+  /**
+   * 数据解析错误
+   **/
+  @ExceptionHandler(value = HttpMessageNotReadableException.class)
+  public Result handleMessageNotReadableException(HttpMessageNotReadableException e) {
+    log.error("全局异常捕获:msg:{}", e.getMessage());
+    Throwable t = e.getCause();
+    if (t instanceof JSONException) {
+      t = t.getCause();
+      if (t instanceof DateTimeParseException) {
+        return ResultUtils.error(ResultCode.PROGRAM_ERROR, "日期格式不正确");
+      }
+      return ResultUtils.error(ResultCode.PROGRAM_ERROR, "数据格式不正确");
     }
+    return ResultUtils.error(ResultCode.PROGRAM_ERROR);
+  }
 
-    /**
-     * 处理请求参数格式错误 @RequestBody上validate失败后抛出的异常
-     * 
-     * @param exception
-     * @return
-     */
-    @ExceptionHandler(value = { MethodArgumentNotValidException.class })
-    @ResponseStatus(HttpStatus.OK)
-    public Result handleValidationExceptionHandler(MethodArgumentNotValidException exception) {
-        BindingResult bindResult = exception.getBindingResult();
-        String msg;
-        if (bindResult != null && bindResult.hasErrors()) {
-            msg = bindResult.getAllErrors().get(0).getDefaultMessage();
-            if (msg.contains("NumberFormatException")) {
-                msg = "参数类型错误！";
-            }
-        } else {
-            msg = "系统繁忙，请稍后重试...";
-        }
-        return ResultUtils.error(ResultCode.PROGRAM_ERROR, msg);
+  /**
+   * 处理请求参数格式错误 @RequestBody上validate失败后抛出的异常
+   *
+   * @param exception
+   * @return
+   */
+  @ExceptionHandler(value = {MethodArgumentNotValidException.class})
+  @ResponseStatus(HttpStatus.OK)
+  public Result handleValidationExceptionHandler(MethodArgumentNotValidException exception) {
+    BindingResult bindResult = exception.getBindingResult();
+    String msg;
+    if (bindResult != null && bindResult.hasErrors()) {
+      msg = bindResult.getAllErrors().get(0).getDefaultMessage();
+      if (msg.contains("NumberFormatException")) {
+        msg = "参数类型错误！";
+      }
+    } else {
+      msg = "系统繁忙，请稍后重试...";
     }
+    return ResultUtils.error(ResultCode.PROGRAM_ERROR, msg);
+  }
 
-    @ExceptionHandler(BindException.class)
-    @ResponseStatus(HttpStatus.OK)
-    public Result handleBindException(BindException e) {
-        // 抛出异常可能不止一个 输出为一个List集合
-        List<ObjectError> errors = e.getAllErrors();
-        // 取第一个异常
-        ObjectError error = errors.get(0);
-        // 获取异常信息
-        String errorMsg = error.getDefaultMessage();
-        return ResultUtils.error(ResultCode.PROGRAM_ERROR, errorMsg);
-    }
+  @ExceptionHandler(BindException.class)
+  @ResponseStatus(HttpStatus.OK)
+  public Result handleBindException(BindException e) {
+    // 抛出异常可能不止一个 输出为一个List集合
+    List<ObjectError> errors = e.getAllErrors();
+    // 取第一个异常
+    ObjectError error = errors.get(0);
+    // 获取异常信息
+    String errorMsg = error.getDefaultMessage();
+    return ResultUtils.error(ResultCode.PROGRAM_ERROR, errorMsg);
+  }
 
-    @ExceptionHandler(value = Exception.class)
-    public Result handleException(Exception e) {
-        if (e instanceof GlobalException) {
-            GlobalException ge = (GlobalException) e;
-            log.error("全局异常捕获:msg:{},log:", ge.getMessage(), ge);
-            return ResultUtils.error(ge.getCode(), ge.getMessage());
-        } else if (e instanceof BusinessException) {
-            BusinessException be = (BusinessException) e;
-            log.error("全局异常捕获:msg:{},log:", be.getMessage(), e);
-            return ResultUtils.error(be.getCode(), be.getMessage());
-        } else {
-            log.error("全局异常捕获:msg:{},", e.getMessage(), e);
-            return ResultUtils.error(ResultCode.PROGRAM_ERROR);
-        }
+  @ExceptionHandler(value = Exception.class)
+  public Result handleException(Exception e) {
+    if (e instanceof GlobalException) {
+      GlobalException ge = (GlobalException) e;
+      log.error("全局异常捕获:msg:{},log:", ge.getMessage(), ge);
+      return ResultUtils.error(ge.getCode(), ge.getMessage());
+    } else if (e instanceof BusinessException) {
+      BusinessException be = (BusinessException) e;
+      log.error("全局异常捕获:msg:{},log:", be.getMessage(), e);
+      return ResultUtils.error(be.getCode(), be.getMessage());
+    } else {
+      log.error("全局异常捕获:msg:{},", e.getMessage(), e);
+      return ResultUtils.error(ResultCode.PROGRAM_ERROR);
     }
+  }
 
 }

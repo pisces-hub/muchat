@@ -10,11 +10,11 @@ import java.util.List;
 
 public interface IGroupMessageService extends IService<GroupMessage> {
 
-    MessageSendResp sendMessage(GroupMessageSendReq vo);
+  MessageSendResp sendMessage(GroupMessageSendReq vo);
 
-    void recallMessage(Long id);
+  void recallMessage(Long id);
 
-    void pullUnreadMessage();
+  void pullUnreadMessage();
 
-    List<GroupMessageInfo> findHistoryMessage(Long groupId, Long lastMessageId);
+  List<GroupMessageInfo> findHistoryMessage(Long groupId, Long lastMessageId);
 }

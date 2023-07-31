@@ -19,18 +19,18 @@ import java.util.List;
 @Data
 public class PageResp<T> implements Serializable {
 
-    private List<T> list;
+  private List<T> list;
 
-    private boolean hasNext;
+  private boolean hasNext;
 
-    public static <T> PageResp<T> empty() {
-        return (PageResp<T>) PageResp.builder().hasNext(false).list(Collections.emptyList()).build();
-    }
+  public static <T> PageResp<T> empty() {
+    return (PageResp<T>) PageResp.builder().hasNext(false).list(Collections.emptyList()).build();
+  }
 
-    public static <T> PageResp<T> toPage(List<T> memberList, boolean hasNext) {
-        PageResp<T> resp = new PageResp<T>();
-        resp.setList(memberList);
-        resp.setHasNext(hasNext);
-        return resp;
-    }
+  public static <T> PageResp<T> toPage(List<T> memberList, boolean hasNext) {
+    PageResp<T> resp = new PageResp<T>();
+    resp.setList(memberList);
+    resp.setHasNext(hasNext);
+    return resp;
+  }
 }

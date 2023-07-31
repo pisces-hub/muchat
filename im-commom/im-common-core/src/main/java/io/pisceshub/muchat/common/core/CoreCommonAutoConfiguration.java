@@ -12,9 +12,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class CoreCommonAutoConfiguration {
 
-    @Bean
-    public SpringContextHolder springContextHolder() {
-        return new SpringContextHolder();
-    }
+  @Bean
+  public SpringContextHolder springContextHolder() {
+    return new SpringContextHolder();
+  }
 
 }

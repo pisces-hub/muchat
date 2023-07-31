@@ -12,16 +12,16 @@ import javax.validation.constraints.NotNull;
 @ApiModel("群聊消息VO")
 public class GroupMessageSendReq {
 
-    @NotNull(message = "群聊id不可为空")
-    @ApiModelProperty(value = "群聊id")
-    private Long    groupId;
+  @NotNull(message = "群聊id不可为空")
+  @ApiModelProperty(value = "群聊id")
+  private Long groupId;
 
-    @Length(max = 1024, message = "内容长度不得大于1024")
-    @NotEmpty(message = "发送内容不可为空")
-    @ApiModelProperty(value = "发送内容")
-    private String  content;
+  @Length(max = 1024, message = "内容长度不得大于1024")
+  @NotEmpty(message = "发送内容不可为空")
+  @ApiModelProperty(value = "发送内容")
+  private String content;
 
-    @NotNull(message = "消息类型不可为空")
-    @ApiModelProperty(value = "消息类型")
-    private Integer type;
+  @NotNull(message = "消息类型不可为空")
+  @ApiModelProperty(value = "消息类型")
+  private Integer type;
 }

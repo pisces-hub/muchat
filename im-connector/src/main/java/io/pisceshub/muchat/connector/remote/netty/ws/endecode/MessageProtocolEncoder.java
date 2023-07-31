@@ -10,13 +10,13 @@ import java.util.List;
 
 public class MessageProtocolEncoder extends MessageToMessageEncoder<IMSendInfo> {
 
-    @Override
-    protected void encode(ChannelHandlerContext channelHandlerContext, IMSendInfo sendInfo,
-                          List<Object> list) throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper();
-        String text = objectMapper.writeValueAsString(sendInfo);
+  @Override
+  protected void encode(ChannelHandlerContext channelHandlerContext, IMSendInfo sendInfo,
+      List<Object> list) throws Exception {
+    ObjectMapper objectMapper = new ObjectMapper();
+    String text = objectMapper.writeValueAsString(sendInfo);
 
-        TextWebSocketFrame frame = new TextWebSocketFrame(text);
-        list.add(frame);
-    }
+    TextWebSocketFrame frame = new TextWebSocketFrame(text);
+    list.add(frame);
+  }
 }

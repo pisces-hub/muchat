@@ -10,9 +10,9 @@ import io.pisceshub.muchat.common.publics.sensitive.common.utils.CharUtils;
 @ThreadSafe
 public class IgnoreEnglishStyleFormat implements ICharFormat {
 
-    @Override
-    public char format(char original) {
-        return CharUtils.getMappingChar(original);
-    }
+  @Override
+  public char format(char original) {
+    return CharUtils.getMappingChar(original);
+  }
 
 }

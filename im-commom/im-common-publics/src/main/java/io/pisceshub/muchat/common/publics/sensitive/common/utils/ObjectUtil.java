@@ -5,11 +5,11 @@ package io.pisceshub.muchat.common.publics.sensitive.common.utils;
  */
 public class ObjectUtil {
 
-    public static <V> boolean isNull(Object values) {
-        return values == null;
-    }
+  public static <V> boolean isNull(Object values) {
+    return values == null;
+  }
 
-    public static boolean isNotNull(Object obj) {
-        return !isNull(obj);
-    }
+  public static boolean isNotNull(Object obj) {
+    return !isNull(obj);
+  }
 }

@@ -22,36 +22,37 @@ import java.util.stream.Collectors;
 @Service
 public class ConnectionServiceImpl implements ConnectionService {
 
-    @Autowired
-    private RouteHandle   routeHandle;
+  @Autowired
+  private RouteHandle routeHandle;
 
-    @Autowired
-    private NodeContainer nodeContainer;
+  @Autowired
+  private NodeContainer nodeContainer;
 
-    @Override
-    public List<NodeInfoResp> nodeList() {
-        return nodeContainer.list(null).stream().map(e -> {
-            NodeInfoResp nodeInfoResp = BeanUtil.copyProperties(e, NodeInfoResp.class);
-            nodeInfoResp.setProtocol(e.getProtocolEnum().name());
-            return nodeInfoResp;
-        }).collect(Collectors.toList());
+  @Override
+  public List<NodeInfoResp> nodeList() {
+    return nodeContainer.list(null).stream().map(e -> {
+      NodeInfoResp nodeInfoResp = BeanUtil.copyProperties(e, NodeInfoResp.class);
+      nodeInfoResp.setProtocol(e.getProtocolEnum().name());
+      return nodeInfoResp;
+    }).collect(Collectors.toList());
+  }
+
+  @Override
+  public NodeInfoResp node(NetProtocolEnum netProtocolEnum, Long identify) {
+    if (identify == null) {
+      identify = Long.valueOf(IpUtil.getIntIp());
     }
-
-    @Override
-    public NodeInfoResp node(NetProtocolEnum netProtocolEnum, Long identify) {
-        if (identify == null) {
-            identify = Long.valueOf(IpUtil.getIntIp());
-        }
-        List<NodeContainer.WNode> nodes = nodeContainer.list(netProtocolEnum);
-        NodeContainer.WNode wNode = routeHandle.routeServer(netProtocolEnum, nodes, String.valueOf(identify));
-        if (wNode == null) {
-            return null;
-        }
-        NodeInfoResp resp = new NodeInfoResp();
-        resp.setProtocol(wNode.getProtocolEnum().name());
-        resp.setIp(wNode.getIp());
-        resp.setPort(wNode.getPort());
-        return resp;
-
+    List<NodeContainer.WNode> nodes = nodeContainer.list(netProtocolEnum);
+    NodeContainer.WNode wNode = routeHandle.routeServer(netProtocolEnum, nodes,
+        String.valueOf(identify));
+    if (wNode == null) {
+      return null;
     }
+    NodeInfoResp resp = new NodeInfoResp();
+    resp.setProtocol(wNode.getProtocolEnum().name());
+    resp.setIp(wNode.getIp());
+    resp.setPort(wNode.getPort());
+    return resp;
+
+  }
 }

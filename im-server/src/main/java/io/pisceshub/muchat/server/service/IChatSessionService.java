@@ -13,9 +13,9 @@ import java.util.Set;
  */
 public interface IChatSessionService {
 
-    boolean save(Long userId, ChatSessionAddReq vo);
+  boolean save(Long userId, ChatSessionAddReq vo);
 
-    Result<Set<ChatSessionInfoResp>> list();
+  Result<Set<ChatSessionInfoResp>> list();
 
-    boolean del(ChatSessionUpdateReq vo);
+  boolean del(ChatSessionUpdateReq vo);
 }

@@ -11,158 +11,159 @@ import java.util.Set;
 
 public class BeanUtils {
 
-    private static void handleReflectionException(Exception e) {
-        ReflectionUtils.handleReflectionException(e);
+  private static void handleReflectionException(Exception e) {
+    ReflectionUtils.handleReflectionException(e);
+  }
+
+  public static <T, U> List<U> copyProperties(List<T> sourceList, Class<U> clazz) {
+
+    if (sourceList == null || sourceList.size() <= 0) {
+      return new ArrayList<>();
     }
 
-    public static <T, U> List<U> copyProperties(List<T> sourceList, Class<U> clazz) {
-
-        if (sourceList == null || sourceList.size() <= 0) {
-            return new ArrayList<>();
-        }
-
-        List<U> result = new ArrayList<>();
-        for (T source : sourceList) {
-            result.add(copyProperties(source, clazz));
-        }
-
-        return result;
+    List<U> result = new ArrayList<>();
+    for (T source : sourceList) {
+      result.add(copyProperties(source, clazz));
     }
 
-    /**
-     * 如果source , 为空返回空对象
-     * 
-     * @param sourceList
-     * @param clazz
-     * @return
-     */
-    public static <T, U> List<U> copyPropertiesList(List<T> sourceList, Class<U> clazz) {
+    return result;
+  }
 
-        if (sourceList == null || sourceList.size() <= 0) {
-            return new ArrayList<U>();
-        }
+  /**
+   * 如果source , 为空返回空对象
+   *
+   * @param sourceList
+   * @param clazz
+   * @return
+   */
+  public static <T, U> List<U> copyPropertiesList(List<T> sourceList, Class<U> clazz) {
 
-        List<U> result = new ArrayList<>();
-        U target = null;
-        for (T source : sourceList) {
-            try {
-                target = clazz.newInstance();
-                copyProperties(source, target);
-            } catch (Exception e) {
-                handleReflectionException(e);
-                return new ArrayList<>();
-            }
-            result.add(target);
-        }
-
-        return result;
+    if (sourceList == null || sourceList.size() <= 0) {
+      return new ArrayList<U>();
     }
 
-    /**
-     * source空为null
-     * 
-     * @param orig
-     * @param destClass
-     * @param <T>
-     * @return
-     */
-    public static <T> T copyProperties(Object orig, Class<T> destClass) {
-
-        try {
-            Object target = destClass.newInstance();
-            if (orig == null) {
-                return null;
-            }
-            copyProperties(orig, (Object) target);
-            return (T) target;
-        } catch (Exception e) {
-            handleReflectionException(e);
-            return null;
-        }
+    List<U> result = new ArrayList<>();
+    U target = null;
+    for (T source : sourceList) {
+      try {
+        target = clazz.newInstance();
+        copyProperties(source, target);
+      } catch (Exception e) {
+        handleReflectionException(e);
+        return new ArrayList<>();
+      }
+      result.add(target);
     }
 
-    /**
-     * source 为null 返回 空对象
-     * 
-     * @param orig
-     * @param destClass
-     * @param <T>
-     * @return
-     */
-    public static <T> T copyProperty(Object orig, Class<T> destClass) {
+    return result;
+  }
 
-        try {
-            Object target = destClass.newInstance();
-            if (orig == null) {
-                return (T) target;
-            }
+  /**
+   * source空为null
+   *
+   * @param orig
+   * @param destClass
+   * @param <T>
+   * @return
+   */
+  public static <T> T copyProperties(Object orig, Class<T> destClass) {
 
-            copyProperties(orig, (Object) target);
-            return (T) target;
-        } catch (Exception e) {
-            handleReflectionException(e);
-            Object o1 = new Object();
-            try {
-                o1 = destClass.newInstance();
-            } catch (Exception ex) {
-                handleReflectionException(e);
-            }
-            return (T) o1;
-        }
+    try {
+      Object target = destClass.newInstance();
+      if (orig == null) {
+        return null;
+      }
+      copyProperties(orig, (Object) target);
+      return (T) target;
+    } catch (Exception e) {
+      handleReflectionException(e);
+      return null;
+    }
+  }
+
+  /**
+   * source 为null 返回 空对象
+   *
+   * @param orig
+   * @param destClass
+   * @param <T>
+   * @return
+   */
+  public static <T> T copyProperty(Object orig, Class<T> destClass) {
+
+    try {
+      Object target = destClass.newInstance();
+      if (orig == null) {
+        return (T) target;
+      }
+
+      copyProperties(orig, (Object) target);
+      return (T) target;
+    } catch (Exception e) {
+      handleReflectionException(e);
+      Object o1 = new Object();
+      try {
+        o1 = destClass.newInstance();
+      } catch (Exception ex) {
+        handleReflectionException(e);
+      }
+      return (T) o1;
+    }
+  }
+
+  public static <T, U> List<U> copyProperties(List<T> sourceList, Class<U> clazz,
+      String... ignoreProperties) {
+
+    if (sourceList == null || sourceList.size() <= 0) {
+      return new ArrayList<U>();
     }
 
-    public static <T, U> List<U> copyProperties(List<T> sourceList, Class<U> clazz, String... ignoreProperties) {
-
-        if (sourceList == null || sourceList.size() <= 0) {
-            return new ArrayList<U>();
-        }
-
-        List<U> result = new ArrayList<>();
-        for (T source : sourceList) {
-            result.add(copyProperties(source, clazz, ignoreProperties));
-        }
-
-        return result;
+    List<U> result = new ArrayList<>();
+    for (T source : sourceList) {
+      result.add(copyProperties(source, clazz, ignoreProperties));
     }
 
-    public static <T> T copyProperties(Object orig, Class<T> destClass, String... ignoreProperties) {
+    return result;
+  }
 
-        if (orig == null) {
-            return null;
-        }
+  public static <T> T copyProperties(Object orig, Class<T> destClass, String... ignoreProperties) {
 
-        try {
-            Object target = destClass.newInstance();
-            org.springframework.beans.BeanUtils.copyProperties(orig, (Object) target, ignoreProperties);
-            return (T) target;
-        } catch (Exception e) {
-            return null;
-        }
+    if (orig == null) {
+      return null;
     }
 
-    public static String[] getNullPropertyNames(Object source) {
-        final BeanWrapper beanWrapper = new BeanWrapperImpl(source);
-        java.beans.PropertyDescriptor[] propDesc = beanWrapper.getPropertyDescriptors();
+    try {
+      Object target = destClass.newInstance();
+      org.springframework.beans.BeanUtils.copyProperties(orig, (Object) target, ignoreProperties);
+      return (T) target;
+    } catch (Exception e) {
+      return null;
+    }
+  }
 
-        Set<String> emptynames = new HashSet<String>();
+  public static String[] getNullPropertyNames(Object source) {
+    final BeanWrapper beanWrapper = new BeanWrapperImpl(source);
+    java.beans.PropertyDescriptor[] propDesc = beanWrapper.getPropertyDescriptors();
 
-        for (java.beans.PropertyDescriptor pd : propDesc) {
-            Object srcValue = beanWrapper.getPropertyValue(pd.getName());
-            if (srcValue == null) {
-                emptynames.add(pd.getName());
-            }
-        }
+    Set<String> emptynames = new HashSet<String>();
 
-        String[] result = new String[emptynames.size()];
-        return emptynames.toArray(result);
+    for (java.beans.PropertyDescriptor pd : propDesc) {
+      Object srcValue = beanWrapper.getPropertyValue(pd.getName());
+      if (srcValue == null) {
+        emptynames.add(pd.getName());
+      }
     }
 
-    public static void copyProperties(Object orig, Object dest) {
-        try {
-            org.springframework.beans.BeanUtils.copyProperties(orig, dest);
-        } catch (Exception e) {
-            handleReflectionException(e);
-        }
+    String[] result = new String[emptynames.size()];
+    return emptynames.toArray(result);
+  }
+
+  public static void copyProperties(Object orig, Object dest) {
+    try {
+      org.springframework.beans.BeanUtils.copyProperties(orig, dest);
+    } catch (Exception e) {
+      handleReflectionException(e);
     }
+  }
 
 }

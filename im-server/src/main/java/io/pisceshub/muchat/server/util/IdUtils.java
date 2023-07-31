@@ -10,14 +10,14 @@ import io.pisceshub.muchat.common.core.utils.SpringContextHolder;
  */
 public final class IdUtils {
 
-    private static Snowflake snowflake = new Snowflake(0, 0);
+  private static Snowflake snowflake = new Snowflake(0, 0);
 
-    private static AppCache  cache     = SpringContextHolder.getBean(AppCache.class);
+  private static AppCache cache = SpringContextHolder.getBean(AppCache.class);
 
-    public static String generatorId() {
-        String key = "id-" + IdUtils.class.getSimpleName();
-        Long aLong = cache.incr(key);
-        return aLong + snowflake.nextIdStr();
-    }
+  public static String generatorId() {
+    String key = "id-" + IdUtils.class.getSimpleName();
+    Long aLong = cache.incr(key);
+    return aLong + snowflake.nextIdStr();
+  }
 
 }

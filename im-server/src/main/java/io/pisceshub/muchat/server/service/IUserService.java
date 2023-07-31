@@ -9,33 +9,33 @@ import java.util.List;
 
 public interface IUserService extends IService<User> {
 
-    LoginResp login(LoginReq dto);
+  LoginResp login(LoginReq dto);
 
-    LoginResp refreshToken(String refreshToken);
+  LoginResp refreshToken(String refreshToken);
 
-    void register(RegisterReq dto);
+  void register(RegisterReq dto);
 
-    User findUserByName(String username);
+  User findUserByName(String username);
 
-    void update(UserVO vo);
+  void update(UserVO vo);
 
-    List<UserVO> findUserByNickName(String nickname);
+  List<UserVO> findUserByNickName(String nickname);
 
-    List<Long> checkOnline(String userIds);
+  List<Long> checkOnline(String userIds);
 
-    UserVO findByUserIdAndFriendId(Long userId, Long friendId);
+  UserVO findByUserIdAndFriendId(Long userId, Long friendId);
 
-    LoginResp oauthLogin(String type, AuthUser authUser);
+  LoginResp oauthLogin(String type, AuthUser authUser);
 
-    LoginResp anonymousLogin(AnonymousLoginReq req);
+  LoginResp anonymousLogin(AnonymousLoginReq req);
 
-    UserVO findByIde(long id);
+  UserVO findByIde(long id);
 
-    /**
-     * 判断用户是否在线
-     * 
-     * @param userId
-     * @return
-     */
-    boolean isOnline(Long userId);
+  /**
+   * 判断用户是否在线
+   *
+   * @param userId
+   * @return
+   */
+  boolean isOnline(Long userId);
 }

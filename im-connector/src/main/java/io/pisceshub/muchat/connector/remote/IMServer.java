@@ -2,11 +2,11 @@ package io.pisceshub.muchat.connector.remote;
 
 public interface IMServer {
 
-    default boolean enable() {
-        return false;
-    }
+  default boolean enable() {
+    return false;
+  }
 
-    void start();
+  void start();
 
-    void stop();
+  void stop();
 }

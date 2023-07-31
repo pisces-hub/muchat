@@ -16,97 +16,97 @@ import java.util.Date;
 @TableName("im_user")
 public class User extends Model<User> {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    /**
-     * id
-     */
-    @TableId(value = "id", type = IdType.AUTO)
-    private Long              id;
+  /**
+   * id
+   */
+  @TableId(value = "id", type = IdType.AUTO)
+  private Long id;
 
-    /**
-     * 用户名
-     */
-    @TableField("user_name")
-    private String            userName;
+  /**
+   * 用户名
+   */
+  @TableField("user_name")
+  private String userName;
 
-    /**
-     * 用户名
-     */
-    @TableField("nick_name")
-    private String            nickName;
+  /**
+   * 用户名
+   */
+  @TableField("nick_name")
+  private String nickName;
 
-    /**
-     * 性别
-     */
-    @TableField("sex")
-    private Integer           sex;
+  /**
+   * 性别
+   */
+  @TableField("sex")
+  private Integer sex;
 
-    /**
-     * 头像
-     */
-    @TableField("head_image")
-    private String            headImage;
+  /**
+   * 头像
+   */
+  @TableField("head_image")
+  private String headImage;
 
-    /**
-     * 头像缩略图
-     */
-    @TableField("head_image_thumb")
-    private String            headImageThumb;
+  /**
+   * 头像缩略图
+   */
+  @TableField("head_image_thumb")
+  private String headImageThumb;
 
-    /**
-     * 个性签名
-     */
-    @TableField("signature")
-    private String            signature;
-    /**
-     * 密码(明文)
-     */
-    @TableField("password")
-    private String            password;
+  /**
+   * 个性签名
+   */
+  @TableField("signature")
+  private String signature;
+  /**
+   * 密码(明文)
+   */
+  @TableField("password")
+  private String password;
 
-    /**
-     * 最后登录时间
-     */
-    @TableField("last_login_time")
-    private Date              lastLoginTime;
+  /**
+   * 最后登录时间
+   */
+  @TableField("last_login_time")
+  private Date lastLoginTime;
 
-    /**
-     * 创建时间
-     */
-    @TableField("created_time")
-    private Date              createdTime;
+  /**
+   * 创建时间
+   */
+  @TableField("created_time")
+  private Date createdTime;
 
-    /**
-     * 注册来源：0本系统，1gitee,2github
-     */
-    @TableField("register_from")
-    private Integer           registerFrom;
+  /**
+   * 注册来源：0本系统，1gitee,2github
+   */
+  @TableField("register_from")
+  private Integer registerFrom;
 
-    /**
-     * oauth认证结果
-     */
-    @TableField("oauth_src")
-    private String            oauthSrc;
+  /**
+   * oauth认证结果
+   */
+  @TableField("oauth_src")
+  private String oauthSrc;
 
-    /**
-     * 账号类型:0正常，1匿名
-     */
-    @TableField("account_type")
-    private Integer           accountType;
+  /**
+   * 账号类型:0正常，1匿名
+   */
+  @TableField("account_type")
+  private Integer accountType;
 
-    /**
-     * 匿名id
-     */
-    @TableField("anonymou_id")
-    private String            anonymouId;
+  /**
+   * 匿名id
+   */
+  @TableField("anonymou_id")
+  private String anonymouId;
 
-    @TableField("last_login_ip")
-    private String            lastLoginIp;
+  @TableField("last_login_ip")
+  private String lastLoginIp;
 
-    @Override
-    protected Serializable pkVal() {
-        return this.id;
-    }
+  @Override
+  protected Serializable pkVal() {
+    return this.id;
+  }
 
 }

@@ -11,8 +11,8 @@ import java.io.Serializable;
 @Data
 public class PageReq implements Serializable {
 
-    private Long pageNo;
+  private Long pageNo;
 
-    private Long pageSize;
+  private Long pageSize;
 
 }

@@ -14,38 +14,38 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = AppConfigProperties.PRE)
 public class AppConfigProperties {
 
-    public final static String PRE = "app";
+  public final static String PRE = "app";
+
+  /**
+   * 公网ip
+   */
+  private String ip;
+
+  private TcpNode ws;
+
+  private TcpNode tcp;
+
+  private ZkNode zk;
+
+  @Data
+  public static class TcpNode {
+
+    private Boolean enable;
 
     /**
-     * 公网ip
+     * -1随机
      */
-    private String             ip;
+    private Integer port;
 
-    private TcpNode            ws;
+  }
 
-    private TcpNode            tcp;
+  @Data
+  public static class ZkNode {
 
-    private ZkNode             zk;
+    private String path;
 
-    @Data
-    public static class TcpNode {
+    private String address;
 
-        private Boolean enable;
-
-        /**
-         * -1随机
-         */
-        private Integer port;
-
-    }
-
-    @Data
-    public static class ZkNode {
-
-        private String path;
-
-        private String address;
-
-    }
+  }
 
 }

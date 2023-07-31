@@ -17,37 +17,37 @@ import java.util.Set;
 // @Component
 public class RedisChatSessionSave implements ChatSessionSave {
 
-    private final static Long MAX_SIZE = 100L;
+  private final static Long MAX_SIZE = 100L;
 
-    @Autowired
-    private RedisTemplate     redisTemplate;
+  @Autowired
+  private RedisTemplate redisTemplate;
 
-    @Override
-    public boolean add(Long userId, ChatSessionInfoDto dto) {
-        dto.setCreateTime(System.currentTimeMillis());
-        String key = String.valueOf(userId);
-        ZSetOperations zSetOperations = redisTemplate.opsForZSet();
-        zSetOperations.add(key, dto, System.currentTimeMillis());
-        Long size = zSetOperations.size(key);
-        if (size > MAX_SIZE) {
-            zSetOperations.removeRange(key, 0, size - MAX_SIZE);
-        }
-        return true;
+  @Override
+  public boolean add(Long userId, ChatSessionInfoDto dto) {
+    dto.setCreateTime(System.currentTimeMillis());
+    String key = String.valueOf(userId);
+    ZSetOperations zSetOperations = redisTemplate.opsForZSet();
+    zSetOperations.add(key, dto, System.currentTimeMillis());
+    Long size = zSetOperations.size(key);
+    if (size > MAX_SIZE) {
+      zSetOperations.removeRange(key, 0, size - MAX_SIZE);
     }
+    return true;
+  }
 
-    @Override
-    public Set<ChatSessionInfoDto> list(Long userId) {
-        Set<ChatSessionInfoDto> sets = redisTemplate.opsForZSet()
-            .rangeByScore(String.valueOf(userId), 0, System.currentTimeMillis());
-        if (CollUtil.isEmpty(sets)) {
-            return Collections.emptySet();
-        }
-        return sets;
+  @Override
+  public Set<ChatSessionInfoDto> list(Long userId) {
+    Set<ChatSessionInfoDto> sets = redisTemplate.opsForZSet()
+        .rangeByScore(String.valueOf(userId), 0, System.currentTimeMillis());
+    if (CollUtil.isEmpty(sets)) {
+      return Collections.emptySet();
     }
+    return sets;
+  }
 
-    @Override
-    public boolean del(Long userId, ChatSessionInfoDto dto) {
-        redisTemplate.opsForZSet().remove(String.valueOf(userId), dto);
-        return true;
-    }
+  @Override
+  public boolean del(Long userId, ChatSessionInfoDto dto) {
+    redisTemplate.opsForZSet().remove(String.valueOf(userId), dto);
+    return true;
+  }
 }

@@ -12,27 +12,27 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class IMSendInfo<T> {
 
-    /*
-     * 命令
-     */
-    private Integer cmd;
+  /*
+   * 命令
+   */
+  private Integer cmd;
 
-    /*
-     * 推送消息体
-     */
-    private T       data;
+  /*
+   * 推送消息体
+   */
+  private T data;
 
-    public static IMSendInfo create(IMCmdType cmdType) {
-        IMSendInfo sendInfo = new IMSendInfo();
-        sendInfo.setCmd(cmdType.code());
-        return sendInfo;
-    }
+  public static IMSendInfo create(IMCmdType cmdType) {
+    IMSendInfo sendInfo = new IMSendInfo();
+    sendInfo.setCmd(cmdType.code());
+    return sendInfo;
+  }
 
-    public static IMSendInfo create(IMCmdType cmdType, String msg) {
-        IMSendInfo sendInfo = new IMSendInfo();
-        sendInfo.setCmd(cmdType.code());
-        sendInfo.setData(msg);
-        return sendInfo;
-    }
+  public static IMSendInfo create(IMCmdType cmdType, String msg) {
+    IMSendInfo sendInfo = new IMSendInfo();
+    sendInfo.setCmd(cmdType.code());
+    sendInfo.setData(msg);
+    return sendInfo;
+  }
 
 }

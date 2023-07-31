@@ -9,10 +9,10 @@ import io.pisceshub.muchat.common.publics.sensitive.core.main.SWDispatcherDefaul
  */
 public class SensitiveTest {
 
-    public static void main(String[] args) {
-        SensitiveWordConfig sensitiveWordConfig = SensitiveWordConfig.defaultConfig();
-        SWDispatcherDefault swDispatcherDefault = SWDispatcherDefault.newInstance(sensitiveWordConfig);
-        String replaced = swDispatcherDefault.replace("中国南海");
-        System.out.println(replaced);
-    }
+  public static void main(String[] args) {
+    SensitiveWordConfig sensitiveWordConfig = SensitiveWordConfig.defaultConfig();
+    SWDispatcherDefault swDispatcherDefault = SWDispatcherDefault.newInstance(sensitiveWordConfig);
+    String replaced = swDispatcherDefault.replace("中国南海");
+    System.out.println(replaced);
+  }
 }

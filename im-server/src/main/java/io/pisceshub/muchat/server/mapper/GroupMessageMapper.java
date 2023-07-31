@@ -9,7 +9,8 @@ import java.util.List;
 
 public interface GroupMessageMapper extends BaseMapper<GroupMessage> {
 
-    List<GroupMessage> findHistoryMessage(@Param("groupId") Long groupId, @Param("startTime") Date startTime,
-                                          @Param("beforeMessageId") Long beforeMessageId,
-                                          @Param("count") Integer count);
+  List<GroupMessage> findHistoryMessage(@Param("groupId") Long groupId,
+      @Param("startTime") Date startTime,
+      @Param("beforeMessageId") Long beforeMessageId,
+      @Param("count") Integer count);
 }

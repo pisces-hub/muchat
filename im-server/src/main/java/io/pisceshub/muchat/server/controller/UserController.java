@@ -22,44 +22,45 @@ import java.util.List;
 @RequestMapping("/user")
 public class UserController {
 
-    @Autowired
-    private IUserService userService;
+  @Autowired
+  private IUserService userService;
 
-    @GetMapping("/online")
-    @ApiOperation(value = "判断用户是否在线", notes = "返回在线的用户id集合")
-    public Result checkOnline(@NotEmpty @RequestParam("userIds") String userIds) {
-        List<Long> onlineIds = userService.checkOnline(userIds);
-        return ResultUtils.success(onlineIds);
-    }
+  @GetMapping("/online")
+  @ApiOperation(value = "判断用户是否在线", notes = "返回在线的用户id集合")
+  public Result checkOnline(@NotEmpty @RequestParam("userIds") String userIds) {
+    List<Long> onlineIds = userService.checkOnline(userIds);
+    return ResultUtils.success(onlineIds);
+  }
 
-    @GetMapping("/self")
-    @ApiOperation(value = "获取当前用户信息", notes = "获取当前用户信息")
-    public Result findSelfInfo() {
-        SessionContext.UserSessionInfo session = SessionContext.getSession();
-        User user = userService.getById(session.getId());
-        UserVO userVO = BeanUtils.copyProperties(user, UserVO.class);
-        return ResultUtils.success(userVO);
-    }
+  @GetMapping("/self")
+  @ApiOperation(value = "获取当前用户信息", notes = "获取当前用户信息")
+  public Result findSelfInfo() {
+    SessionContext.UserSessionInfo session = SessionContext.getSession();
+    User user = userService.getById(session.getId());
+    UserVO userVO = BeanUtils.copyProperties(user, UserVO.class);
+    return ResultUtils.success(userVO);
+  }
 
-    @GetMapping("/find/{id}")
-    @ApiOperation(value = "查找用户", notes = "根据id查找用户")
-    public Result findByIde(@NotEmpty @PathVariable("id") long id) {
+  @GetMapping("/find/{id}")
+  @ApiOperation(value = "查找用户", notes = "根据id查找用户")
+  public Result findByIde(@NotEmpty @PathVariable("id") long id) {
 
-        UserVO userVO = userService.findByIde(id);
-        return ResultUtils.success(userVO);
-    }
+    UserVO userVO = userService.findByIde(id);
+    return ResultUtils.success(userVO);
+  }
 
-    @PutMapping("/update")
-    @ApiOperation(value = "修改用户信息", notes = "修改用户信息，仅允许修改登录用户信息")
-    public Result update(@Valid @RequestBody UserVO vo) {
-        userService.update(vo);
-        return ResultUtils.success();
-    }
+  @PutMapping("/update")
+  @ApiOperation(value = "修改用户信息", notes = "修改用户信息，仅允许修改登录用户信息")
+  public Result update(@Valid @RequestBody UserVO vo) {
+    userService.update(vo);
+    return ResultUtils.success();
+  }
 
-    @AnonymousUserCheck
-    @GetMapping("/findByNickName")
-    @ApiOperation(value = "查找用户", notes = "根据昵称查找用户")
-    public Result findByNickName(@NotEmpty(message = "用户昵称不可为空") @RequestParam("nickName") String nickName) {
-        return ResultUtils.success(userService.findUserByNickName(nickName));
-    }
+  @AnonymousUserCheck
+  @GetMapping("/findByNickName")
+  @ApiOperation(value = "查找用户", notes = "根据昵称查找用户")
+  public Result findByNickName(
+      @NotEmpty(message = "用户昵称不可为空") @RequestParam("nickName") String nickName) {
+    return ResultUtils.success(userService.findUserByNickName(nickName));
+  }
 }

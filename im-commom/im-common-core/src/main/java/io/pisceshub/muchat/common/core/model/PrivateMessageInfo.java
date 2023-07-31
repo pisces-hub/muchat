@@ -5,9 +5,9 @@ import lombok.Data;
 @Data
 public class PrivateMessageInfo extends CommonMessageInfo {
 
-    /*
-     * 接收者id
-     */
-    private Long recvId;
+  /*
+   * 接收者id
+   */
+  private Long recvId;
 
 }

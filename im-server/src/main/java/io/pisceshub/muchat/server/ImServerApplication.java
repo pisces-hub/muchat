@@ -9,12 +9,12 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 @Slf4j
 @EnableAspectJAutoProxy(exposeProxy = true)
-@MapperScan(basePackages = { "io.pisceshub.muchat.server.mapper" })
-@SpringBootApplication(exclude = { SecurityAutoConfiguration.class })
+@MapperScan(basePackages = {"io.pisceshub.muchat.server.mapper"})
+@SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
 public class ImServerApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(ImServerApplication.class, args);
+  public static void main(String[] args) {
+    SpringApplication.run(ImServerApplication.class, args);
 
-    }
+  }
 }

@@ -12,9 +12,10 @@ import java.util.List;
 @ThreadSafe
 public class SystemDefaultWordAllow implements IWordAllow {
 
-    @Override
-    public List<String> allow() {
-        return FileUtils.readAllLinesForZip(SystemDefaultWordAllow.class.getResourceAsStream("/allow.zip"));
-    }
+  @Override
+  public List<String> allow() {
+    return FileUtils.readAllLinesForZip(
+        SystemDefaultWordAllow.class.getResourceAsStream("/allow.zip"));
+  }
 
 }

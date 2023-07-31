@@ -25,23 +25,23 @@ import org.springframework.context.annotation.Bean;
  */
 public class MybatisPlusAutoConfiguration {
 
-    /**
-     * 分页插件
-     * 
-     * @return
-     */
-    @Bean
-    public PaginationInterceptor paginationInterceptor() {
-        PaginationInterceptor paginationInterceptor = new PaginationInterceptor();
-        return paginationInterceptor;
-    }
+  /**
+   * 分页插件
+   *
+   * @return
+   */
+  @Bean
+  public PaginationInterceptor paginationInterceptor() {
+    PaginationInterceptor paginationInterceptor = new PaginationInterceptor();
+    return paginationInterceptor;
+  }
 
-    /**
-     * 元数据填充
-     */
-    @Bean
-    public CustomMetaObjectHandler myMetaObjectHandler() {
-        return new CustomMetaObjectHandler();
-    }
+  /**
+   * 元数据填充
+   */
+  @Bean
+  public CustomMetaObjectHandler myMetaObjectHandler() {
+    return new CustomMetaObjectHandler();
+  }
 
 }

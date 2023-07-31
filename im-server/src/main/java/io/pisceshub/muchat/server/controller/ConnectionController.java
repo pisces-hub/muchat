@@ -26,28 +26,28 @@ import java.util.List;
 @RequestMapping("/connector")
 public class ConnectionController {
 
-    @Autowired
-    private ConnectionService connectionService;
+  @Autowired
+  private ConnectionService connectionService;
 
-    @ApiOperation("查看所有在线的长连接机器")
-    @GetMapping("/list")
-    public Result<List<NodeInfoResp>> conneList() {
-        List<NodeInfoResp> nodeInfoVoList = connectionService.nodeList();
-        return ResultUtils.success(nodeInfoVoList);
-    }
+  @ApiOperation("查看所有在线的长连接机器")
+  @GetMapping("/list")
+  public Result<List<NodeInfoResp>> conneList() {
+    List<NodeInfoResp> nodeInfoVoList = connectionService.nodeList();
+    return ResultUtils.success(nodeInfoVoList);
+  }
 
-    @ApiLog
-    @ApiOperation("选择一台可用的长连接")
-    @GetMapping("/node")
-    public Result<NodeInfoResp> node(NetProtocolEnum protocol) {
-        if (protocol == null) {
-            protocol = NetProtocolEnum.WS;
-        }
-        NodeInfoResp nodeInfoVo = connectionService.node(protocol, SessionContext.getUserIdIfExist());
-        if (nodeInfoVo == null) {
-            return ResultUtils.error(ResultCode.NO_AVAILABLE_SERVICES);
-        }
-        return ResultUtils.success(nodeInfoVo);
+  @ApiLog
+  @ApiOperation("选择一台可用的长连接")
+  @GetMapping("/node")
+  public Result<NodeInfoResp> node(NetProtocolEnum protocol) {
+    if (protocol == null) {
+      protocol = NetProtocolEnum.WS;
     }
+    NodeInfoResp nodeInfoVo = connectionService.node(protocol, SessionContext.getUserIdIfExist());
+    if (nodeInfoVo == null) {
+      return ResultUtils.error(ResultCode.NO_AVAILABLE_SERVICES);
+    }
+    return ResultUtils.success(nodeInfoVo);
+  }
 
 }

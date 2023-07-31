@@ -12,18 +12,19 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class LoopHandle implements RouteHandle {
 
-    private AtomicLong index = new AtomicLong();
+  private AtomicLong index = new AtomicLong();
 
-    @Override
-    public NodeContainer.WNode routeServer(NetProtocolEnum protocolEnum, List<NodeContainer.WNode> values, String key) {
-        if (values.size() == 0) {
-            throw new RuntimeException("");
-        }
-        Long position = index.incrementAndGet() % values.size();
-        if (position < 0) {
-            position = 0L;
-        }
-        return values.get(position.intValue());
+  @Override
+  public NodeContainer.WNode routeServer(NetProtocolEnum protocolEnum,
+      List<NodeContainer.WNode> values, String key) {
+    if (values.size() == 0) {
+      throw new RuntimeException("");
     }
+    Long position = index.incrementAndGet() % values.size();
+    if (position < 0) {
+      position = 0L;
+    }
+    return values.get(position.intValue());
+  }
 
 }

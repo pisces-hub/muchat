@@ -8,9 +8,9 @@ import lombok.Data;
 @ApiModel("图片上传VO")
 public class UploadImageResp {
 
-    @ApiModelProperty(value = "原图")
-    private String originUrl;
+  @ApiModelProperty(value = "原图")
+  private String originUrl;
 
-    @ApiModelProperty(value = "缩略图")
-    private String thumbUrl;
+  @ApiModelProperty(value = "缩略图")
+  private String thumbUrl;
 }

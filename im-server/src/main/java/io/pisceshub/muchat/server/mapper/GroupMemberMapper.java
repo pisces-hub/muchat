@@ -8,6 +8,6 @@ import org.apache.ibatis.annotations.Param;
 
 public interface GroupMemberMapper extends BaseMapper<GroupMember> {
 
-    Page<GroupMember> findGroupMembersV2(IPage<GroupMember> page, @Param("groupId") Long groupId,
-                                         @Param("search") String search);
+  Page<GroupMember> findGroupMembersV2(IPage<GroupMember> page, @Param("groupId") Long groupId,
+      @Param("search") String search);
 }

@@ -8,24 +8,24 @@ import lombok.Data;
 @ApiModel("群成员信息VO")
 public class GroupMemberResp {
 
-    @ApiModelProperty("用户id")
-    private Long    userId;
+  @ApiModelProperty("用户id")
+  private Long userId;
 
-    @ApiModelProperty("群内显示名称")
-    private String  aliasName;
+  @ApiModelProperty("群内显示名称")
+  private String aliasName;
 
-    @ApiModelProperty("头像")
-    private String  headImage;
+  @ApiModelProperty("头像")
+  private String headImage;
 
-    @ApiModelProperty("是否已退出")
-    private Boolean quit;
+  @ApiModelProperty("是否已退出")
+  private Boolean quit;
 
-    @ApiModelProperty("备注")
-    private String  remark;
+  @ApiModelProperty("备注")
+  private String remark;
 
-    @ApiModelProperty(value = "ip地址")
-    private String  ipAddress;
+  @ApiModelProperty(value = "ip地址")
+  private String ipAddress;
 
-    private Boolean onlineState;
+  private Boolean onlineState;
 
 }

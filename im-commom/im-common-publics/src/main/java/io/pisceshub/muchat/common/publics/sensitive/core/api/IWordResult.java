@@ -5,25 +5,25 @@ package io.pisceshub.muchat.common.publics.sensitive.core.api;
  */
 public interface IWordResult {
 
-    /**
-     * 敏感词
-     * 
-     * @return 敏感词
-     */
-    String word();
+  /**
+   * 敏感词
+   *
+   * @return 敏感词
+   */
+  String word();
 
-    /**
-     * 开始下标
-     * 
-     * @return 开始下标
-     */
-    int startIndex();
+  /**
+   * 开始下标
+   *
+   * @return 开始下标
+   */
+  int startIndex();
 
-    /**
-     * 结束下标
-     * 
-     * @return 结束下标
-     */
-    int endIndex();
+  /**
+   * 结束下标
+   *
+   * @return 结束下标
+   */
+  int endIndex();
 
 }

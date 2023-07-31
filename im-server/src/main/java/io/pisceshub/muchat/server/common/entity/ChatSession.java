@@ -9,27 +9,27 @@ import lombok.Data;
 @Data
 public class ChatSession {
 
-    private Long   id;
+  private Long id;
 
-    /**
-     * 对方id
-     */
-    private Long   targetId;
+  /**
+   * 对方id
+   */
+  private Long targetId;
 
-    /**
-     * 聊天类型
-     */
-    private String chatType;
+  /**
+   * 聊天类型
+   */
+  private String chatType;
 
-    /**
-     * 归属用户id
-     */
-    private Long   ownId;
+  /**
+   * 归属用户id
+   */
+  private Long ownId;
 
-    private Long   updateTime;
+  private Long updateTime;
 
-    /**
-     * 是否置顶
-     */
-    private Long   topFlag;
+  /**
+   * 是否置顶
+   */
+  private Long topFlag;
 }

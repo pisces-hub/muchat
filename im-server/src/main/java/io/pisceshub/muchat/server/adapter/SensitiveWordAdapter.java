@@ -16,23 +16,23 @@ import org.springframework.stereotype.Component;
 @Configuration
 public class SensitiveWordAdapter {
 
-    @Autowired
-    private SWDispatcher swDispatcher;
+  @Autowired
+  private SWDispatcher swDispatcher;
 
-    /**
-     * 替换敏感词
-     * 
-     * @param target
-     * @return
-     */
-    public String replace(final String target) {
-        return swDispatcher.replace(target, '*');
-    }
+  /**
+   * 替换敏感词
+   *
+   * @param target
+   * @return
+   */
+  public String replace(final String target) {
+    return swDispatcher.replace(target, '*');
+  }
 
-    @Bean
-    public SWDispatcher sWDispatcher() {
-        SensitiveWordConfig sensitiveWordConfig = SensitiveWordConfig.defaultConfig();
-        return SWDispatcherDefault.newInstance(sensitiveWordConfig);
-    }
+  @Bean
+  public SWDispatcher sWDispatcher() {
+    SensitiveWordConfig sensitiveWordConfig = SensitiveWordConfig.defaultConfig();
+    return SWDispatcherDefault.newInstance(sensitiveWordConfig);
+  }
 
 }

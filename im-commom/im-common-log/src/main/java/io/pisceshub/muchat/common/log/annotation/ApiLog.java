@@ -9,24 +9,24 @@ import java.lang.annotation.Target;
  * @author xiaochangbai
  * @date 2023-07-01 10:42
  */
-@Target({ ElementType.TYPE, ElementType.METHOD })
+@Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ApiLog {
 
-    /**
-     * 打印请求参数
-     */
-    boolean input() default true;
+  /**
+   * 打印请求参数
+   */
+  boolean input() default true;
 
-    /**
-     * 打印返回值
-     */
-    boolean output() default true;
+  /**
+   * 打印返回值
+   */
+  boolean output() default true;
 
-    /**
-     * 是否持久化
-     * 
-     * @return
-     */
-    boolean isPersistence() default false;
+  /**
+   * 是否持久化
+   *
+   * @return
+   */
+  boolean isPersistence() default false;
 }

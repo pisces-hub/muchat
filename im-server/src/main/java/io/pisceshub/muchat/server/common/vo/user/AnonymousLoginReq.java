@@ -13,7 +13,7 @@ import java.io.Serializable;
 @Data
 public class AnonymousLoginReq implements Serializable {
 
-    @NotNull
-    @Size(min = 10, max = 100)
-    private String anonymouId;
+  @NotNull
+  @Size(min = 10, max = 100)
+  private String anonymouId;
 }

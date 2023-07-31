@@ -13,7 +13,7 @@ import java.util.List;
  */
 public interface ConnectionService {
 
-    List<NodeInfoResp> nodeList();
+  List<NodeInfoResp> nodeList();
 
-    NodeInfoResp node(NetProtocolEnum netProtocolEnum, Long identify);
+  NodeInfoResp node(NetProtocolEnum netProtocolEnum, Long identify);
 }

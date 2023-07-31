@@ -5,10 +5,10 @@ import lombok.Data;
 @Data
 public class ServerConnectionInfoItemVo {
 
-    private String netAddress;
+  private String netAddress;
 
-    private String protocol;
+  private String protocol;
 
-    private Long   connectorCount;
+  private Long connectorCount;
 
 }

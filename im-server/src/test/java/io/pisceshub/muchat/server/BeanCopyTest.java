@@ -9,13 +9,14 @@ import io.pisceshub.muchat.server.common.entity.GroupMessage;
  */
 public class BeanCopyTest {
 
-    public static void main(String[] args) {
-        GroupMessage groupMessage = new GroupMessage();
-        groupMessage.setGroupId(1L);
-        groupMessage.setContent("aaa");
+  public static void main(String[] args) {
+    GroupMessage groupMessage = new GroupMessage();
+    groupMessage.setGroupId(1L);
+    groupMessage.setContent("aaa");
 
-        GroupMessageInfo groupMessageInfo = BeanUtil.copyProperties(groupMessage, GroupMessageInfo.class);
-        System.out.println(groupMessageInfo.getGroupId());
-        System.out.println(groupMessageInfo.getContent());
-    }
+    GroupMessageInfo groupMessageInfo = BeanUtil.copyProperties(groupMessage,
+        GroupMessageInfo.class);
+    System.out.println(groupMessageInfo.getGroupId());
+    System.out.println(groupMessageInfo.getContent());
+  }
 }

@@ -21,35 +21,36 @@ import java.util.List;
 @RequestMapping("/message/group")
 public class GroupMessageController {
 
-    @Autowired
-    private IGroupMessageService groupMessageService;
+  @Autowired
+  private IGroupMessageService groupMessageService;
 
-    @ApiLog
-    @PostMapping("/send")
-    @ApiOperation(value = "发送群聊消息", notes = "发送群聊消息")
-    public Result<MessageSendResp> sendMessage(@Valid @RequestBody GroupMessageSendReq vo) {
-        return ResultUtils.success(groupMessageService.sendMessage(vo));
-    }
+  @ApiLog
+  @PostMapping("/send")
+  @ApiOperation(value = "发送群聊消息", notes = "发送群聊消息")
+  public Result<MessageSendResp> sendMessage(@Valid @RequestBody GroupMessageSendReq vo) {
+    return ResultUtils.success(groupMessageService.sendMessage(vo));
+  }
 
-    @DeleteMapping("/recall/{id}")
-    @ApiOperation(value = "撤回消息", notes = "撤回群聊消息")
-    public Result<Long> recallMessage(@NotNull(message = "消息id不能为空") @PathVariable Long id) {
-        groupMessageService.recallMessage(id);
-        return ResultUtils.success();
-    }
+  @DeleteMapping("/recall/{id}")
+  @ApiOperation(value = "撤回消息", notes = "撤回群聊消息")
+  public Result<Long> recallMessage(@NotNull(message = "消息id不能为空") @PathVariable Long id) {
+    groupMessageService.recallMessage(id);
+    return ResultUtils.success();
+  }
 
-    @PostMapping("/pullUnreadMessage")
-    @ApiOperation(value = "拉取未读消息", notes = "拉取未读消息")
-    public Result pullUnreadMessage() {
-        groupMessageService.pullUnreadMessage();
-        return ResultUtils.success();
-    }
+  @PostMapping("/pullUnreadMessage")
+  @ApiOperation(value = "拉取未读消息", notes = "拉取未读消息")
+  public Result pullUnreadMessage() {
+    groupMessageService.pullUnreadMessage();
+    return ResultUtils.success();
+  }
 
-    @ApiLog
-    @GetMapping("/history")
-    @ApiOperation(value = "查询聊天记录", notes = "查询聊天记录")
-    public Result<List<GroupMessageInfo>> recallMessage(@NotNull(message = "群聊id不能为空") @RequestParam Long groupId,
-                                                        @RequestParam(required = false) Long lastMessageId) {
-        return ResultUtils.success(groupMessageService.findHistoryMessage(groupId, lastMessageId));
-    }
+  @ApiLog
+  @GetMapping("/history")
+  @ApiOperation(value = "查询聊天记录", notes = "查询聊天记录")
+  public Result<List<GroupMessageInfo>> recallMessage(
+      @NotNull(message = "群聊id不能为空") @RequestParam Long groupId,
+      @RequestParam(required = false) Long lastMessageId) {
+    return ResultUtils.success(groupMessageService.findHistoryMessage(groupId, lastMessageId));
+  }
 }

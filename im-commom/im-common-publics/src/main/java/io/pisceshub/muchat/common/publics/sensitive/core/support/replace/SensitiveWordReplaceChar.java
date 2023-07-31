@@ -11,17 +11,17 @@ import io.pisceshub.muchat.common.publics.sensitive.core.api.ISensitiveWordRepla
 @ThreadSafe
 public class SensitiveWordReplaceChar implements ISensitiveWordReplace {
 
-    private final char replaceChar;
+  private final char replaceChar;
 
-    public SensitiveWordReplaceChar(char replaceChar){
-        this.replaceChar = replaceChar;
-    }
+  public SensitiveWordReplaceChar(char replaceChar) {
+    this.replaceChar = replaceChar;
+  }
 
-    @Override
-    public String replace(ISensitiveWordReplaceContext context) {
-        int wordLength = context.wordLength();
+  @Override
+  public String replace(ISensitiveWordReplaceContext context) {
+    int wordLength = context.wordLength();
 
-        return CharUtil.repeat(replaceChar, wordLength);
-    }
+    return CharUtil.repeat(replaceChar, wordLength);
+  }
 
 }

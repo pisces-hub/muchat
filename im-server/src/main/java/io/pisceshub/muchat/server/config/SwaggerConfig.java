@@ -25,49 +25,49 @@ import static com.google.common.collect.Lists.newArrayList;
 @EnableSwagger2
 public class SwaggerConfig {
 
-    @Value("${swagger.enable}")
-    private Boolean enabled;
+  @Value("${swagger.enable}")
+  private Boolean enabled;
 
-    @Bean
-    @SuppressWarnings("all")
-    public Docket createRestApi() {
+  @Bean
+  @SuppressWarnings("all")
+  public Docket createRestApi() {
 
-        return new Docket(DocumentationType.SWAGGER_2).enable(enabled)
-            .apiInfo(apiInfo())
-            .select() // .paths(Predicates.not(PathSelectors.regex("/error.*")))
-            .build()
-            .securitySchemes(securitySchemes())
-            .securityContexts(securityContexts());
-    }
+    return new Docket(DocumentationType.SWAGGER_2).enable(enabled)
+        .apiInfo(apiInfo())
+        .select() // .paths(Predicates.not(PathSelectors.regex("/error.*")))
+        .build()
+        .securitySchemes(securitySchemes())
+        .securityContexts(securityContexts());
+  }
 
-    private ApiInfo apiInfo() {
-        return new ApiInfoBuilder().title("幕聊api文档").description("web").version("1.0").build();
-    }
+  private ApiInfo apiInfo() {
+    return new ApiInfoBuilder().title("幕聊api文档").description("web").version("1.0").build();
+  }
 
-    private List<ApiKey> securitySchemes() {
-        // 设置请求头信息
-        List<ApiKey> result = new ArrayList<ApiKey>();
-        ApiKey apiKey = new ApiKey("accessToken", "accessToken", "header");
-        result.add(apiKey);
-        return result;
-    }
+  private List<ApiKey> securitySchemes() {
+    // 设置请求头信息
+    List<ApiKey> result = new ArrayList<ApiKey>();
+    ApiKey apiKey = new ApiKey("accessToken", "accessToken", "header");
+    result.add(apiKey);
+    return result;
+  }
 
-    private List<SecurityContext> securityContexts() {
-        // 设置需要登录认证的路径
-        return newArrayList(SecurityContext.builder()
-            .securityReferences(defaultAuth())
-            // .forPaths(PathSelectors.regex("^(?!auth).*$"))
-            .forPaths(PathSelectors.any())
-            .build());
-    }
+  private List<SecurityContext> securityContexts() {
+    // 设置需要登录认证的路径
+    return newArrayList(SecurityContext.builder()
+        .securityReferences(defaultAuth())
+        // .forPaths(PathSelectors.regex("^(?!auth).*$"))
+        .forPaths(PathSelectors.any())
+        .build());
+  }
 
-    private List<SecurityReference> defaultAuth() {
-        List<SecurityReference> result = new ArrayList<SecurityReference>();
-        AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
-        AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
-        authorizationScopes[0] = authorizationScope;
-        result.add(new SecurityReference("Authorization", authorizationScopes));
-        return result;
-    }
+  private List<SecurityReference> defaultAuth() {
+    List<SecurityReference> result = new ArrayList<SecurityReference>();
+    AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
+    AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
+    authorizationScopes[0] = authorizationScope;
+    result.add(new SecurityReference("Authorization", authorizationScopes));
+    return result;
+  }
 
 }

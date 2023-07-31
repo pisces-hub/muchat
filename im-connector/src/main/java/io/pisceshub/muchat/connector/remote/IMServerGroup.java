@@ -15,32 +15,32 @@ import java.util.List;
 @Component
 public class IMServerGroup implements CommandLineRunner {
 
-    public static volatile long serverId = -1;
+  public static volatile long serverId = -1;
 
-    @Autowired
-    private AppCache            appCache;
+  @Autowired
+  private AppCache appCache;
 
-    @Autowired
-    private List<IMServer>      imServers;
+  @Autowired
+  private List<IMServer> imServers;
 
-    @Override
-    public void run(String... args) throws Exception {
-        // 初始化SERVER_ID
-        serverId = appCache.incr(RedisKey.IM_MAX_SERVER_ID);
-        Iterator<IMServer> iterator = imServers.iterator();
-        while (iterator.hasNext()) {
-            IMServer imServer = iterator.next();
-            if (imServer.enable()) {
-                imServer.start();
-            }
-        }
+  @Override
+  public void run(String... args) throws Exception {
+    // 初始化SERVER_ID
+    serverId = appCache.incr(RedisKey.IM_MAX_SERVER_ID);
+    Iterator<IMServer> iterator = imServers.iterator();
+    while (iterator.hasNext()) {
+      IMServer imServer = iterator.next();
+      if (imServer.enable()) {
+        imServer.start();
+      }
     }
+  }
 
-    @PreDestroy
-    public void destroy() {
-        // 停止服务
-        for (IMServer imServer : imServers) {
-            imServer.stop();
-        }
+  @PreDestroy
+  public void destroy() {
+    // 停止服务
+    for (IMServer imServer : imServers) {
+      imServer.stop();
     }
+  }
 }

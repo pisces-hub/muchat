@@ -12,8 +12,8 @@ import javax.validation.constraints.NotNull;
 @Data
 public class GroupMemberQueryReq extends PageReq {
 
-    @NotNull(message = "群聊id不能为空")
-    private Long   groupId;
+  @NotNull(message = "群聊id不能为空")
+  private Long groupId;
 
-    private String search;
+  private String search;
 }

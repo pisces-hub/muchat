@@ -7,14 +7,14 @@ package io.pisceshub.muchat.connector.contant;
  */
 public interface ConnectorConst {
 
-    /**
-     * 心跳次数
-     */
-    String HEARTBEAT_TIMES = "heartbeat_times";
+  /**
+   * 心跳次数
+   */
+  String HEARTBEAT_TIMES = "heartbeat_times";
 
-    /**
-     * 用户id
-     */
-    String USER_ID         = "user_id";
+  /**
+   * 用户id
+   */
+  String USER_ID = "user_id";
 
 }

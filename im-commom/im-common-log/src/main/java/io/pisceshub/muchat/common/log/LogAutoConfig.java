@@ -11,8 +11,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class LogAutoConfig {
 
-    @Bean
-    public ApiLogAspect apiLogAspect() {
-        return new ApiLogAspect();
-    }
+  @Bean
+  public ApiLogAspect apiLogAspect() {
+    return new ApiLogAspect();
+  }
 }

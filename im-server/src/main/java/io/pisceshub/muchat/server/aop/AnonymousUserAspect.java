@@ -26,26 +26,27 @@ import java.util.Optional;
 @Order(0)
 public class AnonymousUserAspect {
 
-    @Before("@within(io.pisceshub.muchat.server.aop.annotation.AnonymousUserCheck) "
-            + "|| @annotation(io.pisceshub.muchat.server.aop.annotation.AnonymousUserCheck)")
-    public void interceptor(JoinPoint point) throws NoSuchMethodException {
-        MethodSignature methodSignature = (MethodSignature) point.getSignature();
-        Method targetMethod = point.getTarget()
-            .getClass()
-            .getDeclaredMethod(methodSignature.getName(), methodSignature.getMethod().getParameterTypes());
-        AnonymousUserCheck anonymousUserCheck = Optional
-            .ofNullable(targetMethod.getAnnotation(AnonymousUserCheck.class))
-            .orElse(point.getTarget().getClass().getAnnotation(AnonymousUserCheck.class));
-        if (anonymousUserCheck == null) {
-            return;
-        }
-        SessionContext.UserSessionInfo session = SessionContext.getSession();
-        if (session == null) {
-            throw new BusinessException(ResultCode.INVALID_TOKEN);
-        }
-        if (UserEnum.AccountType.Anonymous.getCode().equals(session.getAccountType())) {
-            throw new BusinessException(ResultCode.ANONYMOUSE_USER_NO_ACTION);
-        }
+  @Before("@within(io.pisceshub.muchat.server.aop.annotation.AnonymousUserCheck) "
+      + "|| @annotation(io.pisceshub.muchat.server.aop.annotation.AnonymousUserCheck)")
+  public void interceptor(JoinPoint point) throws NoSuchMethodException {
+    MethodSignature methodSignature = (MethodSignature) point.getSignature();
+    Method targetMethod = point.getTarget()
+        .getClass()
+        .getDeclaredMethod(methodSignature.getName(),
+            methodSignature.getMethod().getParameterTypes());
+    AnonymousUserCheck anonymousUserCheck = Optional
+        .ofNullable(targetMethod.getAnnotation(AnonymousUserCheck.class))
+        .orElse(point.getTarget().getClass().getAnnotation(AnonymousUserCheck.class));
+    if (anonymousUserCheck == null) {
+      return;
     }
+    SessionContext.UserSessionInfo session = SessionContext.getSession();
+    if (session == null) {
+      throw new BusinessException(ResultCode.INVALID_TOKEN);
+    }
+    if (UserEnum.AccountType.Anonymous.getCode().equals(session.getAccountType())) {
+      throw new BusinessException(ResultCode.ANONYMOUSE_USER_NO_ACTION);
+    }
+  }
 
 }

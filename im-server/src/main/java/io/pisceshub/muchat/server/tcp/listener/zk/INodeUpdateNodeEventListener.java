@@ -11,16 +11,16 @@ import java.util.Collection;
  */
 public interface INodeUpdateNodeEventListener {
 
-    default void delete(NetProtocolEnum netProtocolEnum, NodeContainer.WNode node) {
+  default void delete(NetProtocolEnum netProtocolEnum, NodeContainer.WNode node) {
 
-    }
+  }
 
-    default void add(NetProtocolEnum netProtocolEnum, Collection<NodeContainer.WNode> node) {
+  default void add(NetProtocolEnum netProtocolEnum, Collection<NodeContainer.WNode> node) {
 
-    }
+  }
 
-    default void list(NetProtocolEnum netProtocolEnum, Collection<NodeContainer.WNode> nodes) {
+  default void list(NetProtocolEnum netProtocolEnum, Collection<NodeContainer.WNode> nodes) {
 
-    }
+  }
 
 }

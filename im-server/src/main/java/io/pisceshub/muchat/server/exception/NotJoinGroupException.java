@@ -8,9 +8,9 @@ import io.pisceshub.muchat.common.core.enums.ResultCode;
  */
 public class NotJoinGroupException extends BusinessException {
 
-    public NotJoinGroupException(ResultCode resultCode, String message){
-        code = resultCode.getCode();
-        message = message;
-    }
+  public NotJoinGroupException(ResultCode resultCode, String message) {
+    code = resultCode.getCode();
+    message = message;
+  }
 
 }

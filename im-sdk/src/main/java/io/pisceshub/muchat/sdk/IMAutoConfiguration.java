@@ -8,4 +8,5 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ComponentScan("io.pisceshub.muchat.sdk")
 public class IMAutoConfiguration {
+
 }

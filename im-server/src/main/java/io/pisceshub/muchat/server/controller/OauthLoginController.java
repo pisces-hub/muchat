@@ -32,49 +32,51 @@ import java.util.UUID;
 @RequestMapping("/connect")
 public class OauthLoginController {
 
-    @Autowired
-    private AppConfigInfo   appConfigInfo;
+  @Autowired
+  private AppConfigInfo appConfigInfo;
 
-    @Autowired
-    private OauthLoginUtils oauthLoginUtils;
+  @Autowired
+  private OauthLoginUtils oauthLoginUtils;
 
-    @Autowired
-    private IUserService    userService;
+  @Autowired
+  private IUserService userService;
 
-    @ResponseBody
-    @GetMapping("/login/web/{type}")
-    @ApiOperation(value = "WEB信任登录授权,包含PC、WAP")
-    public Result<String> webAuthorize(@PathVariable String type) throws IOException {
-        AuthRequest authRequest = oauthLoginUtils.buildAuthRequest(type);
-        String uuId = UUID.randomUUID().toString().replaceAll("-", "");
-        String url = authRequest.authorize(uuId);
-        return ResultUtils.success(url);
+  @ResponseBody
+  @GetMapping("/login/web/{type}")
+  @ApiOperation(value = "WEB信任登录授权,包含PC、WAP")
+  public Result<String> webAuthorize(@PathVariable String type) throws IOException {
+    AuthRequest authRequest = oauthLoginUtils.buildAuthRequest(type);
+    String uuId = UUID.randomUUID().toString().replaceAll("-", "");
+    String url = authRequest.authorize(uuId);
+    return ResultUtils.success(url);
+  }
+
+  @ApiOperation(value = "信任登录统一回调地址", hidden = true)
+  @GetMapping("/callback/{type}")
+  public void callBack(@PathVariable String type, AuthCallback callback,
+      HttpServletResponse httpServletResponse) throws IOException {
+    String errorMsg = "登录失败";
+    try {
+      AuthRequest authRequest = oauthLoginUtils.buildAuthRequest(type);
+      AuthResponse response = authRequest.login(callback);
+      int code = response.getCode();
+      if (code == 2000) {
+        AuthUser authUser = (AuthUser) response.getData();
+        log.info("登录响应，{}", JSONObject.toJSONString(authUser));
+        LoginResp vo = userService.oauthLogin(type, authUser);
+        String oAuthInfo = SecurityUtils.base64Obj(JSONObject.toJSONString(vo));
+        httpServletResponse
+            .sendRedirect(
+                appConfigInfo.getAuth2().getLoginRedirectUri() + "?state=1&oAuthInfo=" + oAuthInfo);
+        return;
+      }
+      errorMsg = response.getMsg();
+    } catch (Exception e) {
+      errorMsg = e.getMessage();
     }
-
-    @ApiOperation(value = "信任登录统一回调地址", hidden = true)
-    @GetMapping("/callback/{type}")
-    public void callBack(@PathVariable String type, AuthCallback callback,
-                         HttpServletResponse httpServletResponse) throws IOException {
-        String errorMsg = "登录失败";
-        try {
-            AuthRequest authRequest = oauthLoginUtils.buildAuthRequest(type);
-            AuthResponse response = authRequest.login(callback);
-            int code = response.getCode();
-            if (code == 2000) {
-                AuthUser authUser = (AuthUser) response.getData();
-                log.info("登录响应，{}", JSONObject.toJSONString(authUser));
-                LoginResp vo = userService.oauthLogin(type, authUser);
-                String oAuthInfo = SecurityUtils.base64Obj(JSONObject.toJSONString(vo));
-                httpServletResponse
-                    .sendRedirect(appConfigInfo.getAuth2().getLoginRedirectUri() + "?state=1&oAuthInfo=" + oAuthInfo);
-                return;
-            }
-            errorMsg = response.getMsg();
-        } catch (Exception e) {
-            errorMsg = e.getMessage();
-        }
-        httpServletResponse.sendRedirect(
-            appConfigInfo.getAuth2().getLoginRedirectUri() + "?state=0&errorMsg=" + SecurityUtils.base64Obj(errorMsg));
-    }
+    httpServletResponse.sendRedirect(
+        appConfigInfo.getAuth2().getLoginRedirectUri() + "?state=0&errorMsg="
+            + SecurityUtils.base64Obj(errorMsg));
+  }
 
 }

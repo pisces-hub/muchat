@@ -4,6 +4,6 @@ import io.pisceshub.muchat.common.core.model.SendResult;
 
 public interface MessageListener {
 
-    void process(SendResult result);
+  void process(SendResult result);
 
 }

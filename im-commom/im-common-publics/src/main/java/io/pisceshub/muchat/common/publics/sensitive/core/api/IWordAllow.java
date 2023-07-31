@@ -7,11 +7,11 @@ import java.util.List;
  */
 public interface IWordAllow {
 
-    /**
-     * 获取结果
-     * 
-     * @return 结果 3
-     */
-    List<String> allow();
+  /**
+   * 获取结果
+   *
+   * @return 结果 3
+   */
+  List<String> allow();
 
 }

@@ -13,19 +13,19 @@ import java.util.List;
 @Slf4j
 public class MessageProtocolDecoder extends ReplayingDecoder {
 
-    @Override
-    protected void decode(ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf,
-                          List<Object> list) throws Exception {
-        if (byteBuf.readableBytes() < 4) {
-            return;
-        }
-        // 获取到包的长度
-        long length = byteBuf.readLong();
-        // 转成IMSendInfo
-        ByteBuf contentBuf = byteBuf.readBytes((int) length);
-        String content = contentBuf.toString(CharsetUtil.UTF_8);
-        ObjectMapper objectMapper = new ObjectMapper();
-        IMSendInfo sendInfo = objectMapper.readValue(content, IMSendInfo.class);
-        list.add(sendInfo);
+  @Override
+  protected void decode(ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf,
+      List<Object> list) throws Exception {
+    if (byteBuf.readableBytes() < 4) {
+      return;
     }
+    // 获取到包的长度
+    long length = byteBuf.readLong();
+    // 转成IMSendInfo
+    ByteBuf contentBuf = byteBuf.readBytes((int) length);
+    String content = contentBuf.toString(CharsetUtil.UTF_8);
+    ObjectMapper objectMapper = new ObjectMapper();
+    IMSendInfo sendInfo = objectMapper.readValue(content, IMSendInfo.class);
+    list.add(sendInfo);
+  }
 }

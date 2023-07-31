@@ -10,25 +10,25 @@ import java.util.List;
 
 public interface IGroupService extends IService<Group> {
 
-    GroupVO createGroup(String groupName);
+  GroupVO createGroup(String groupName);
 
-    GroupVO modifyGroup(GroupVO vo);
+  GroupVO modifyGroup(GroupVO vo);
 
-    void deleteGroup(Long groupId);
+  void deleteGroup(Long groupId);
 
-    void quitGroup(Long groupId);
+  void quitGroup(Long groupId);
 
-    void kickGroup(Long groupId, Long userId);
+  void kickGroup(Long groupId, Long userId);
 
-    List<GroupVO> findGroups();
+  List<GroupVO> findGroups();
 
-    void invite(GroupInviteReq vo);
+  void invite(GroupInviteReq vo);
 
-    Group findBaseInfoById(Long groupId);
+  Group findBaseInfoById(Long groupId);
 
-    GroupVO findById(Long groupId);
+  GroupVO findById(Long groupId);
 
-    List<GroupMemberResp> findGroupMembers(Long groupId);
+  List<GroupMemberResp> findGroupMembers(Long groupId);
 
-    List<Group> findByGroupType(Integer code);
+  List<Group> findByGroupType(Integer code);
 }

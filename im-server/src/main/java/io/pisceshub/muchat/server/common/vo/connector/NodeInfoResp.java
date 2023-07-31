@@ -12,15 +12,15 @@ import lombok.Data;
 @Data
 public class NodeInfoResp {
 
-    @ApiModelProperty("协议,ws,wss,mqtt等等")
-    private String  protocol;
+  @ApiModelProperty("协议,ws,wss,mqtt等等")
+  private String protocol;
 
-    @ApiModelProperty("ip信息")
-    private String  ip;
+  @ApiModelProperty("ip信息")
+  private String ip;
 
-    @ApiModelProperty("端口信息")
-    private Integer port;
+  @ApiModelProperty("端口信息")
+  private Integer port;
 
-    @ApiModelProperty("最近上线时间")
-    private Long    registerTime;
+  @ApiModelProperty("最近上线时间")
+  private Long registerTime;
 }

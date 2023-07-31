@@ -10,15 +10,15 @@ import java.util.List;
 @ThreadSafe
 public class FileWordDeny implements IWordDeny {
 
-    private InputStream ios;
+  private InputStream ios;
 
-    public FileWordDeny(InputStream ios){
-        this.ios = ios;
-    }
+  public FileWordDeny(InputStream ios) {
+    this.ios = ios;
+  }
 
-    @Override
-    public List<String> deny() {
-        return FileUtils.readAllLines(ios);
-    }
+  @Override
+  public List<String> deny() {
+    return FileUtils.readAllLines(ios);
+  }
 
 }

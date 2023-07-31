@@ -12,15 +12,16 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class RandomHandle implements RouteHandle {
 
-    @Override
-    public NodeContainer.WNode routeServer(NetProtocolEnum protocolEnum, List<NodeContainer.WNode> values, String key) {
-        int size = values.size();
-        if (size == 0) {
-            throw new RuntimeException();
-        }
-        int offset = ThreadLocalRandom.current().nextInt(size);
-
-        return values.get(offset);
+  @Override
+  public NodeContainer.WNode routeServer(NetProtocolEnum protocolEnum,
+      List<NodeContainer.WNode> values, String key) {
+    int size = values.size();
+    if (size == 0) {
+      throw new RuntimeException();
     }
+    int offset = ThreadLocalRandom.current().nextInt(size);
+
+    return values.get(offset);
+  }
 
 }

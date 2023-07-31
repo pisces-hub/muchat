@@ -13,12 +13,12 @@ import java.io.Serializable;
 @Data
 public class ChatSessionInfoDto implements Serializable {
 
-    @NotNull(message = "对方id不能为空")
-    private Long     targetId;
+  @NotNull(message = "对方id不能为空")
+  private Long targetId;
 
-    @NotNull(message = "聊天类型不能为空")
-    private ChatType chatType;
+  @NotNull(message = "聊天类型不能为空")
+  private ChatType chatType;
 
-    private Long     createTime;
+  private Long createTime;
 
 }

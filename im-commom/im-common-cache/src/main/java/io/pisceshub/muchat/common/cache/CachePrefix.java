@@ -5,9 +5,9 @@ package io.pisceshub.muchat.common.cache;
  */
 public enum CachePrefix {
 
-                         /**
-                          * 匿名用户用户昵称自增
-                          */
-                         ANONYMOUS_USER_NICK_NAME;
+  /**
+   * 匿名用户用户昵称自增
+   */
+  ANONYMOUS_USER_NICK_NAME;
 
 }

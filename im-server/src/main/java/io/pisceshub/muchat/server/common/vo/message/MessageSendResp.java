@@ -17,8 +17,8 @@ import java.io.Serializable;
 @Data
 public class MessageSendResp implements Serializable {
 
-    private Long   id;
+  private Long id;
 
-    private String content;
+  private String content;
 
 }

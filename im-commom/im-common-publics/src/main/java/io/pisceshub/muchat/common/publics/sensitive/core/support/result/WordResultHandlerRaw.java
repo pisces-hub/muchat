@@ -10,9 +10,9 @@ import io.pisceshub.muchat.common.publics.sensitive.core.api.IWordResultHandler;
 @ThreadSafe
 public class WordResultHandlerRaw implements IWordResultHandler<IWordResult> {
 
-    @Override
-    public IWordResult handle(IWordResult wordResult) {
-        return wordResult;
-    }
+  @Override
+  public IWordResult handle(IWordResult wordResult) {
+    return wordResult;
+  }
 
 }

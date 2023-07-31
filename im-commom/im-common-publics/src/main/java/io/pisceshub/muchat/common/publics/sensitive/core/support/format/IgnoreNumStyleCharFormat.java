@@ -10,9 +10,9 @@ import io.pisceshub.muchat.common.publics.sensitive.common.utils.NumUtils;
 @ThreadSafe
 public class IgnoreNumStyleCharFormat implements ICharFormat {
 
-    @Override
-    public char format(char original) {
-        return NumUtils.getMappingChar(original);
-    }
+  @Override
+  public char format(char original) {
+    return NumUtils.getMappingChar(original);
+  }
 
 }
