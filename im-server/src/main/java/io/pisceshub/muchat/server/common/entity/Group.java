@@ -58,10 +58,10 @@ public class Group extends Model<Group> {
   private String notice;
 
   /**
-   * 是否已删除
+   * 是否已删除:1已删除，0否
    */
   @TableField("deleted")
-  private Boolean deleted;
+  private Integer deleted;
 
   /**
    * 创建时间

@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.pisceshub.muchat.common.core.contant.AppConst;
+import io.pisceshub.muchat.common.core.enums.CommonEnums;
 import io.pisceshub.muchat.common.core.enums.MessageStatus;
 import io.pisceshub.muchat.common.core.enums.MessageType;
 import io.pisceshub.muchat.common.core.enums.ResultCode;
@@ -77,7 +78,7 @@ public class GroupMessageServiceImpl extends
     if (group == null) {
       throw new GlobalException(ResultCode.PROGRAM_ERROR, "群聊不存在");
     }
-    if (group.getDeleted()) {
+    if (CommonEnums.Yes.getCode().equals(group.getDeleted())) {
       throw new GlobalException(ResultCode.PROGRAM_ERROR, "群聊已解散");
     }
     // 判断是否在群里
@@ -98,8 +99,8 @@ public class GroupMessageServiceImpl extends
     msg.setSendTime(new Date());
     this.save(msg);
     // 不用发给自己
-    userIds = userIds.stream().filter(id -> userId != id).collect(Collectors.toList());
-    // 群发
+    userIds = userIds.stream().filter(id -> !userId.equals(id)).collect(Collectors.toList());
+    // 群发userIds = {ArrayList@14535}  size = 174
     GroupMessageInfo msgInfo = BeanUtils.copyProperties(msg, GroupMessageInfo.class);
     imClient.sendGroupMessage(userIds, msgInfo);
     log.info("发送群聊消息，发送id:{},群聊id:{},内容:{}", userId, vo.getGroupId(), vo.getContent());
@@ -137,7 +138,7 @@ public class GroupMessageServiceImpl extends
     // 群发
     List<Long> userIds = groupMemberService.findUserIdsByGroupId(msg.getGroupId());
     // 不用发给自己
-    userIds = userIds.stream().filter(uid -> userId.equals(uid)).collect(Collectors.toList());
+    userIds = userIds.stream().filter(uid -> !userId.equals(uid)).collect(Collectors.toList());
     GroupMessageInfo msgInfo = BeanUtils.copyProperties(msg, GroupMessageInfo.class);
     msgInfo.setType(MessageType.TIP.code());
     String content = String.format("'%s'撤回了一条消息", member.getAliasName());

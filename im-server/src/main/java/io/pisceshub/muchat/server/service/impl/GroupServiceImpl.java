@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.pisceshub.muchat.common.core.enums.ChatType;
+import io.pisceshub.muchat.common.core.enums.CommonEnums;
 import io.pisceshub.muchat.common.core.enums.ResultCode;
 import io.pisceshub.muchat.server.adapter.IpSearchAdapter;
 import io.pisceshub.muchat.server.common.contant.Constant;
@@ -133,7 +134,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
       throw new GlobalException(ResultCode.PROGRAM_ERROR, "只有群主才有权限解除群聊");
     }
     // 逻辑删除群数据
-    group.setDeleted(true);
+    group.setDeleted(CommonEnums.Yes.getCode());
     this.updateById(group);
     // 删除成员数据
     groupMemberService.removeByGroupId(groupId);
@@ -190,7 +191,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
   @Override
   public Group findBaseInfoById(Long groupId) {
     LambdaQueryWrapper<Group> groupLambdaQueryWrapper = new LambdaQueryWrapper<>();
-    groupLambdaQueryWrapper.eq(Group::getDeleted, false);
+    groupLambdaQueryWrapper.eq(Group::getDeleted, CommonEnums.No.getCode());
     groupLambdaQueryWrapper.eq(Group::getId, groupId);
     return this.getOne(groupLambdaQueryWrapper);
   }
@@ -380,7 +381,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
   @Override
   public List<Group> findByGroupType(Integer code) {
     return lambdaQuery().eq(Group::getGroupType, code)
-        .eq(Group::getDeleted, false)
+        .eq(Group::getDeleted, CommonEnums.No.getCode())
         .orderByAsc(Group::getCreatedTime)
         .list();
   }
