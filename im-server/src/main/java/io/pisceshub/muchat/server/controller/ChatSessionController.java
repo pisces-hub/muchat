@@ -35,7 +35,6 @@ public class ChatSessionController {
    * @return
    */
   @ApiLog
-  @AnonymousUserCheck
   @PostMapping("/save")
   public Result<String> save(@RequestBody @Valid ChatSessionAddReq vo) {
     return iChatSessionService.save(SessionContext.getUserId(), vo) ? ResultUtils.success()
