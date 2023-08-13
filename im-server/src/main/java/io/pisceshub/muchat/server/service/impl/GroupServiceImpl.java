@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.pisceshub.muchat.common.core.enums.ChatType;
 import io.pisceshub.muchat.common.core.enums.CommonEnums;
 import io.pisceshub.muchat.common.core.enums.ResultCode;
-import io.pisceshub.muchat.server.adapter.IpSearchAdapter;
 import io.pisceshub.muchat.server.common.contant.Constant;
 import io.pisceshub.muchat.server.common.contant.RedisKey;
 import io.pisceshub.muchat.server.common.entity.Friend;
@@ -25,6 +24,7 @@ import io.pisceshub.muchat.server.exception.NotJoinGroupException;
 import io.pisceshub.muchat.server.mapper.GroupMapper;
 import io.pisceshub.muchat.server.service.*;
 import io.pisceshub.muchat.server.util.BeanUtils;
+import io.pisceshub.muchat.server.util.IpUtil;
 import io.pisceshub.muchat.server.util.SessionContext;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -50,8 +50,6 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
   @Autowired
   private IFriendService friendsService;
 
-  @Autowired
-  private IpSearchAdapter ipSearchAdapter;
 
   @Autowired
   private IChatSessionService iChatSessionService;
@@ -349,7 +347,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
     return members.stream().filter(e -> ipMap.containsKey(e.getUserId())).map(m -> {
       GroupMemberResp vo = BeanUtils.copyProperties(m, GroupMemberResp.class);
       User user = ipMap.get(vo.getUserId());
-      vo.setIpAddress(ipSearchAdapter.search(user.getLastLoginIp()));
+      vo.setIpAddress(IpUtil.search(user.getLastLoginIp()));
       if (GroupEnum.GroupType.Anonymous.getCode().equals(groupVO.getGroupType())) {
         vo.setAliasName(user.getNickName());
         vo.setHeadImage(user.getHeadImage());

@@ -14,7 +14,6 @@ import io.pisceshub.muchat.common.core.contant.RedisKey;
 import io.pisceshub.muchat.common.core.enums.ResultCode;
 import io.pisceshub.muchat.common.core.utils.JwtUtil;
 import io.pisceshub.muchat.common.core.utils.MixUtils;
-import io.pisceshub.muchat.server.adapter.IpSearchAdapter;
 import io.pisceshub.muchat.server.common.contant.Constant;
 import io.pisceshub.muchat.server.common.entity.Friend;
 import io.pisceshub.muchat.server.common.entity.Group;
@@ -66,8 +65,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
   @Autowired
   private IGroupMemberService iGroupMemberService;
 
-  @Autowired
-  private IpSearchAdapter ipSearchAdapter;
 
   @Autowired
   private AppCache appCache;
@@ -352,7 +349,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
   public UserVO findByIde(long id) {
     User user = this.getById(id);
     UserVO userVO = BeanUtils.copyProperties(user, UserVO.class);
-    userVO.setIpAddress(ipSearchAdapter.search(user.getLastLoginIp()));
+    userVO.setIpAddress(IpUtil.search(user.getLastLoginIp()));
     return userVO;
   }
 

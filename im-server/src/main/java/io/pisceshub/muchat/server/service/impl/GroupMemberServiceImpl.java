@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.pisceshub.muchat.common.core.model.PageResp;
-import io.pisceshub.muchat.server.adapter.IpSearchAdapter;
 import io.pisceshub.muchat.server.common.contant.RedisKey;
 import io.pisceshub.muchat.server.common.entity.GroupMember;
 import io.pisceshub.muchat.server.common.entity.User;
@@ -16,6 +15,7 @@ import io.pisceshub.muchat.server.common.vo.user.GroupMemberResp;
 import io.pisceshub.muchat.server.mapper.GroupMemberMapper;
 import io.pisceshub.muchat.server.service.IGroupMemberService;
 import io.pisceshub.muchat.server.service.IUserService;
+import io.pisceshub.muchat.server.util.IpUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -33,9 +33,6 @@ public class GroupMemberServiceImpl extends ServiceImpl<GroupMemberMapper, Group
 
   @Autowired
   private IUserService iUserService;
-
-  @Autowired
-  private IpSearchAdapter ipSearchAdapter;
 
   /**
    * 添加群聊成员
@@ -190,7 +187,7 @@ public class GroupMemberServiceImpl extends ServiceImpl<GroupMemberMapper, Group
       GroupMemberResp groupMemberResp = BeanUtil.copyProperties(e, GroupMemberResp.class);
       groupMemberResp.setOnlineState(iUserService.isOnline(e.getUserId()));
       User user = ipMap.get(e.getUserId());
-      groupMemberResp.setIpAddress(ipSearchAdapter.search(user.getLastLoginIp()));
+      groupMemberResp.setIpAddress(IpUtil.search(user.getLastLoginIp()));
       return groupMemberResp;
     }).collect(Collectors.toList());
 
