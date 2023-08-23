@@ -34,6 +34,6 @@ public class ConsistentHashHandle implements RouteHandle, INodeUpdateNodeEventLi
       abstractConsistentHash.reBuildRing(nodes);
     }
     tmpMap.put(netProtocolEnum, abstractConsistentHash);
-    // log.info("节点发生变更，重建hash环{},{}",netProtocolEnum,nodes);
+    log.info("节点发生变更，重建hash环{},{}",netProtocolEnum,nodes);
   }
 }
