@@ -39,7 +39,7 @@ public class PrivateMessageListener implements MessageListener {
     if (messageInfo.getType() >= MessageType.RTC_CALL.code()
         && messageInfo.getType() < MessageType.RTC_CANDIDATE.code()) {
       // 通知用户呼叫失败了
-      if (messageInfo.getType() == MessageType.RTC_CALL.code() && !result.getCode()
+      if (MessageType.RTC_CALL.code().equals(messageInfo.getType()) && !result.getCode()
           .equals(IMSendCode.SUCCESS)) {
         PrivateMessageInfo sendMessage = new PrivateMessageInfo();
         sendMessage.setRecvId(messageInfo.getSendId());
