@@ -22,7 +22,7 @@ public class GroupMessageListener implements MessageListener {
   @Override
   public void process(SendResult result) {
     GroupMessageInfo messageInfo = (GroupMessageInfo) result.getMessageInfo();
-    if (messageInfo.getType().equals(MessageType.TIP)) {
+    if (messageInfo.getType().equals(MessageType.TIP.code())) {
       // 提示类数据不记录
       return;
     }
