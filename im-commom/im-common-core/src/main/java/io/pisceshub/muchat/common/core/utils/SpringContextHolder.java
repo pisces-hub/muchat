@@ -1,5 +1,7 @@
 package io.pisceshub.muchat.common.core.utils;
 
+import java.util.Collection;
+import java.util.Map;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.context.ApplicationContext;
@@ -41,6 +43,12 @@ public class SpringContextHolder implements ApplicationContextAware {
   public static <T> T getBean(Class<T> requiredType) {
     assertApplicationContext();
     return applicationContext.getBean(requiredType);
+  }
+
+  public static <T> Collection<T> getBeans(Class<T> requiredType) {
+    assertApplicationContext();
+    Map<String, T> beansOfTypes = applicationContext.getBeansOfType(requiredType);
+    return beansOfTypes.values();
   }
 
   private static void assertApplicationContext() {
